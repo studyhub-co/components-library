@@ -1,0 +1,30 @@
+{
+  "name": "config-common",
+  "version": "0.1.0",
+  "author": "Wang Guan <momocraft@gmail.com>",
+  "private": true,
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "typecheck": "tsc --noEmit",
+    "typecheck:watch": "tsc --watch --noEmit",
+    "lint": "    eslint '**/*.@(ts|js|tsx|jsx)'",
+    "lint:fix": "eslint '**/*.@(ts|js|tsx|jsx)' --fix"
+  },
+  "dependencies": {
+    "tslib": "^1.10.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^25",
+    "@types/node": "^12",
+    "@typescript-eslint/eslint-plugin": "^2.19.2",
+    "@typescript-eslint/parser": "^2.19.2",
+    "eslint": "6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "jest": "^25",
+    "prettier": "^1.19.1",
+    "ts-jest": "^25",
+    "typescript": "^3.7"
+  }
+}
