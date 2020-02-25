@@ -11,6 +11,10 @@
     "type": "git",
     "url": "git://github.com/physics-is-beautiful/pib-eval-library.git"
   },
+  "moduleDirectories": [
+    "node_modules",
+    "src"
+  ],
   "scripts": {
     "start": "react-scripts start",
     "build": "yarn build:types && yarn build:clean && yarn build:lib",
@@ -27,6 +31,8 @@
     "lint:fix": "eslint '**/*.@(ts|js|tsx|jsx)' --fix"
   },
   "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-object-rest-spread": "^7.8.3",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "tslib": "^1.10.0"
@@ -39,6 +45,7 @@
     "@types/node": "^12",
     "@types/react": "^16.9.19",
     "@types/react-dom": "^16.9.5",
+    "@types/react-redux": "^7.1.7",
     "@typescript-eslint/eslint-plugin": "^2.19.2",
     "@typescript-eslint/parser": "^2.19.2",
     "cross-env": "^7.0.0",
@@ -47,7 +54,10 @@
     "eslint-plugin-prettier": "^3.1.2",
     "jest": "^25",
     "prettier": "^1.19.1",
+    "react-redux": "^7.2.0",
     "react-scripts": "3.4.0",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
     "rimraf": "^3.0.2",
     "sass": "^1.25.0",
     "source-map-explorer": "^2.2.2",

@@ -1,22 +1,21 @@
 {
-  "extends": "./config/tsconfig.base.json" /* https://github.com/microsoft/TypeScript-Babel-Starter/blob/master/tsconfig.json */,
+  "extends": "./config/tsconfig.base.json",
   "compilerOptions": {
     "target": "esnext",
     "isolatedModules": true,
     "sourceMap": true,
     "declaration": true,
-    "esModuleInterop": true /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */,
-    "strict": true /* Enable all strict type-checking options. */,
+    "esModuleInterop": true,
+    "strict": true,
     "jsx": "preserve",
-    "module": "commonjs",
-    //"module": "esnext",
+    "module": "esnext",
     "moduleResolution": "node",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
-    // "noEmit": true
+    "noEmit": true
   },
   "exclude": [
     "node_modules",
