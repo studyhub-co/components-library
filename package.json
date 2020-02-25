@@ -1,11 +1,21 @@
 {
-  "name": "pib_eval_library",
+  "name": "@physicsisbeautiful/pib-eval-library",
   "version": "0.1.0",
   "author": "Physics is beautiful (https://www.physicsisbeautiful.com)",
-  "private": true,
+  "license": "MIT",
+  "private": false,
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/physics-is-beautiful/pib-eval-library.git"
+  },
   "scripts": {
     "start": "react-scripts start",
-    "build": "cross-env NODE_ENV=production babel src --out-dir lib --extensions \".tsx,.ts\" --copy-files",
+    "build": "yarn build:types && yarn build:clean && yarn build:lib",
+    "build:lib": "cross-env NODE_ENV=production babel src --out-dir lib --extensions \".tsx,.ts\" --copy-files --source-maps inline",
+    "build:types": "tsc --emitDeclarationOnly",
     "build:clean": "rimraf lib/*",
     "analyze": "react-scripts build && source-map-explorer 'build/static/js/*.js'",
     "test": "CI=true react-scripts test",
