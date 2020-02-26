@@ -7,6 +7,13 @@ import thunk from 'redux-thunk';
 
 import rootReducer from '../src/redux/modules/index';
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
+import App from './app';
 
-ReactDOM.render(<Provider store={store}>test</Provider>, document.getElementById('root') as HTMLElement);
+const store = createStore(combineReducers(rootReducer), applyMiddleware(thunk));
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root') as HTMLElement,
+);

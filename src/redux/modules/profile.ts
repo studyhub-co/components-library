@@ -13,12 +13,12 @@ const initialState: Profile = {
   id: 0,
 };
 
-export default function profile(state = initialState, action: any) {
+export default function profile(state = initialState, action: any): Profile {
   switch (action.type) {
     case PROFILE_ME:
       return {
         ...state,
-        is: action.id,
+        id: action.id,
       };
     default:
       return state;

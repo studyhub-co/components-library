@@ -1,5 +1,8 @@
 ## Available Scripts
 
+### `yarn run start`
+Start demo project (from /demo/ directory)
+
 ### `yarn run build`
 
 Builds the lib for production to the `build` folder.<br />
