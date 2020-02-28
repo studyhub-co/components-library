@@ -1,14 +1,7 @@
-// action + reducer in the same file
 import { MATERIAL_FETCHING, MATERIAL_FETCHING_SUCCESS } from './constants';
 import { Material } from '../../models/';
 
-// actions
-// export const setProfileMe = (id: number) => {
-//   return {
-//     type: PROFILE_ME,
-//     id,
-//   };
-// };
+import { ChoicesData } from '../../components/data/choices';
 
 // class MaterialRedux extends Material {
 //   public isFetching!: boolean;
@@ -37,9 +30,34 @@ export const fetchMaterial = (uuid: string | undefined) => {
   return (dispatch: any) => {
     dispatch(fetchingMaterial());
     if (uuid) {
-      // todo get API call
+      // todo API get call with JSON data validation
     } else {
-      dispatch(fetchingMaterialSuccess({ uuid: '' })); // Material mock
+      // Material mock data
+      const mockMaterial: Material = {
+        uuid: '',
+        data: {
+          question: 'this is the question!',
+          choices: [
+            {
+              content: {
+                image: '',
+                text: 'this is the 1st choice',
+              },
+              type: 'base',
+              uuid: '1',
+            },
+            {
+              content: {
+                image: '',
+                text: 'this is the 2st choice',
+              },
+              type: 'base',
+              uuid: '2',
+            },
+          ],
+        } as ChoicesData,
+      };
+      dispatch(fetchingMaterialSuccess(mockMaterial));
     }
   };
 };
@@ -47,6 +65,7 @@ export const fetchMaterial = (uuid: string | undefined) => {
 const initialState: MaterialRedux = {
   uuid: null,
   isFetching: false,
+  data: null,
 };
 
 // reducer

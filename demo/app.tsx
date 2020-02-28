@@ -1,5 +1,5 @@
 import React from 'react';
-import Choices from '../src/components/qa/choices';
+import Choices from '../src/components/qa';
 
 const App: React.FC = () => {
   // const textInput = createRef<HTMLInputElement>();
