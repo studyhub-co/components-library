@@ -1,1 +1,3 @@
 export declare const PROFILE_ME = "PROFILE_ME";
+export declare const MATERIAL_FETCHING = "MATERIAL_FETCHING";
+export declare const MATERIAL_FETCHING_SUCCESS = "MATERIAL_FETCHING_SUCCESS";
