@@ -16,10 +16,11 @@ interface IChoicesProps {
   component: any;
   currentMaterial: materialActionCreators.MaterialRedux;
   fetchMaterial(uuid: string | undefined): void;
+  editMode: boolean;
 }
 
 const Index: React.FC<IChoicesProps> = props => {
-  const { currentMaterial, fetchMaterial } = props;
+  const { currentMaterial, fetchMaterial, editMode } = props;
   // const textInput = createRef<HTMLInputElement>();
   // function addTodo(e: React.KeyboardEvent<HTMLInputElement>): void {
   //
@@ -39,16 +40,14 @@ const Index: React.FC<IChoicesProps> = props => {
         </ContainerItem>
         <ContainerItem>
           <Paper>
-            {currentMaterial && currentMaterial.data ? (
+            editMode: {editMode.toString()}
+            {currentMaterial && currentMaterial.data && currentMaterial.data.choices ? (
               <React.Fragment>
-                {currentMaterial.data.choices.map(choice => {
-                  return <Choice key={choice.uuid} choice={choice} />;
+                {currentMaterial.data.choices.map((choice, index) => {
+                  return <Choice key={choice.uuid} index={index} choice={choice} />;
                 })}
               </React.Fragment>
             ) : null}
-            {/*{currentMaterial.uuid === ''*/}
-            {/*  ? 'This is answers text!' // question loaded from server (material.data)*/}
-            {/*  : currentMaterial.uuid}*/}
           </Paper>
         </ContainerItem>
       </Container>
