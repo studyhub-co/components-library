@@ -44,7 +44,7 @@ const Index: React.FC<IChoicesProps> = props => {
             {currentMaterial && currentMaterial.data && currentMaterial.data.choices ? (
               <React.Fragment>
                 {currentMaterial.data.choices.map((choice, index) => {
-                  return <Choice key={choice.uuid} index={index} choice={choice} />;
+                  return <Choice editMode={editMode} key={choice.uuid} index={index} choice={choice} />;
                 })}
               </React.Fragment>
             ) : null}

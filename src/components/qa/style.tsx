@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-// import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 // import { base } from '../../style';
 
 // export const useStyles = makeStyles({
@@ -13,7 +13,30 @@ import styled from 'styled-components';
 //     },
 // });
 
-// styled plain react with @emotion/styled
+export const useRadioStyle = makeStyles({
+  root: {
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
+  icon: {
+    backgroundColor: '#f5f8fa',
+    'input:hover ~ &': {
+      backgroundColor: '#ebf1f5',
+    },
+    'input:disabled ~ &': {
+      boxShadow: 'none',
+      background: 'rgba(206,217,224,.5)',
+    },
+  },
+  checkedIcon: {
+    backgroundColor: '#137cbd',
+    'input:hover ~ &': {
+      backgroundColor: '#106ba3',
+    },
+  },
+});
+
 export const StyledChoiceButton = styled.div`
   border-radius: 12rem;
   border: 0.2rem solid gray;
@@ -32,7 +55,7 @@ export const StyledChoiceButton = styled.div`
 `;
 
 export const ChoiceIndex = styled.span`
-  position: 'absolute';
-  top: '50%';
-  transform: 'translate(-50%,-50%)';
+  position: absolute;
+  top: 50%;
+  transform: translate(-100%, -50%);
 `;
