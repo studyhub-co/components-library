@@ -30,6 +30,14 @@ const Index: React.FC<IChoicesProps> = props => {
     fetchMaterial(undefined);
   }, []);
 
+  const [state, setState] = React.useState({
+    selectedChoiceUuid: '',
+  });
+
+  const selectChoiceUuid = (uuid: string) => {
+    setState({ selectedChoiceUuid: uuid });
+  };
+
   return (
     <div style={{ flexGrow: 1, padding: '1rem' }}>
       <Container>
@@ -44,7 +52,16 @@ const Index: React.FC<IChoicesProps> = props => {
             {currentMaterial && currentMaterial.data && currentMaterial.data.choices ? (
               <React.Fragment>
                 {currentMaterial.data.choices.map((choice, index) => {
-                  return <Choice editMode={editMode} key={choice.uuid} index={index} choice={choice} />;
+                  return (
+                    <Choice
+                      selected={state.selectedChoiceUuid === choice.uuid}
+                      onChange={uuid => selectChoiceUuid(uuid)}
+                      editMode={editMode}
+                      key={choice.uuid}
+                      index={index}
+                      choice={choice}
+                    />
+                  );
                 })}
               </React.Fragment>
             ) : null}

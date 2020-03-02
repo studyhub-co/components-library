@@ -1,7 +1,9 @@
 import React from 'react';
 
-import InputBase from '@material-ui/core/InputBase';
+import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
 import { FaPencilAlt } from 'react-icons/fa';
+import { withStyles } from '@material-ui/core';
+import { blue } from '@material-ui/core/colors';
 
 export const DEFAULT_MATHJAX_OPTIONS = {
   extensions: ['tex2jax.js'],
@@ -20,8 +22,23 @@ export const DEFAULT_MATHJAX_OPTIONS = {
   'HTML-CSS': { availableFonts: ['TeX'] },
 };
 
+//  remove color from Material UI to all change with parent hover
+const BlueInput = withStyles({
+  root: {
+    color: 'inherit',
+    // cursor: 'default',
+    // '&:hover': {
+    //   cursor: 'pointer',
+    // },
+    // 'input:hover ~ &': {
+    //   cursor: 'pointer',
+    // },
+  },
+})((props: InputBaseProps) => <InputBase color="primary" {...props} />);
+
 interface EditableLabelProps {
   value: string;
+  cursorPointer: boolean;
   editMode: boolean;
 }
 
@@ -41,15 +58,18 @@ const EditableLabel: React.FC<EditableLabelProps> = props => {
   };
 
   return (
-    <span onMouseOver={onHover} onMouseOut={onHover}>
-      <InputBase
+    <div onMouseOver={onHover} onMouseOut={onHover}>
+      <BlueInput
         // className={classes.margin}
         defaultValue={value}
         readOnly={!editMode}
-        inputProps={{ 'aria-label': 'naked', style: { cursor: editMode ? 'pointer' : 'default' } }}
+        inputProps={{
+          'aria-label': 'naked',
+          style: { cursor: editMode || props.cursorPointer ? 'pointer' : 'default' },
+        }}
       />
       {state.hovered && <FaPencilAlt />}
-    </span>
+    </div>
   );
 };
 

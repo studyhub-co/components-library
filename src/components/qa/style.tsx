@@ -19,29 +19,13 @@ export const useRadioStyle = makeStyles({
       backgroundColor: 'transparent',
     },
   },
-  icon: {
-    backgroundColor: '#f5f8fa',
-    'input:hover ~ &': {
-      backgroundColor: '#ebf1f5',
-    },
-    'input:disabled ~ &': {
-      boxShadow: 'none',
-      background: 'rgba(206,217,224,.5)',
-    },
-  },
-  checkedIcon: {
-    backgroundColor: '#137cbd',
-    'input:hover ~ &': {
-      backgroundColor: '#106ba3',
-    },
-  },
 });
 
 export const StyledChoiceButton = styled.div`
   border-radius: 12rem;
   border: 0.2rem solid gray;
-  padding: 1rem 2rem;
-  margin: 1rem;
+  padding: 1vh 1vw;
+  margin: 2vh 1vw;
   background: rgba(255, 255, 255, 0);
   position: relative;
   color: gray;
