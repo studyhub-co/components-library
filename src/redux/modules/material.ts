@@ -44,7 +44,7 @@ export const fetchMaterial = (uuid: string | undefined) => {
                 text: 'this is the 1st choice',
               },
               type: 'base',
-              uuid: '1',
+              uuid: 'uuid1',
             },
             {
               content: {
@@ -52,7 +52,7 @@ export const fetchMaterial = (uuid: string | undefined) => {
                 text: 'this is the 2st choice',
               },
               type: 'base',
-              uuid: '2',
+              uuid: 'uuid2',
             },
           ],
         } as ChoicesData,

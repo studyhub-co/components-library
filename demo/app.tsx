@@ -4,6 +4,8 @@ import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import Choices from '../src/components/qa';
+import { theme } from '../src/components/style';
+import { ThemeProvider } from '@material-ui/styles';
 
 const App: React.FC = () => {
   // const textInput = createRef<HTMLInputElement>();
@@ -20,14 +22,18 @@ const App: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Choices</h1>
-      <FormControlLabel
-        control={<Switch checked={state.checkedEditMode} color="primary" onChange={handleEditModeChange()} value="" />}
-        label="Edit Mode"
-      />
-      <Choices editMode={state.checkedEditMode} />
-    </div>
+    <ThemeProvider theme={theme}>
+      <div>
+        <h1>Choices</h1>
+        <FormControlLabel
+          control={
+            <Switch checked={state.checkedEditMode} color="primary" onChange={handleEditModeChange()} value="" />
+          }
+          label="Edit Mode"
+        />
+        <Choices editMode={state.checkedEditMode} />
+      </div>
+    </ThemeProvider>
   );
 };
 

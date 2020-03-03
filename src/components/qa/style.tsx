@@ -37,9 +37,3 @@ export const StyledChoiceButton = styled.div`
     border: 0.2rem solid #1caff6;
   }
 `;
-
-export const ChoiceIndex = styled.span`
-  position: absolute;
-  top: 50%;
-  transform: translate(-100%, -50%);
-`;

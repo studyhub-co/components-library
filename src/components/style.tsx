@@ -1,4 +1,10 @@
-// import styled from '@emotion/styled';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
-export const base = {
-}
+// override MuiTheme to PIB stylish
+export const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#1caff6', // PIB blue main color
+    },
+  },
+});
