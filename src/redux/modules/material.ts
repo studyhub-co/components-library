@@ -49,7 +49,7 @@ export const fetchMaterial = (uuid: string | undefined) => {
             {
               content: {
                 image: '',
-                text: 'this is the 2st choice',
+                text: 'this is the 2nd choice',
               },
               type: 'base',
               uuid: 'uuid2',

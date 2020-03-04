@@ -1,8 +1,14 @@
-interface Answer {
-    answer: string;
+interface ChoiceContent {
+    text: string;
+    image: string;
+}
+interface Choice {
+    uuid: string;
+    type: 'base';
+    content: ChoiceContent;
 }
 export interface ChoicesData {
     question: string;
-    answers: Answer[];
+    choices: Choice[];
 }
 export {};
