@@ -52,12 +52,12 @@ const Index: React.FC<IChoicesProps> = props => {
         <Container>
           <ContainerItem>
             <Paper>
-              <Question material={currentMaterial} />
+              <Question editMode={editMode} material={currentMaterial} />
             </Paper>
           </ContainerItem>
           <ContainerItem>
             <Paper>
-              editMode: {editMode.toString()}
+              {/*editMode: {editMode.toString()}*/}
               {currentMaterial && currentMaterial.data && currentMaterial.data.choices ? (
                 <React.Fragment>
                   {currentMaterial.data.choices.map((choice, index) => {
