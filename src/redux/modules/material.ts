@@ -1,7 +1,7 @@
 import { MATERIAL_FETCHING, MATERIAL_FETCHING_SUCCESS } from './constants';
 import { Material } from '../../models/';
 
-import { ChoicesData } from '../../components/data/choices';
+import { ChoicesData } from '../../components/qa/IData/choices';
 
 // class MaterialRedux extends Material {
 //   public isFetching!: boolean;
@@ -36,7 +36,9 @@ export const fetchMaterial = (uuid: string | undefined) => {
       const mockMaterial: Material = {
         uuid: '',
         data: {
-          question: 'this is the question!',
+          question: {
+            text: 'this is the question!',
+          },
           choices: [
             {
               content: {

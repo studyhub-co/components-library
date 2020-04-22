@@ -1,3 +1,5 @@
+import { Question } from './question';
+
 interface ChoiceContent {
   text: string;
   image: string;
@@ -10,6 +12,6 @@ interface Choice {
 }
 
 export interface ChoicesData {
-  question: string;
+  question: Question;
   choices: Choice[];
 }

@@ -4,12 +4,12 @@ import { FaTimes, FaTrashAlt } from 'react-icons/fa';
 
 import Grid from '@material-ui/core/Grid';
 import { withStyles, makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Fab from '@material-ui/core/Fab';
+// import Fab from '@material-ui/core/Fab';
 
 import { StyledChoiceButton } from './style';
 import EditableLabel from '../editable/label';
 import EditableThumbnail from '../editable/thumbnail';
-import { useRadioStyle } from './style';
+// import { useRadioStyle } from './style';
 import Radio, { RadioProps } from '@material-ui/core/Radio';
 
 type onChangeType = (uuid: string) => void;

@@ -2,24 +2,24 @@ import React from 'react';
 import * as materialActionCreators from '../../redux/modules/material';
 import EditableLabel from '../editable/label';
 
+import { Question as IQuestion } from './IData/question';
+
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IQuestionProps {
-  material: materialActionCreators.MaterialRedux;
+  // material: materialActionCreators.MaterialRedux;
   editMode: boolean;
+  question: IQuestion;
 }
 
 const Question: React.FC<IQuestionProps> = props => {
-  const { material, editMode } = props;
+  const { question, editMode } = props;
 
   return (
     <React.Fragment>
-      {material && material.data && material.data.question && (
-        <EditableLabel value={material.data.question} editMode={editMode} cursorPointer={true} />
-      )}
+      {question.text && <EditableLabel value={question.text} editMode={editMode} cursorPointer={true} />}
+      {/* TODO image, hint */}
     </React.Fragment>
   );
-
-  // return <React.Fragment>{material && material.data && material.data.question}</React.Fragment>;
 };
 
 export default Question;
