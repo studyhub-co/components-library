@@ -1,27 +1,29 @@
 import React from 'react';
 
-import { FaTimes, FaTrashAlt } from 'react-icons/fa';
+import { FaTrashAlt } from 'react-icons/fa';
 
+import Radio, { RadioProps } from '@material-ui/core/Radio';
 import Grid from '@material-ui/core/Grid';
+
 import { withStyles, makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-// import Fab from '@material-ui/core/Fab';
 
 import { StyledChoiceButton } from './style';
 import EditableLabel from '../editable/label';
 import EditableThumbnail from '../editable/thumbnail';
-// import { useRadioStyle } from './style';
-import Radio, { RadioProps } from '@material-ui/core/Radio';
+import { Choice as IChoice } from './IData/choices';
 
-type onChangeType = (uuid: string) => void;
+type onSelectType = (uuid: string) => void;
 type deleteChoice = (uuid: string) => void;
+type onChange = (choice: IChoice) => void;
 
 interface ChoiceProps {
-  choice: any; // TODO
+  choice: IChoice;
   index: number;
   editMode: boolean;
-  onChange: onChangeType;
+  onSelect: onSelectType;
   selected: boolean;
   deleteChoice: deleteChoice;
+  onChange: onChange;
 }
 
 const BlueRadio = withStyles({
@@ -35,7 +37,7 @@ const BlueRadio = withStyles({
 })((props: RadioProps) => <Radio color="default" {...props} />);
 
 const Choice: React.FC<ChoiceProps> = props => {
-  const { choice, index, editMode, onChange, deleteChoice } = props;
+  const { choice, index, editMode, onSelect, deleteChoice, onChange } = props;
   // const classesRadio = useRadioStyle();
 
   const [state, setState] = React.useState({
@@ -48,7 +50,7 @@ const Choice: React.FC<ChoiceProps> = props => {
   };
 
   const handleChange = () => {
-    onChange(choice.uuid);
+    onSelect(choice.uuid);
   };
 
   const onHover = () => {
@@ -57,6 +59,11 @@ const Choice: React.FC<ChoiceProps> = props => {
     } else {
       setState({ hovered: false });
     }
+  };
+
+  const onTextChange = (text: string) => {
+    choice.content.text = text;
+    onChange(choice);
   };
 
   return (
@@ -90,7 +97,7 @@ const Choice: React.FC<ChoiceProps> = props => {
           </Grid>
         </Grid>
         <Grid item xs={8} md={10}>
-          <EditableLabel value={choice.content.text} editMode={editMode} cursorPointer={true} />
+          <EditableLabel onChange={onTextChange} value={choice.content.text} editMode={editMode} cursorPointer={true} />
         </Grid>
         <Grid item xs={2} md={1}>
           <EditableThumbnail value={''} showAddImageIcon={state.hovered} editMode={editMode} />

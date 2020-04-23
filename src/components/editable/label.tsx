@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core';
 import { blue } from '@material-ui/core/colors';
 
 import TextField from '@material-ui/core/TextField';
+import { Question as IQuestion } from '../qa/IData/question';
 
 export const DEFAULT_MATHJAX_OPTIONS = {
   extensions: ['tex2jax.js'],
@@ -36,6 +37,7 @@ interface EditableLabelProps {
   value: string;
   cursorPointer: boolean;
   editMode: boolean;
+  onChange: (text: string) => void;
 }
 
 // TODO
@@ -43,7 +45,7 @@ interface EditableLabelProps {
 // 2. MathJax
 // 3. handleInputKeyUp
 const EditableLabel: React.FC<EditableLabelProps> = props => {
-  const { value, editMode } = props;
+  const { value, editMode, onChange } = props;
 
   const [state, setState] = React.useState({
     hovered: false,
@@ -63,6 +65,9 @@ const EditableLabel: React.FC<EditableLabelProps> = props => {
         fullWidth
         disableUnderline={!editMode}
         // className={classes.margin}
+        onChange={e => {
+          onChange(e.target.value);
+        }}
         defaultValue={value}
         readOnly={!editMode}
         inputProps={{

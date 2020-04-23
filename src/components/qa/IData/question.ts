@@ -1,5 +1,8 @@
 export interface Question {
-  text: string;
-  image: string;
-  hint: string;
+  content: {
+    text: string;
+    image: string;
+    hint: string;
+  };
+  type: string;
 }

@@ -9,14 +9,22 @@ interface IQuestionProps {
   // material: materialActionCreators.MaterialRedux;
   editMode: boolean;
   question: IQuestion;
+  onChange: (question: IQuestion) => void;
 }
 
 const Question: React.FC<IQuestionProps> = props => {
-  const { question, editMode } = props;
+  const { question, onChange, editMode } = props;
+
+  const onTextChange = (text: string) => {
+    question.content.text = text;
+    onChange(question);
+  };
 
   return (
     <React.Fragment>
-      {question.text && <EditableLabel value={question.text} editMode={editMode} cursorPointer={true} />}
+      {question.content.text && (
+        <EditableLabel onChange={onTextChange} value={question.content.text} editMode={editMode} cursorPointer={true} />
+      )}
       {/* TODO image, hint */}
     </React.Fragment>
   );

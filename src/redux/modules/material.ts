@@ -1,7 +1,7 @@
 import { MATERIAL_FETCHING, MATERIAL_FETCHING_SUCCESS } from './constants';
 import { Material } from '../../models/';
 
-import { ChoicesData } from '../../components/qa/IData/choices';
+import { QAData } from '../../components/qa/IData/index';
 
 // class MaterialRedux extends Material {
 //   public isFetching!: boolean;
@@ -34,10 +34,15 @@ export const fetchMaterial = (uuid: string | undefined) => {
     } else {
       // Material mock data
       const mockMaterial: Material = {
-        uuid: '',
+        uuid: 'materialUuid',
         data: {
           question: {
-            text: 'this is the question!',
+            content: {
+              text: 'this is the question!',
+              image: '',
+              hint: 'this is the hint',
+            },
+            type: 'base',
           },
           choices: [
             {
@@ -47,6 +52,7 @@ export const fetchMaterial = (uuid: string | undefined) => {
               },
               type: 'base',
               uuid: 'uuid1',
+              position: 0,
             },
             {
               content: {
@@ -55,9 +61,10 @@ export const fetchMaterial = (uuid: string | undefined) => {
               },
               type: 'base',
               uuid: 'uuid2',
+              position: 1,
             },
           ],
-        } as ChoicesData,
+        } as QAData,
       };
       dispatch(fetchingMaterialSuccess(mockMaterial));
     }

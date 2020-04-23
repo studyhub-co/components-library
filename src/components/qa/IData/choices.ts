@@ -5,13 +5,9 @@ interface ChoiceContent {
   image: string;
 }
 
-interface Choice {
+export interface Choice {
   uuid: string;
+  position: number;
   type: 'base'; // FIXME what types of choices do we need here? (was imagewtext)
   content: ChoiceContent;
-}
-
-export interface ChoicesData {
-  question: Question;
-  choices: Choice[];
 }

@@ -13,26 +13,30 @@ import * as materialActionCreators from '../../redux/modules/material';
 import Question from './question';
 import Choice from './choice';
 
-// hook to work with jsonData across any components
-import { useJsonData } from '../hooks/jsonData';
+import { Question as IQuestion } from './IData/question';
+import { Choice as IChoice } from './IData/choices';
+
+// hook to work with componentData across any components
+import { useComponentData } from '../hooks/componentData';
+import { ComponentsData as IComponentsData } from '../hooks/IData';
 
 import { theme } from '../style';
 import { StyledChoiceButton } from './style';
+// import { on } from 'cluster';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IChoicesProps {
   component: any;
   currentMaterial: materialActionCreators.MaterialRedux;
-  fetchMaterial(uuid: string | undefined): void;
   editMode: boolean;
-  jsonData: any; // JSON DATA
+  componentData: IComponentsData;
+  // redux actions
+  fetchMaterial(uuid: string | undefined): void;
 }
 
 const Index: React.FC<IChoicesProps> = props => {
-  const { currentMaterial, editMode: editModeProp, fetchMaterial, jsonData: jsonDataProp } = props;
+  const { currentMaterial, editMode: editModeProp, fetchMaterial, componentData: componentDataProp } = props;
   // const textInput = createRef<HTMLInputElement>();
-  // function addTodo(e: React.KeyboardEvent<HTMLInputElement>): void {
-  // }
 
   // const [state, setState] = React.useState({
   //   selectedChoiceUuid: '',
@@ -40,6 +44,9 @@ const Index: React.FC<IChoicesProps> = props => {
   // });
   const [selectedChoiceUuid, setSelectedChoiceUuid] = useState('');
   const [editMode, setEditMode] = useState(editModeProp);
+
+  const { data: componentData, setComponentData } = useComponentData(componentDataProp, currentMaterial);
+  // const [componentData, setComponentData] = useComponentData(componentDataProp, currentMaterial);
 
   useEffect(() => {
     // catch parent event inside iframe
@@ -57,10 +64,11 @@ const Index: React.FC<IChoicesProps> = props => {
     });
   }, []);
 
-  const jsonData = useJsonData(jsonDataProp, currentMaterial);
-
   useEffect(() => {
     setEditMode(editModeProp);
+    if (editModeProp === false) {
+      // TODO update componentData redux state
+    }
   }, [editModeProp]);
 
   useEffect(() => {
@@ -76,30 +84,51 @@ const Index: React.FC<IChoicesProps> = props => {
     console.log(uuid);
   };
 
-  console.log(jsonData);
+  const onQuestionChange = (question: IQuestion) => {
+    if (componentData) {
+      componentData.question = question;
+      setComponentData(componentData);
+    }
+  };
+
+  const onChoiceChange = (newChoice: IChoice) => {
+    if (componentData) {
+      const choiceIndex = componentData.choices.findIndex(el => el.uuid === newChoice.uuid);
+      // componentData[choiceIndex] = newChoice;
+      // setComponentData(componentData);
+    }
+  };
+
+  const onChoiceAdd = () => {
+    // Add choice to data
+  };
+
+  // if (componentData) {
+  //   console.log(componentData);
+  // }
 
   return (
     <ThemeProvider theme={theme}>
       <div style={{ flexGrow: 1, padding: '1rem' }}>
-        {jsonData && ( // need to wait jsonData
+        {componentData && ( // need to wait componentData
           <Container>
             <ContainerItem>
               <Paper>
-                <Question editMode={editMode} question={jsonData.question} />
+                <Question editMode={editMode} question={componentData.question} onChange={onQuestionChange} />
               </Paper>
             </ContainerItem>
             <ContainerItem>
               <Paper>
-                {/*editMode: {editMode.toString()}*/}
-                {currentMaterial && currentMaterial.data && currentMaterial.data.choices ? (
+                {componentData.choices ? (
                   <React.Fragment>
-                    {currentMaterial.data.choices.map((choice, index) => {
+                    {componentData.choices.map((choice, index) => {
                       return (
                         <Choice
                           selected={selectedChoiceUuid === choice.uuid}
-                          onChange={uuid => selectChoiceUuid(uuid)}
+                          onSelect={uuid => selectChoiceUuid(uuid)}
                           editMode={editMode}
                           deleteChoice={deleteChoice}
+                          onChange={onChoiceChange}
                           key={choice.uuid}
                           index={index + 1}
                           choice={choice}
@@ -108,7 +137,11 @@ const Index: React.FC<IChoicesProps> = props => {
                     })}
                   </React.Fragment>
                 ) : null}
-                {editMode && <StyledChoiceButton style={{ textAlign: 'center' }}>+ Add answer</StyledChoiceButton>}
+                {editMode && (
+                  <StyledChoiceButton onClick={onChoiceAdd} style={{ textAlign: 'center' }}>
+                    + Add answer
+                  </StyledChoiceButton>
+                )}
               </Paper>
             </ContainerItem>
           </Container>

@@ -1,6 +1,6 @@
-import { ChoicesData } from '../components/qa/IData/choices';
+import { QAData } from '../components/qa/IData/index';
 
 export interface Material {
   uuid: string | null; // null - material not loaded yet
-  data: ChoicesData | null; // TODO list of components interfaces
+  data: QAData | null; // TODO list of components interfaces
 }
