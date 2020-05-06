@@ -1,7 +1,9 @@
 import React from 'react';
-import * as materialActionCreators from '../../redux/modules/material';
+import { Question as IQuestion } from './IData/question';
 interface IQuestionProps {
-    material: materialActionCreators.MaterialRedux;
+    editMode: boolean;
+    question: IQuestion;
+    onChange: (question: IQuestion) => void;
 }
 declare const Question: React.FC<IQuestionProps>;
 export default Question;

@@ -1,13 +1,16 @@
 import React from 'react';
-declare type onChangeType = (uuid: string) => void;
+import { Choice as IChoice } from './IData/choices';
+declare type onSelectType = (uuid: string) => void;
 declare type deleteChoice = (uuid: string) => void;
+declare type onChange = (choice: IChoice) => void;
 interface ChoiceProps {
-    choice: any;
+    choice: IChoice;
     index: number;
     editMode: boolean;
-    onChange: onChangeType;
+    onSelect: onSelectType;
     selected: boolean;
     deleteChoice: deleteChoice;
+    onChange: onChange;
 }
 declare const Choice: React.FC<ChoiceProps>;
 export default Choice;

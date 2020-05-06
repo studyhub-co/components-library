@@ -44,16 +44,16 @@ const Choice: React.FC<ChoiceProps> = props => {
     hovered: false,
   });
 
-  const onDeleteChoiceClick = (e: any) => {
+  const onDeleteChoiceClick = (e: any): void => {
     e.stopPropagation(); // do not select choice
     deleteChoice(choice.uuid);
   };
 
-  const handleChange = () => {
+  const handleChange = (): void => {
     onSelect(choice.uuid);
   };
 
-  const onHover = () => {
+  const onHover = (): void => {
     if (editMode) {
       setState({ hovered: !state.hovered });
     } else {

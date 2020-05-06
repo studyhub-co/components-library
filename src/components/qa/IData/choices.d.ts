@@ -2,13 +2,10 @@ interface ChoiceContent {
     text: string;
     image: string;
 }
-interface Choice {
+export interface Choice {
     uuid: string;
+    position: number;
     type: 'base';
     content: ChoiceContent;
-}
-export interface ChoicesData {
-    question: string;
-    choices: Choice[];
 }
 export {};

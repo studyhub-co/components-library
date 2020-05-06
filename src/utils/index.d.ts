@@ -1,1 +1,1 @@
-export declare function sum(a: number, b: number): number;
+export declare function uuidV4(): string;

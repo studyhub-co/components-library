@@ -15,6 +15,7 @@ interface EditableLabelProps {
     value: string;
     cursorPointer: boolean;
     editMode: boolean;
+    onChange: (text: string) => void;
 }
 declare const EditableLabel: React.FC<EditableLabelProps>;
 export default EditableLabel;

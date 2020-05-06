@@ -1,5 +1,5 @@
-import { ChoicesData } from '../components/data/choices';
+import { QAData } from '../components/qa/IData/index';
 export interface Material {
     uuid: string | null;
-    data: ChoicesData | null;
+    data: QAData | null;
 }
