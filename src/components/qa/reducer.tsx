@@ -16,6 +16,10 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
     // if (action.type === 'DELETE_CHOICE') {
     //   // draft.numbers = [];
     // }
+    if (action.type === 'QUESTION_CHANGE') {
+      const question = action.payload;
+      draft.reducerData.question = question;
+    }
     if (action.type === 'REPLACE_DATA') {
       draft.reducerData = action.payload;
     }

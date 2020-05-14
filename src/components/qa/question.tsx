@@ -1,5 +1,4 @@
 import React from 'react';
-import * as materialActionCreators from '../../redux/modules/material';
 import EditableLabel from '../editable/label';
 
 import { Question as IQuestion } from './IData/question';
@@ -16,8 +15,10 @@ const Question: React.FC<IQuestionProps> = props => {
   const { question, onChange, editMode } = props;
 
   const onTextChange = (text: string) => {
-    question.content.text = text;
-    onChange(question);
+    // question.content.text is read only via immer now
+    const newQuestion: IQuestion = Object.assign({}, question);
+    newQuestion.content.text = text;
+    onChange(newQuestion);
   };
 
   return (

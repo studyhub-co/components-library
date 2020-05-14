@@ -1,8 +1,8 @@
 import { QAData } from './IData/index';
-export declare type ReducerObject = {
-    data: QAData;
+export declare type IReducerObject = {
+    reducerData: QAData | null;
 };
-export declare const reducer: (state: QAData, action: {
+export declare const reducer: (state: IReducerObject, action: {
     type: string;
     payload: any;
-}) => QAData;
+}) => IReducerObject;

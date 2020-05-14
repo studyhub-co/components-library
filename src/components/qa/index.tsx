@@ -19,29 +19,24 @@ import { Question as IQuestion } from './IData/question';
 import { Choice as IChoice } from './IData/choices';
 import { QAData as IQAData } from './IData/index';
 
-// hook to work with componentData across any components
+// hook to work with componentData
 // import { useComponentData } from '../hooks/componentData';
 import { useComponentData } from './componentData';
-// import { ComponentsData as IComponentsData } from '../hooks/IData';
-
-import { reducer } from './reducer';
 
 import { theme } from '../style';
 import { StyledChoiceButton } from './style';
-// import { on } from 'cluster';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
-interface IChoicesProps {
+interface IQAProps {
   component: any;
   currentMaterial: materialActionCreators.MaterialRedux;
   editMode: boolean;
-  // componentData: IComponentsData;
   componentData: IQAData;
   // redux actions
   fetchMaterial(uuid: string | undefined): void;
 }
 
-const Index: React.FC<IChoicesProps> = props => {
+const Index: React.FC<IQAProps> = props => {
   const { currentMaterial, editMode: editModeProp, fetchMaterial, componentData: componentDataProp } = props;
   // const textInput = createRef<HTMLInputElement>();
 
@@ -51,11 +46,6 @@ const Index: React.FC<IChoicesProps> = props => {
   // });
   const [selectedChoiceUuid, setSelectedChoiceUuid] = useState('');
   const [editMode, setEditMode] = useState(editModeProp);
-
-  // const { data: componentData, setComponentData } = useComponentData(componentDataProp, currentMaterial);
-  // const [componentData, setComponentData] = useComponentData(componentDataProp, currentMaterial);
-  // const { data: componentData, dispatch } = useComponentData(componentDataProp, currentMaterial);
-  // const { data: componentData, dispatch } = useComponentData(reducer, componentDataProp, currentMaterial);
 
   const { data: componentData, dispatch } = useComponentData(componentDataProp, currentMaterial);
 
@@ -96,10 +86,9 @@ const Index: React.FC<IChoicesProps> = props => {
   };
 
   const onQuestionChange = (question: IQuestion): void => {
-    // if (componentData) {
-    //   componentData.question = question;
-    //   // setComponentData(componentData);
-    // }
+    if (componentData) {
+      dispatch({ type: 'QUESTION_CHANGE', payload: question });
+    }
   };
 
   const onChoiceChange = (newChoice: IChoice): void => {
@@ -124,12 +113,6 @@ const Index: React.FC<IChoicesProps> = props => {
     //   // setComponentData(componentData);
     // }
   };
-
-  // if (componentData) {
-  //   console.log(componentData);
-  // }
-
-  // const componentData = componentDataProp;
 
   return (
     <ThemeProvider theme={theme}>
