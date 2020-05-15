@@ -12,10 +12,10 @@ import * as materialActionCreators from '../../redux/modules/material';
 
 import { uuidV4 } from '../../utils/index';
 
-import Question from './question';
+import Question from '../common/question';
 import Choice from './choice';
 
-import { Question as IQuestion } from './IData/question';
+// import { Question as IQuestion } from '../common/IData/question';
 import { Choice as IChoice } from './IData/choices';
 import { QAData as IQAData } from './IData/index';
 
@@ -87,9 +87,9 @@ const Index: React.FC<IQAProps> = props => {
     dispatch({ type: 'DELETE_CHOICE', payload: uuid });
   };
 
-  const onQuestionChange = (question: IQuestion): void => {
+  const onQuestionTextChange = (text: string): void => {
     if (componentData) {
-      dispatch({ type: 'QUESTION_CHANGE', payload: question });
+      dispatch({ type: 'QUESTION_TEXT_CHANGE', payload: text });
     }
   };
 
@@ -123,7 +123,7 @@ const Index: React.FC<IQAProps> = props => {
           <Container>
             <ContainerItem>
               <Paper>
-                <Question editMode={editMode} question={componentData.question} onChange={onQuestionChange} />
+                <Question editMode={editMode} question={componentData.question} onTextChange={onQuestionTextChange} />
               </Paper>
             </ContainerItem>
             <ContainerItem>

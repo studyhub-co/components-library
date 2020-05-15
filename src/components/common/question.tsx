@@ -8,18 +8,19 @@ interface IQuestionProps {
   // material: materialActionCreators.MaterialRedux;
   editMode: boolean;
   question: IQuestion;
-  onChange: (question: IQuestion) => void;
+  // onChange: (question: IQuestion) => void;
+  onTextChange: (text: string) => void;
 }
 
 const Question: React.FC<IQuestionProps> = props => {
-  const { question, onChange, editMode } = props;
+  const { question, onTextChange, editMode } = props;
 
-  const onTextChange = (text: string) => {
-    // question.content.text is read only via immer now
-    const newQuestion: IQuestion = Object.assign({}, question);
-    newQuestion.content.text = text;
-    onChange(newQuestion);
-  };
+  // const onTextChange = (text: string) => {
+  //       // can't change question.content is immutable
+  //   // const newQuestion: IQuestion = { ...question };
+  //   // newQuestion.content.text = text;
+  //   // onChange(newQuestion);
+  // };
 
   return (
     <React.Fragment>

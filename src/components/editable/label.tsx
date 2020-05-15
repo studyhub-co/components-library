@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core';
 import { blue } from '@material-ui/core/colors';
 
 import TextField from '@material-ui/core/TextField';
-import { Question as IQuestion } from '../qa/IData/question';
+import { Question as IQuestion } from '../common/IData/question';
 
 export const DEFAULT_MATHJAX_OPTIONS = {
   extensions: ['tex2jax.js'],

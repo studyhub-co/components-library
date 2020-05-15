@@ -1,4 +1,4 @@
-import { Question } from './question';
+import { Question } from '../../common/IData/question';
 
 interface ChoiceContent {
   text: string;

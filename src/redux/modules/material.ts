@@ -1,7 +1,7 @@
 import { MATERIAL_FETCHING, MATERIAL_FETCHING_SUCCESS } from './constants';
 import { Material } from '../../models/';
 
-import { QAData } from '../../components/qa/IData/index';
+// import { QAData } from '../../components/qa/IData/index';
 
 // class MaterialRedux extends Material {
 //   public isFetching!: boolean;
@@ -28,46 +28,9 @@ const fetchingMaterialSuccess = (material: Material) => {
 // actions
 export const fetchMaterial = (uuid: string | undefined) => {
   return (dispatch: any) => {
-    dispatch(fetchingMaterial());
-    if (uuid) {
-      // todo API get call with JSON data validation
-    } else {
-      // Material mock data
-      const mockMaterial: Material = {
-        uuid: 'materialUuid',
-        data: {
-          question: {
-            content: {
-              text: 'this is the question!',
-              image: '',
-              hint: 'this is the hint',
-            },
-            type: 'base',
-          },
-          choices: [
-            {
-              content: {
-                image: '',
-                text: 'this is the 1st choice',
-              },
-              type: 'base',
-              uuid: 'uuid1',
-              position: 0,
-            },
-            {
-              content: {
-                image: '',
-                text: 'this is the 2nd choice',
-              },
-              type: 'base',
-              uuid: 'uuid2',
-              position: 1,
-            },
-          ],
-        } as QAData,
-      };
-      dispatch(fetchingMaterialSuccess(mockMaterial));
-    }
+    // dispatch(fetchingMaterial());
+    // todo API get call with JSON data validation
+    // dispatch(fetchingMaterialSuccess(mockMaterial));
   };
 };
 

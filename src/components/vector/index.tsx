@@ -18,10 +18,14 @@ import * as materialActionCreators from '../../redux/modules/material';
 
 import { VectorData as IVectorData } from './IData/index';
 
-import { VectorCanvas, CanvasVector } from './vectorCanvas';
+import { VectorCanvas } from './vectorCanvas';
 
 import { theme } from '../style';
 import EditableLabel from '../editable/label';
+import Question from '../common/question';
+
+import { useComponentData } from './componentData';
+
 // import { StyledChoiceButton } from './style';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
@@ -45,7 +49,7 @@ const Index: React.FC<IVectorProps> = props => {
   const [selectedChoiceUuid, setSelectedChoiceUuid] = useState('');
   const [editMode, setEditMode] = useState(editModeProp);
 
-  // const { data: componentData, dispatch } = useComponentData(componentDataProp, currentMaterial);
+  const { data: componentData, dispatch } = useComponentData(componentDataProp, currentMaterial);
 
   // TODO move to common hooks
   useEffect(() => {
@@ -75,10 +79,16 @@ const Index: React.FC<IVectorProps> = props => {
     fetchMaterial(undefined);
   }, [fetchMaterial]);
 
-  const onQuestionTextChange = (question: string): void => {
-    // if (componentData) {
-    //   dispatch({ type: 'QUESTION_CHANGE', payload: question });
-    // }
+  const onQuestionTextChange = (text: string): void => {
+    if (componentData) {
+      dispatch({ type: 'QUESTION_TEXT_CHANGE', payload: text });
+    }
+  };
+
+  const onQuestionTextOnly = (checked: boolean): void => {
+    if (componentData) {
+      dispatch({ type: 'QUESTION_TEXT_ONLY', payload: checked });
+    }
   };
 
   const onAnswerTextChange = (answer: string): void => {
@@ -99,77 +109,84 @@ const Index: React.FC<IVectorProps> = props => {
   return (
     <ThemeProvider theme={theme}>
       <div style={{ flexGrow: 1, padding: '1rem' }}>
-        {/*{componentData && ( // need to wait componentData*/}
-        <Container>
-          <ContainerItem>
-            <Paper>
-              <EditableLabel
-                onChange={onQuestionTextChange}
-                // value={question.content.text}
-                value={'question'}
-                editMode={editMode}
-                cursorPointer={true}
-              />
-              <VectorCanvas
-                clear={true}
-                canvasId={'question'}
-                // objects={objects}
-                allowInput={true}
-                // updateAnswer={ans => this.props.onVectorChanged(ans[1].vector.x_component, ans[1].vector.y_component)}
-                // question={{ uuid: this.props.question }}
-              />
-              <FormControlLabel
-                control={<Checkbox checked={false} onChange={() => {}} name="checkedB" color="primary" />}
-                label="Question text only"
-              />
-              <br />
-              <FormControlLabel
-                control={<Checkbox checked={false} onChange={() => {}} name="checkedB" color="primary" />}
-                label="Null vector"
-              />
-            </Paper>
-          </ContainerItem>
-          <ContainerItem>
-            <Paper>
-              <EditableLabel
-                value={'answer'}
-                onChange={onAnswerTextChange}
-                // value={question.content.text}
-                editMode={editMode}
-                cursorPointer={true}
-              />
-              <VectorCanvas
-                clear={true}
-                canvasId={'answer'}
-                // objects={objects}
-                allowInput={true}
-                // updateAnswer={ans => this.props.onVectorChanged(ans[1].vector.x_component, ans[1].vector.y_component)}
-                // question={{ uuid: this.props.question }}
-              />
-              {/*VectorCanvas is not works for multiple components on the one page!*/}
-              <br />
-              <FormControlLabel
-                control={<Checkbox checked={false} onChange={() => {}} name="checkedB" color="primary" />}
-                label="Answer text only"
-              />
-              <br />
-              <FormControlLabel
-                control={<Checkbox checked={false} onChange={() => {}} name="checkedB" color="primary" />}
-                label="Null vector"
-              />
-              <br />
-              <FormControl>
-                <InputLabel id="demo-simple-select-label">To check:</InputLabel>
-                <Select labelId="demo-simple-select-label" id="demo-simple-select" value={10} onChange={() => {}}>
-                  <MenuItem value={10}>Full vector match</MenuItem>
-                  <MenuItem value={20}>Magnitude only</MenuItem>
-                  <MenuItem value={30}>Angle only</MenuItem>
-                </Select>
-              </FormControl>
-            </Paper>
-          </ContainerItem>
-        </Container>
-        {/*)}*/}
+        {componentData && ( // need to wait componentData
+          <Container>
+            <ContainerItem>
+              <Paper>
+                <Question editMode={editMode} question={componentData.question} onTextChange={onQuestionTextChange} />
+                <VectorCanvas
+                  clear={true}
+                  canvasId={'question'}
+                  // objects={objects}
+                  allowInput={true}
+                  // updateAnswer={ans => this.props.onVectorChanged(ans[1].vector.x_component, ans[1].vector.y_component)}
+                  // question={{ uuid: this.props.question }}
+                />
+                {editMode && (
+                  <React.Fragment>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={componentData.questionTextOnly}
+                          onChange={(e, checked) => {
+                            onQuestionTextOnly(checked);
+                          }}
+                          name="checkedB"
+                          color="primary"
+                        />
+                      }
+                      label="Question text only"
+                    />
+                    <br />
+                    <FormControlLabel
+                      control={<Checkbox checked={false} onChange={() => {}} name="checkedB" color="primary" />}
+                      label="Null vector"
+                    />
+                  </React.Fragment>
+                )}
+              </Paper>
+            </ContainerItem>
+            <ContainerItem>
+              <Paper>
+                <EditableLabel
+                  value={'answer'}
+                  onChange={onAnswerTextChange}
+                  // value={question.content.text}
+                  editMode={editMode}
+                  cursorPointer={true}
+                />
+                <VectorCanvas
+                  clear={true}
+                  canvasId={'answer'}
+                  // objects={objects}
+                  allowInput={true}
+                  // updateAnswer={ans => this.props.onVectorChanged(ans[1].vector.x_component, ans[1].vector.y_component)}
+                  // question={{ uuid: this.props.question }}
+                />
+                {/*VectorCanvas is not works for multiple components on the one page!*/}
+                <br />
+                <FormControlLabel
+                  control={<Checkbox checked={false} onChange={() => {}} name="checkedB" color="primary" />}
+                  label="Answer text only"
+                />
+                <br />
+                <FormControlLabel
+                  control={<Checkbox checked={false} onChange={() => {}} name="checkedB" color="primary" />}
+                  label="Null vector"
+                />
+                <br />
+                <FormControl>
+                  <InputLabel id="demo-simple-select-label">To check:</InputLabel>
+                  <Select labelId="demo-simple-select-label" id="demo-simple-select" value={10} onChange={() => {}}>
+                    <MenuItem value={10}>Full vector match</MenuItem>
+                    <MenuItem value={20}>Magnitude only</MenuItem>
+                    <MenuItem value={30}>Angle only</MenuItem>
+                  </Select>
+                </FormControl>
+              </Paper>
+            </ContainerItem>
+          </Container>
+        )}
       </div>
     </ThemeProvider>
   );
