@@ -112,6 +112,7 @@ const Index: React.FC<IVectorProps> = props => {
               />
               <VectorCanvas
                 clear={true}
+                canvasId={'question'}
                 // objects={objects}
                 allowInput={true}
                 // updateAnswer={ans => this.props.onVectorChanged(ans[1].vector.x_component, ans[1].vector.y_component)}
@@ -139,6 +140,7 @@ const Index: React.FC<IVectorProps> = props => {
               />
               <VectorCanvas
                 clear={true}
+                canvasId={'answer'}
                 // objects={objects}
                 allowInput={true}
                 // updateAnswer={ans => this.props.onVectorChanged(ans[1].vector.x_component, ans[1].vector.y_component)}

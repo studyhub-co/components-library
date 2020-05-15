@@ -275,7 +275,7 @@ export class VectorCanvas extends React.Component {
   }
 
   componentDidMount() {
-    this.canvas = new fabric.Canvas('c', {
+    this.canvas = new fabric.Canvas(this.props.canvasId, {
       selection: false,
       hasControls: false,
     });
@@ -514,7 +514,7 @@ export class VectorCanvas extends React.Component {
     // }
     return (
       <div>
-        <canvas id="c" width="300" height="300" className="lower-canvas" style={canvasStyle} />
+        <canvas id={this.props.canvasId} width="300" height="300" className="lower-canvas" style={canvasStyle} />
         <div>{nullBox}</div>
         {/* <div>{checkButton}</div> */}
         {/* {typeof this.props.continueBtn !== 'undefined' ? this.props.continueBtn : ''} */}

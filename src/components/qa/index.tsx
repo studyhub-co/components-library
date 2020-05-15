@@ -25,6 +25,8 @@ import { useComponentData } from './componentData';
 
 import { theme } from '../style';
 import { StyledChoiceButton } from './style';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IQAProps {
@@ -82,7 +84,7 @@ const Index: React.FC<IQAProps> = props => {
 
   const deleteChoice = (uuid: string): void => {
     // TODO delete choice from Data and reload Material
-    console.log(uuid);
+    dispatch({ type: 'DELETE_CHOICE', payload: uuid });
   };
 
   const onQuestionChange = (question: IQuestion): void => {
@@ -145,9 +147,16 @@ const Index: React.FC<IQAProps> = props => {
                   </React.Fragment>
                 ) : null}
                 {editMode && (
-                  <StyledChoiceButton onClick={onAddChoice} style={{ textAlign: 'center' }}>
-                    + Add answer
-                  </StyledChoiceButton>
+                  <div>
+                    <FormControlLabel
+                      control={<Checkbox checked={false} onChange={() => {}} name="checkedB" color="primary" />}
+                      label="Multi-select mode"
+                    />
+                    <br />
+                    <StyledChoiceButton onClick={onAddChoice} style={{ textAlign: 'center' }}>
+                      + Add answer
+                    </StyledChoiceButton>
+                  </div>
                 )}
               </Paper>
             </ContainerItem>

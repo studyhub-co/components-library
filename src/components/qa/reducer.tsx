@@ -13,9 +13,13 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
     // if (action.type === 'ADD_CHOICE') {
     //   // draft.numbers.push(Math.round(Math.random() * 1000));
     // }
-    // if (action.type === 'DELETE_CHOICE') {
-    //   // draft.numbers = [];
-    // }
+    if (action.type === 'DELETE_CHOICE') {
+      const choiceUUid = action.payload;
+      // draft.reducerData
+      draft.reducerData.choices = draft.reducerData.choices.filter(choice => {
+        return choice.uuid !== choiceUUid;
+      });
+    }
     if (action.type === 'QUESTION_CHANGE') {
       const question = action.payload;
       draft.reducerData.question = question;
