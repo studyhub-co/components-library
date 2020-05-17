@@ -14,6 +14,14 @@ export const mockQaBaseMaterial: Material = {
       },
       type: 'base',
     },
+    answer: {
+      content: {
+        text: 'this is the answer!',
+        image: '',
+        // hint: 'this is the hint',
+      },
+      type: 'base',
+    },
   } as QABaseData,
 };
 

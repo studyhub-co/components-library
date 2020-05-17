@@ -72,6 +72,20 @@ const Index: React.FC<IQAProps> = props => {
     }
   };
 
+  const onQuestionHintChange = (text: string): void => {
+    if (componentData) {
+      dispatch({ type: 'QUESTION_HINT_CHANGE', payload: text });
+    }
+  };
+
+  const onAnswerTextChange = (text: string): void => {
+    if (componentData) {
+      dispatch({ type: 'ANSWER_TEXT_CHANGE', payload: text });
+    }
+  };
+
+  console.log(componentData);
+
   return (
     <ThemeProvider theme={theme}>
       <div style={{ flexGrow: 1, padding: '1rem' }}>
@@ -79,11 +93,18 @@ const Index: React.FC<IQAProps> = props => {
           <Container>
             <ContainerItem>
               <Paper>
-                <Question editMode={editMode} question={componentData.question} onTextChange={onQuestionTextChange} />
+                <Question
+                  editMode={editMode}
+                  question={componentData.question}
+                  onTextChange={onQuestionTextChange}
+                  onHintChange={onQuestionHintChange}
+                />
               </Paper>
             </ContainerItem>
             <ContainerItem>
-              <Paper>Answer</Paper>
+              <Paper>
+                <Question editMode={editMode} question={componentData.answer} onTextChange={onAnswerTextChange} />
+              </Paper>
             </ContainerItem>
           </Container>
         )}

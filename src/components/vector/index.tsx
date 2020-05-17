@@ -163,26 +163,29 @@ const Index: React.FC<IVectorProps> = props => {
                   // updateAnswer={ans => this.props.onVectorChanged(ans[1].vector.x_component, ans[1].vector.y_component)}
                   // question={{ uuid: this.props.question }}
                 />
-                {/*VectorCanvas is not works for multiple components on the one page!*/}
                 <br />
-                <FormControlLabel
-                  control={<Checkbox checked={false} onChange={() => {}} name="checkedB" color="primary" />}
-                  label="Answer text only"
-                />
-                <br />
-                <FormControlLabel
-                  control={<Checkbox checked={false} onChange={() => {}} name="checkedB" color="primary" />}
-                  label="Null vector"
-                />
-                <br />
-                <FormControl>
-                  <InputLabel id="demo-simple-select-label">To check:</InputLabel>
-                  <Select labelId="demo-simple-select-label" id="demo-simple-select" value={10} onChange={() => {}}>
-                    <MenuItem value={10}>Full vector match</MenuItem>
-                    <MenuItem value={20}>Magnitude only</MenuItem>
-                    <MenuItem value={30}>Angle only</MenuItem>
-                  </Select>
-                </FormControl>
+                {editMode && (
+                  <React.Fragment>
+                    <FormControlLabel
+                      control={<Checkbox checked={false} onChange={() => {}} name="checkedB" color="primary" />}
+                      label="Answer text only"
+                    />
+                    <br />
+                    <FormControlLabel
+                      control={<Checkbox checked={false} onChange={() => {}} name="checkedB" color="primary" />}
+                      label="Null vector"
+                    />
+                    <br />
+                    <FormControl>
+                      <InputLabel id="demo-simple-select-label">To check:</InputLabel>
+                      <Select labelId="demo-simple-select-label" id="demo-simple-select" value={10} onChange={() => {}}>
+                        <MenuItem value={10}>Full vector match</MenuItem>
+                        <MenuItem value={20}>Magnitude only</MenuItem>
+                        <MenuItem value={30}>Angle only</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </React.Fragment>
+                )}
               </Paper>
             </ContainerItem>
           </Container>
