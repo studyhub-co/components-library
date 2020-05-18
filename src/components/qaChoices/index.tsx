@@ -93,6 +93,18 @@ const Index: React.FC<IQAProps> = props => {
     }
   };
 
+  const onQuestionHintChange = (image: string): void => {
+    if (componentData) {
+      dispatch({ type: 'QUESTION_HINT_CHANGE', payload: image });
+    }
+  };
+
+  const onQuestionImageChange = (image: string): void => {
+    if (componentData) {
+      dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
+    }
+  };
+
   const onChoiceChange = (newChoice: IChoice): void => {
     // if (componentData) {
     //   dispatch({ type: 'REPLACE_DATA', payload: newChoice });
@@ -123,7 +135,13 @@ const Index: React.FC<IQAProps> = props => {
           <Container>
             <ContainerItem>
               <Paper>
-                <Question editMode={editMode} question={componentData.question} onTextChange={onQuestionTextChange} />
+                <Question
+                  onHintChange={onQuestionHintChange}
+                  editMode={editMode}
+                  question={componentData.question}
+                  onTextChange={onQuestionTextChange}
+                  onImageChange={onQuestionImageChange}
+                />
               </Paper>
             </ContainerItem>
             <ContainerItem>

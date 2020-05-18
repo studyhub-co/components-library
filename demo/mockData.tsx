@@ -70,6 +70,14 @@ export const mockVectorMaterial: Material = {
       },
       type: 'base',
     },
+    answer: {
+      content: {
+        text: 'this is the answer!',
+        image: '',
+        // hint: 'this is the hint',
+      },
+      type: 'base',
+    },
     questionTextOnly: false,
     questionVector: {
       angle: 0,

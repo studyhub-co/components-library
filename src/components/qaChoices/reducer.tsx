@@ -8,7 +8,6 @@ export type IReducerObject = { reducerData: QAData | null };
 
 // TODO add action typings
 export const reducer = (state: IReducerObject, action: { type: string; payload: any }) => {
-  console.log(action.payload);
   return produce(state, (draft: { reducerData: QAData }) => {
     // if (action.type === 'ADD_CHOICE') {
     //   // draft.numbers.push(Math.round(Math.random() * 1000));
@@ -23,6 +22,10 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
     if (action.type === 'QUESTION_TEXT_CHANGE') {
       const text = action.payload;
       draft.reducerData.question.content.text = text;
+    }
+    if (action.type === 'QUESTION_HINT_CHANGE') {
+      const text = action.payload;
+      draft.reducerData.question.content.hint = text;
     }
     if (action.type === 'REPLACE_DATA') {
       draft.reducerData = action.payload;

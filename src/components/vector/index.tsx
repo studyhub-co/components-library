@@ -91,6 +91,18 @@ const Index: React.FC<IVectorProps> = props => {
     }
   };
 
+  const onQuestionImageChange = (image: string): void => {
+    if (componentData) {
+      dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
+    }
+  };
+
+  const onAnswerImageChange = (image: string): void => {
+    if (componentData) {
+      dispatch({ type: 'ANSWER_IMAGE_CHANGE', payload: image });
+    }
+  };
+
   const onAnswerTextChange = (answer: string): void => {
     // if (componentData) {
     //   dispatch({ type: 'QUESTION_CHANGE', payload: question });
@@ -113,7 +125,12 @@ const Index: React.FC<IVectorProps> = props => {
           <Container>
             <ContainerItem>
               <Paper>
-                <Question editMode={editMode} question={componentData.question} onTextChange={onQuestionTextChange} />
+                <Question
+                  editMode={editMode}
+                  question={componentData.question}
+                  onTextChange={onQuestionTextChange}
+                  onImageChange={onQuestionImageChange}
+                />
                 <VectorCanvas
                   clear={true}
                   canvasId={'question'}
@@ -148,12 +165,11 @@ const Index: React.FC<IVectorProps> = props => {
             </ContainerItem>
             <ContainerItem>
               <Paper>
-                <EditableLabel
-                  value={'answer'}
-                  onChange={onAnswerTextChange}
-                  // value={question.content.text}
+                <Question
                   editMode={editMode}
-                  cursorPointer={true}
+                  question={componentData.answer}
+                  onTextChange={onAnswerTextChange}
+                  onImageChange={onAnswerImageChange}
                 />
                 <VectorCanvas
                   clear={true}

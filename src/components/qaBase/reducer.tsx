@@ -15,11 +15,17 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
     }
     if (action.type === 'QUESTION_HINT_CHANGE') {
       const text = action.payload;
-      draft.reducerData.answer.content.hint = text;
+      draft.reducerData.question.content.hint = text;
     }
     if (action.type === 'ANSWER_TEXT_CHANGE') {
       const text = action.payload;
       draft.reducerData.answer.content.text = text;
+    }
+    if (action.type === 'QUESTION_IMAGE_CHANGE') {
+      draft.reducerData.question.content.image = action.payload;
+    }
+    if (action.type === 'ANSWER_IMAGE_CHANGE') {
+      draft.reducerData.answer.content.image = action.payload;
     }
     if (action.type === 'REPLACE_DATA') {
       draft.reducerData = action.payload;

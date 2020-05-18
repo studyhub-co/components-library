@@ -125,7 +125,7 @@ export class CanvasVector {
       angle: this.calcArrowAngle(this.line.x1, this.line.y1, snappedxCoordinate, snappedyCoordinate),
     });
     if (this.canvas) {
-      if (this.getVectorMagnitude() == 0) {
+      if (this.getVectorMagnitude() === 0) {
         this.canvas.remove(this.line);
         this.triangle.set({
           left: snappedxCoordinateArrowhead,

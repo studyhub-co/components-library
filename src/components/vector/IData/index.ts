@@ -5,7 +5,5 @@ export interface VectorData {
   question: Question;
   questionVector: Vector;
   questionTextOnly: boolean;
-  answer: {
-    text: string;
-  };
+  answer: Question;
 }

@@ -66,6 +66,7 @@ const Index: React.FC<IQAProps> = props => {
     fetchMaterial(undefined);
   }, [fetchMaterial]);
 
+  // TODO move dispatch and question related funcs to Question component
   const onQuestionTextChange = (text: string): void => {
     if (componentData) {
       dispatch({ type: 'QUESTION_TEXT_CHANGE', payload: text });
@@ -84,7 +85,19 @@ const Index: React.FC<IQAProps> = props => {
     }
   };
 
-  console.log(componentData);
+  const onQuestionImageChange = (image: string): void => {
+    if (componentData) {
+      dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
+    }
+  };
+
+  const onAnswerImageChange = (image: string): void => {
+    if (componentData) {
+      dispatch({ type: 'ANSWER_IMAGE_CHANGE', payload: image });
+    }
+  };
+
+  // console.log(componentData);
 
   return (
     <ThemeProvider theme={theme}>
@@ -98,12 +111,18 @@ const Index: React.FC<IQAProps> = props => {
                   question={componentData.question}
                   onTextChange={onQuestionTextChange}
                   onHintChange={onQuestionHintChange}
+                  onImageChange={onQuestionImageChange}
                 />
               </Paper>
             </ContainerItem>
             <ContainerItem>
               <Paper>
-                <Question editMode={editMode} question={componentData.answer} onTextChange={onAnswerTextChange} />
+                <Question
+                  editMode={editMode}
+                  question={componentData.answer}
+                  onTextChange={onAnswerTextChange}
+                  onImageChange={onAnswerImageChange}
+                />
               </Paper>
             </ContainerItem>
           </Container>
