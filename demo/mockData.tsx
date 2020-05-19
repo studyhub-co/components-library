@@ -10,7 +10,7 @@ export const mockQaBaseMaterial: Material = {
       content: {
         text: 'this is the question!',
         image: '',
-        hint: 'this is the hint',
+        hint: '',
       },
       type: 'base',
     },
@@ -32,7 +32,7 @@ export const mockQaChoicesMaterial: Material = {
       content: {
         text: 'this is the question!',
         image: '',
-        hint: 'this is the hint',
+        hint: '',
       },
       type: 'base',
     },
@@ -66,7 +66,7 @@ export const mockVectorMaterial: Material = {
       content: {
         text: 'this is the question!',
         image: '',
-        hint: 'this is the hint',
+        hint: '',
       },
       type: 'base',
     },

@@ -103,20 +103,17 @@ const Index: React.FC<IVectorProps> = props => {
     }
   };
 
-  const onAnswerTextChange = (answer: string): void => {
-    // if (componentData) {
-    //   dispatch({ type: 'QUESTION_CHANGE', payload: question });
-    // }
+  const onAnswerTextChange = (text: string): void => {
+    if (componentData) {
+      dispatch({ type: 'ANSWER_TEXT_CHANGE', payload: text });
+    }
   };
 
-  // const onChoiceChange = (newChoice: IChoice): void => {
-  //   // if (componentData) {
-  //   //   dispatch({ type: 'REPLACE_DATA', payload: newChoice });
-  //   //   // const choiceIndex = componentData.choices.findIndex(el => el.uuid === newChoice.uuid);
-  //   //   // componentData.choices[choiceIndex] = newChoice;
-  //   //   // setComponentData(componentData);
-  //   // }
-  // };
+  const onQuestionHintChange = (text: string): void => {
+    if (componentData) {
+      dispatch({ type: 'QUESTION_HINT_CHANGE', payload: text });
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -130,7 +127,9 @@ const Index: React.FC<IVectorProps> = props => {
                   question={componentData.question}
                   onTextChange={onQuestionTextChange}
                   onImageChange={onQuestionImageChange}
+                  onHintChange={onQuestionHintChange}
                 />
+                <br />
                 <VectorCanvas
                   clear={true}
                   canvasId={'question'}
@@ -171,6 +170,7 @@ const Index: React.FC<IVectorProps> = props => {
                   onTextChange={onAnswerTextChange}
                   onImageChange={onAnswerImageChange}
                 />
+                <br />
                 <VectorCanvas
                   clear={true}
                   canvasId={'answer'}

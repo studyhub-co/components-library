@@ -35,6 +35,7 @@ const BlueInput = withStyles({
 
 interface EditableLabelProps {
   value: string;
+  placeholder?: string;
   cursorPointer: boolean;
   editMode: boolean;
   onChange: (text: string) => void;
@@ -45,7 +46,7 @@ interface EditableLabelProps {
 // 2. MathJax
 // 3. handleInputKeyUp
 const EditableLabel: React.FC<EditableLabelProps> = props => {
-  const { value, editMode, onChange } = props;
+  const { value, editMode, onChange, placeholder } = props;
 
   const [state, setState] = React.useState({
     hovered: false,
@@ -68,6 +69,7 @@ const EditableLabel: React.FC<EditableLabelProps> = props => {
         onChange={e => {
           onChange(e.target.value);
         }}
+        placeholder={placeholder}
         defaultValue={value}
         readOnly={!editMode}
         inputProps={{

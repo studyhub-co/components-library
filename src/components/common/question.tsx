@@ -49,19 +49,12 @@ const Question: React.FC<IQuestionProps> = props => {
 
   return (
     <React.Fragment>
-      {question.content.text && (
-        <React.Fragment>
-          <EditableLabel
-            onChange={onTextChange}
-            value={question.content.text}
-            editMode={editMode}
-            cursorPointer={true}
-          />
-        </React.Fragment>
-      )}
+      <React.Fragment>
+        <EditableLabel onChange={onTextChange} value={question.content.text} editMode={editMode} cursorPointer={true} />
+      </React.Fragment>
       <br />
-      {editMode && question.content.image && imageSrc && <img src={imageSrc} />}
-      {editMode && !question.content.image && (
+      {!editMode && question.content.image && imageSrc && <img width={'100%'} src={imageSrc} />}
+      {editMode && (
         <React.Fragment>
           <input
             accept="image/*"
@@ -72,12 +65,22 @@ const Question: React.FC<IQuestionProps> = props => {
             onChange={selectImage}
           />
           <label htmlFor="select-img">
-            <FaFileImage style={{ cursor: 'pointer' }} size={'5rem'} />
+            {question.content.image && imageSrc ? (
+              <img width={'100%'} src={imageSrc} style={{ cursor: 'pointer' }} />
+            ) : (
+              <FaFileImage style={{ cursor: 'pointer' }} size={'5rem'} />
+            )}
           </label>
         </React.Fragment>
       )}
       {editMode && onHintChange && (
-        <EditableLabel onChange={onHintChange} value={question.content.hint} editMode={editMode} cursorPointer={true} />
+        <EditableLabel
+          placeholder="Hint text"
+          onChange={onHintChange}
+          value={question.content.hint}
+          editMode={editMode}
+          cursorPointer={true}
+        />
       )}
       {!editMode && question.content.hint && (
         <React.Fragment>
