@@ -1,5 +1,8 @@
 import produce from 'immer';
 import { QAData } from './IData/index';
+import { Choice as IChoice } from './IData/choices';
+
+import { uuidV4 } from '../../utils/index';
 
 // import { ReducerObject as IReducerObject, ComponentsData as IComponentsData } from '../hooks/IData';
 
@@ -9,12 +12,20 @@ export type IReducerObject = { reducerData: QAData | null };
 // TODO add action typings
 export const reducer = (state: IReducerObject, action: { type: string; payload: any }) => {
   return produce(state, (draft: { reducerData: QAData }) => {
-    // if (action.type === 'ADD_CHOICE') {
-    //   // draft.numbers.push(Math.round(Math.random() * 1000));
-    // }
+    if (action.type === 'ADD_CHOICE') {
+      const newChoice = {
+        content: {
+          image: '',
+          text: 'new answer',
+        },
+        type: 'base',
+        uuid: uuidV4(),
+        position: draft.reducerData.choices.length,
+      } as IChoice;
+      draft.reducerData.choices.push(newChoice);
+    }
     if (action.type === 'DELETE_CHOICE') {
       const choiceUUid = action.payload;
-      // draft.reducerData
       draft.reducerData.choices = draft.reducerData.choices.filter(choice => {
         return choice.uuid !== choiceUUid;
       });

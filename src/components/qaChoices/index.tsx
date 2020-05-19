@@ -10,8 +10,6 @@ import Paper from '../layout/Paper/index';
 
 import * as materialActionCreators from '../../redux/modules/material';
 
-import { uuidV4 } from '../../utils/index';
-
 import Question from '../common/question';
 import Choice from './choice';
 
@@ -83,7 +81,6 @@ const Index: React.FC<IQAProps> = props => {
   };
 
   const deleteChoice = (uuid: string): void => {
-    // TODO delete choice from Data and reload Material
     dispatch({ type: 'DELETE_CHOICE', payload: uuid });
   };
 
@@ -116,16 +113,9 @@ const Index: React.FC<IQAProps> = props => {
 
   const onAddChoice = (): void => {
     // Add choice to data
-    // if (componentData) {
-    //   // TODO move to redux
-    //   componentData.choices.push({
-    //     uuid: uuidV4(),
-    //     content: { text: '' },
-    //     position: componentData.choices.length,
-    //     type: 'base',
-    //   } as IChoice);
-    //   // setComponentData(componentData);
-    // }
+    if (componentData) {
+      dispatch({ type: 'ADD_CHOICE', payload: {} });
+    }
   };
 
   return (
