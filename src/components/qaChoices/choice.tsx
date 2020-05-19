@@ -66,6 +66,11 @@ const Choice: React.FC<ChoiceProps> = props => {
     onChange(choice);
   };
 
+  const onImageChange = (image: string) => {
+    // choice.content.text = text;
+    // onChange(choice);
+  };
+
   return (
     <StyledChoiceButton style={{ flexGrow: 1 }} onClick={handleChange} onMouseOver={onHover} onMouseOut={onHover}>
       <Grid container direction="row" justify="center" alignItems="center">
@@ -76,15 +81,6 @@ const Choice: React.FC<ChoiceProps> = props => {
                 <FaTrashAlt onClick={onDeleteChoiceClick} />
               </div>
               <span style={{ display: editMode && state.hovered ? 'none' : 'block' }}>{index}</span>
-              {/*following variant has flicker due icon is not mount to parent StyledChoiceButton*/}
-              {/*{editMode && state.hovered ? (*/}
-              {/*  <span title="Delete answer">*/}
-              {/*    <FaTrashAlt onClick={onDeleteChoiceClick} />*/}
-              {/*  </span>*/}
-              {/*) : (*/}
-              {/*  index*/}
-              {/*)}*/}
-              {/*</ChoiceIndex>*/}
             </Grid>
             <Grid item xs={3}>
               <BlueRadio
@@ -100,7 +96,9 @@ const Choice: React.FC<ChoiceProps> = props => {
           <EditableLabel onChange={onTextChange} value={choice.content.text} editMode={editMode} cursorPointer={true} />
         </Grid>
         <Grid item xs={2} md={1}>
-          <EditableThumbnail value={''} showAddImageIcon={state.hovered} editMode={editMode} />
+          <span style={{ display: editMode && state.hovered ? 'block' : 'none' }}>
+            <EditableThumbnail image={choice.content.image} editMode={editMode} onImageChange={onImageChange} />
+          </span>
         </Grid>
       </Grid>
     </StyledChoiceButton>

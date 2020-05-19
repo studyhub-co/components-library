@@ -8,6 +8,7 @@ import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { FaFileImage } from 'react-icons/fa';
+import EditableThumbnail from '../editable/thumbnail';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IQuestionProps {
@@ -24,28 +25,29 @@ const Question: React.FC<IQuestionProps> = props => {
   const { question, onTextChange, editMode, onHintChange, onImageChange } = props;
 
   const [showHint, setShowHint] = useState(false);
-  const [imageSrc, setImageSrc] = useState<string>('');
+  // const [imageSrc, setImageSrc] = useState<string>('');
 
   const handleShowHintChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setShowHint(event.target.checked);
   };
 
-  const selectImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    if (event.target.files && event.target.files.length > 0) {
-      onImageChange(event.target.files[0]);
-    }
-  };
-
-  useEffect(() => {
-    if (
-      question.content.image &&
-      question.content.image instanceof File &&
-      question.content.image.type.startsWith('image/')
-    ) {
-      const objectUrl = URL.createObjectURL(question.content.image);
-      setImageSrc(objectUrl);
-    }
-  }, [question.content.image]);
+  // const selectImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  //   if (event.target.files && event.target.files.length > 0) {
+  //     onImageChange(event.target.files[0]);
+  //   }
+  // };
+  //
+  // useEffect(() => {
+  //   if (
+  //     question.content.image &&
+  //     question.content.image instanceof File &&
+  //     question.content.image.type.startsWith('image/')
+  //   ) {
+  //     const objectUrl = URL.createObjectURL(question.content.image);
+  //     setImageSrc(objectUrl);
+  //   }
+  // }, [question.content.image]);
+  // console.log(onImageChange);
 
   return (
     <React.Fragment>
@@ -53,26 +55,27 @@ const Question: React.FC<IQuestionProps> = props => {
         <EditableLabel onChange={onTextChange} value={question.content.text} editMode={editMode} cursorPointer={true} />
       </React.Fragment>
       <br />
-      {!editMode && question.content.image && imageSrc && <img width={'100%'} src={imageSrc} />}
-      {editMode && (
-        <React.Fragment>
-          <input
-            accept="image/*"
-            style={{ display: 'none' }}
-            id="select-img"
-            multiple
-            type="file"
-            onChange={selectImage}
-          />
-          <label htmlFor="select-img">
-            {question.content.image && imageSrc ? (
-              <img width={'100%'} src={imageSrc} style={{ cursor: 'pointer' }} />
-            ) : (
-              <FaFileImage style={{ cursor: 'pointer' }} size={'5rem'} />
-            )}
-          </label>
-        </React.Fragment>
-      )}
+      <EditableThumbnail editMode={editMode} image={question.content.image} onImageChange={onImageChange} />
+      {/*{!editMode && question.content.image && imageSrc && <img width={'100%'} src={imageSrc} />}*/}
+      {/*{editMode && (*/}
+      {/*  <React.Fragment>*/}
+      {/*    <input*/}
+      {/*      accept="image/*"*/}
+      {/*      style={{ display: 'none' }}*/}
+      {/*      id="select-img"*/}
+      {/*      multiple*/}
+      {/*      type="file"*/}
+      {/*      onChange={selectImage}*/}
+      {/*    />*/}
+      {/*    <label htmlFor="select-img">*/}
+      {/*      {question.content.image && imageSrc ? (*/}
+      {/*        <img width={'100%'} src={imageSrc} style={{ cursor: 'pointer' }} />*/}
+      {/*      ) : (*/}
+      {/*        <FaFileImage style={{ cursor: 'pointer' }} size={'5rem'} />*/}
+      {/*      )}*/}
+      {/*    </label>*/}
+      {/*  </React.Fragment>*/}
+      {/*)}*/}
       {editMode && onHintChange && (
         <EditableLabel
           placeholder="Hint text"
