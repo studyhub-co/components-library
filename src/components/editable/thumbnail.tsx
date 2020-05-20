@@ -50,12 +50,8 @@ const EditableThumbnail: React.FC<EditableThumbnailProps> = props => {
   }, [image]);
 
   const selectImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    // console.log(event.target.files);
     if (event.target.files && event.target.files.length > 0) {
-      console.log(onImageChange);
-
       onImageChange(event.target.files[0]);
-      // console.log(event.target.files);
     }
   };
 

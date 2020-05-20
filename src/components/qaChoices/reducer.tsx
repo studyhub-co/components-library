@@ -30,13 +30,28 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
         return choice.uuid !== choiceUUid;
       });
     }
+    if (action.type === 'CHOICE_TEXT_CHANGE') {
+      const { uuid, text } = action.payload;
+      const choice = draft.reducerData.choices.find(x => x.uuid === uuid);
+      if (choice) {
+        choice.content.text = text;
+      }
+    }
+    if (action.type === 'CHOICE_IMAGE_CHANGE') {
+      const { uuid, image } = action.payload;
+      const choice = draft.reducerData.choices.find(x => x.uuid === uuid);
+      if (choice) {
+        choice.content.image = image;
+      }
+    }
     if (action.type === 'QUESTION_TEXT_CHANGE') {
-      const text = action.payload;
-      draft.reducerData.question.content.text = text;
+      draft.reducerData.question.content.text = action.payload;
     }
     if (action.type === 'QUESTION_HINT_CHANGE') {
-      const text = action.payload;
-      draft.reducerData.question.content.hint = text;
+      draft.reducerData.question.content.hint = action.payload;
+    }
+    if (action.type === 'QUESTION_IMAGE_CHANGE') {
+      draft.reducerData.question.content.image = action.payload;
     }
     if (action.type === 'REPLACE_DATA') {
       draft.reducerData = action.payload;

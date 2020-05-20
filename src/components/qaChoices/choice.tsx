@@ -6,6 +6,10 @@ import Radio, { RadioProps } from '@material-ui/core/Radio';
 import Grid from '@material-ui/core/Grid';
 
 import { withStyles, makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Typography from '@material-ui/core/Typography';
 
 import { StyledChoiceButton } from './style';
 import EditableLabel from '../editable/label';
@@ -14,7 +18,9 @@ import { Choice as IChoice } from './IData/choices';
 
 type onSelectType = (uuid: string) => void;
 type deleteChoice = (uuid: string) => void;
-type onChange = (choice: IChoice) => void;
+// type onChange = (choice: IChoice) => void;
+type onImageChange = (file: File) => void;
+type onTextChange = (text: string) => void;
 
 interface ChoiceProps {
   choice: IChoice;
@@ -22,9 +28,24 @@ interface ChoiceProps {
   editMode: boolean;
   onSelect: onSelectType;
   selected: boolean;
+  cardMode: boolean;
   deleteChoice: deleteChoice;
-  onChange: onChange;
+  // onChange: onChange;
+  onImageChange: onImageChange;
+  onTextChange: onTextChange;
 }
+
+// card styles
+const useCardStyles = makeStyles({
+  root: {
+    maxWidth: '15rem',
+    display: 'inline-block',
+    margin: '1rem',
+  },
+  media: {
+    height: '10rem',
+  },
+});
 
 const BlueRadio = withStyles({
   root: {
@@ -37,7 +58,8 @@ const BlueRadio = withStyles({
 })((props: RadioProps) => <Radio color="default" {...props} />);
 
 const Choice: React.FC<ChoiceProps> = props => {
-  const { choice, index, editMode, onSelect, deleteChoice, onChange } = props;
+  const { choice, index, editMode, onSelect, deleteChoice, onImageChange, onTextChange, cardMode } = props;
+  // const { choice, index, editMode, onSelect, deleteChoice, onChange } = props;
   // const classesRadio = useRadioStyle();
 
   const [state, setState] = React.useState({
@@ -61,17 +83,30 @@ const Choice: React.FC<ChoiceProps> = props => {
     }
   };
 
-  const onTextChange = (text: string) => {
-    choice.content.text = text;
-    onChange(choice);
-  };
+  // const onTextChange = (text: string) => {
+  //   choice.content.text = text;
+  //   onChange(choice);
+  // };
+  //
+  // const onImageChange = (image: string) => {
+  //   // choice.content.text = text;
+  //   // onChange(choice);
+  // };
 
-  const onImageChange = (image: string) => {
-    // choice.content.text = text;
-    // onChange(choice);
-  };
+  const cardClasses = useCardStyles();
 
-  return (
+  // return cardMode ? (
+  return true ? (
+    <Card className={cardClasses.root}>
+      <CardMedia className={cardClasses.media} image="" title="Contemplative Reptile" />
+      <CardContent>
+        <Typography variant="body2" color="textSecondary" component="p">
+          Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents
+          except Antarctica
+        </Typography>
+      </CardContent>
+    </Card>
+  ) : (
     <StyledChoiceButton style={{ flexGrow: 1 }} onClick={handleChange} onMouseOver={onHover} onMouseOut={onHover}>
       <Grid container direction="row" justify="center" alignItems="center">
         <Grid item xs={2} md={1}>

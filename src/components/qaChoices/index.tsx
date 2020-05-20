@@ -46,6 +46,7 @@ const Index: React.FC<IQAProps> = props => {
   // });
   const [selectedChoiceUuid, setSelectedChoiceUuid] = useState('');
   const [editMode, setEditMode] = useState(editModeProp);
+  const [cardMode, setCardMode] = useState(false);
 
   const { data: componentData, dispatch } = useComponentData(componentDataProp, currentMaterial);
 
@@ -76,12 +77,23 @@ const Index: React.FC<IQAProps> = props => {
     fetchMaterial(undefined);
   }, [fetchMaterial]);
 
+  useEffect(() => {
+    // if we have at least one image in choice enable cardMode
+    if (componentData) {
+      let cardMode = false;
+      cardMode = componentData.choices.some(choice => choice.content.image);
+      setCardMode(cardMode);
+    }
+  }, [componentData]);
+
   const selectChoiceUuid = (uuid: string): void => {
     setSelectedChoiceUuid(uuid);
   };
 
   const deleteChoice = (uuid: string): void => {
-    dispatch({ type: 'DELETE_CHOICE', payload: uuid });
+    if (componentData) {
+      dispatch({ type: 'DELETE_CHOICE', payload: uuid });
+    }
   };
 
   const onQuestionTextChange = (text: string): void => {
@@ -102,13 +114,18 @@ const Index: React.FC<IQAProps> = props => {
     }
   };
 
-  const onChoiceChange = (newChoice: IChoice): void => {
-    // if (componentData) {
-    //   dispatch({ type: 'REPLACE_DATA', payload: newChoice });
-    //   // const choiceIndex = componentData.choices.findIndex(el => el.uuid === newChoice.uuid);
-    //   // componentData.choices[choiceIndex] = newChoice;
-    //   // setComponentData(componentData);
-    // }
+  const onChoiceImageChange = (uuid: string, image: File): void => {
+    if (componentData) {
+      const newChoice = { uuid, image };
+      dispatch({ type: 'CHOICE_IMAGE_CHANGE', payload: newChoice });
+    }
+  };
+
+  const onChoiceTextChange = (uuid: string, text: string): void => {
+    if (componentData) {
+      const newChoice = { uuid, text };
+      dispatch({ type: 'CHOICE_TEXT_CHANGE', payload: newChoice });
+    }
   };
 
   const onAddChoice = (): void => {
@@ -145,7 +162,13 @@ const Index: React.FC<IQAProps> = props => {
                           onSelect={uuid => selectChoiceUuid(uuid)}
                           editMode={editMode}
                           deleteChoice={deleteChoice}
-                          onChange={onChoiceChange}
+                          onImageChange={image => {
+                            onChoiceImageChange(choice.uuid, image);
+                          }}
+                          onTextChange={text => {
+                            onChoiceTextChange(choice.uuid, text);
+                          }}
+                          cardMode={cardMode}
                           key={choice.uuid}
                           index={index + 1}
                           choice={choice}
