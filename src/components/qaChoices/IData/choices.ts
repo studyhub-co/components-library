@@ -2,7 +2,7 @@ import { Question } from '../../common/IData/question';
 
 interface ChoiceContent {
   text: string;
-  image: string;
+  image: string | File;
 }
 
 export interface Choice {

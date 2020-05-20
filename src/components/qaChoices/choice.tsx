@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { FaTrashAlt } from 'react-icons/fa';
 
@@ -41,9 +41,17 @@ const useCardStyles = makeStyles({
     maxWidth: '15rem',
     display: 'inline-block',
     margin: '1rem',
+    cursor: 'pointer',
   },
   media: {
     height: '10rem',
+    overflow: 'hidden',
+  },
+  controls: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingRight: '0.5rem',
   },
 });
 
@@ -65,6 +73,19 @@ const Choice: React.FC<ChoiceProps> = props => {
   const [state, setState] = React.useState({
     hovered: false,
   });
+  // const [imageSrc, setImageSrc] = useState<string>('');
+
+  // useEffect(() => {
+  //   if (
+  //     choice &&
+  //     choice.content &&
+  //     choice.content.image instanceof File &&
+  //     choice.content.image.type.startsWith('image/')
+  //   ) {
+  //     const objectUrl = URL.createObjectURL(choice.content.image);
+  //     setImageSrc(objectUrl);
+  //   }
+  // }, [choice]);
 
   const onDeleteChoiceClick = (e: any): void => {
     e.stopPropagation(); // do not select choice
@@ -77,10 +98,14 @@ const Choice: React.FC<ChoiceProps> = props => {
 
   const onHover = (): void => {
     if (editMode) {
-      setState({ hovered: !state.hovered });
+      setState({ hovered: true });
     } else {
       setState({ hovered: false });
     }
+  };
+
+  const onHoverOut = (): void => {
+    setState({ hovered: false });
   };
 
   // const onTextChange = (text: string) => {
@@ -95,19 +120,39 @@ const Choice: React.FC<ChoiceProps> = props => {
 
   const cardClasses = useCardStyles();
 
-  // return cardMode ? (
-  return true ? (
-    <Card className={cardClasses.root}>
-      <CardMedia className={cardClasses.media} image="" title="Contemplative Reptile" />
+  return cardMode ? (
+    // return true ? (
+    <Card className={cardClasses.root} onClick={handleChange} onMouseOver={onHover} onMouseOut={onHoverOut}>
+      {/*{imageSrc ? (*/}
+      {/*  <CardMedia className={cardClasses.media} image={imageSrc} />*/}
+      {/*) : (*/}
+      {/*  <CardMedia className={cardClasses.media}></CardMedia>*/}
+      {/*)}*/}
+      <CardMedia className={cardClasses.media}>
+        <EditableThumbnail image={choice.content.image} editMode={editMode} onImageChange={onImageChange} />
+      </CardMedia>
       <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
-          Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents
-          except Antarctica
+        <Typography variant="body2" color="textSecondary" component="div">
+          <EditableLabel onChange={onTextChange} value={choice.content.text} editMode={editMode} cursorPointer={true} />
         </Typography>
       </CardContent>
+      <div className={cardClasses.controls}>
+        <BlueRadio
+          checked={props.selected}
+          onChange={handleChange}
+          // style={{ marginLeft: '5%' }}
+          // inputProps={{ 'aria-label': 'B' }}
+        />
+        <span>
+          <div title="Delete answer" style={{ display: editMode && state.hovered ? 'block' : 'none' }}>
+            <FaTrashAlt onClick={onDeleteChoiceClick} />
+          </div>
+          <span style={{ display: editMode && state.hovered ? 'none' : 'block' }}>{index}</span>
+        </span>
+      </div>
     </Card>
   ) : (
-    <StyledChoiceButton style={{ flexGrow: 1 }} onClick={handleChange} onMouseOver={onHover} onMouseOut={onHover}>
+    <StyledChoiceButton style={{ flexGrow: 1 }} onClick={handleChange} onMouseOver={onHover} onMouseOut={onHoverOut}>
       <Grid container direction="row" justify="center" alignItems="center">
         <Grid item xs={2} md={1}>
           <Grid container direction="row" alignItems="center">
