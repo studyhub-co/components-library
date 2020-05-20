@@ -11,13 +11,14 @@
     "allowJs": true,
     "checkJs": false,
     "module": "esnext",
+    "outDir": "declarations",
     "moduleResolution": "node",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
-    ],
-    "noEmit": true
+    ]
+    // "noEmit": true
   },
   "exclude": [
     "node_modules",
@@ -30,7 +31,9 @@
     "acceptance-tests",
     "webpack",
     "jest",
-    "src/setupTests.ts"
+    "src/setupTests.ts",
+    "**/*.jsx",
+    "src/components/vector/vectorCanvas.jsx"
   ],
   "include": [
     "src"
