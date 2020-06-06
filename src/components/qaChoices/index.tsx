@@ -13,12 +13,12 @@ import * as materialActionCreators from '../../redux/modules/material';
 import Question from '../common/question';
 import Choice from './choice';
 
-// import { Question as IQuestion } from '../common/IData/question';
 import { Choice as IChoice } from './IData/choices';
 import { QAData as IQAData } from './IData/index';
 
 // hook to work with componentData
 // import { useComponentData } from '../hooks/componentData';
+// import { reducer } from './reducer';
 import { useComponentData } from './componentData';
 
 import { theme } from '../style';
@@ -49,6 +49,7 @@ const Index: React.FC<IQAProps> = props => {
   const [cardMode, setCardMode] = useState(false);
 
   const { data: componentData, dispatch } = useComponentData(componentDataProp, currentMaterial);
+  // const { data: componentData, dispatch } = useComponentData(reducer, componentDataProp, currentMaterial);
 
   useEffect(() => {
     // catch parent event inside iframe

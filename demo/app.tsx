@@ -1,46 +1,52 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-
-import QAChoices from '../src/components/qaChoices';
-import QABase from '../src/components/qaBase';
-import Vector from '../src/components/vector';
-import { theme } from '../src/components/style';
-import { ThemeProvider } from '@material-ui/styles';
-import { mockQaChoicesMaterial, mockVectorMaterial, mockQaBaseMaterial } from './mockData';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Components from './components';
+import Student from './student';
 
 const App: React.FC = () => {
-  // const textInput = createRef<HTMLInputElement>();
-  // function addTodo(e: React.KeyboardEvent<HTMLInputElement>): void {
-  //
-  // }
+  const [tabIndex, setTabIndex] = React.useState(0);
 
-  const [state, setState] = React.useState({
-    checkedEditMode: false,
-  });
-
-  const handleEditModeChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, checkedEditMode: event.target.checked });
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    setTabIndex(newValue);
   };
 
-  return (
-    <ThemeProvider theme={theme}>
-      <div>
-        <FormControlLabel
-          control={
-            <Switch checked={state.checkedEditMode} color="primary" onChange={handleEditModeChange()} value="" />
-          }
-          label="Edit Mode"
-        />
-        <h1>Q&A Base</h1>
-        <QABase componentData={mockQaBaseMaterial.data} editMode={state.checkedEditMode} />
-        <h1>Q&A Choices</h1>
-        <QAChoices componentData={mockQaChoicesMaterial.data} editMode={state.checkedEditMode} />
-        <h1>Vector</h1>
-        <Vector componentData={mockVectorMaterial.data} editMode={state.checkedEditMode} />
+  interface TabPanelProps {
+    children?: React.ReactNode;
+    index: any;
+    value: any;
+  }
+
+  function TabPanel(props: TabPanelProps) {
+    const { children, value, index, ...other } = props;
+
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && children}
       </div>
-    </ThemeProvider>
+    );
+  }
+
+  return (
+    <div>
+      <Tabs value={tabIndex} onChange={handleChange} indicatorColor="primary" textColor="primary" centered>
+        <Tab label="Components demo" />
+        <Tab label="Student process demo" />
+      </Tabs>
+      <TabPanel value={tabIndex} index={0}>
+        <Components />
+      </TabPanel>
+      <TabPanel value={tabIndex} index={1}>
+        <Student />
+      </TabPanel>
+    </div>
   );
 };
 

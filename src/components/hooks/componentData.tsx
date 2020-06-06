@@ -1,42 +1,40 @@
-import React, { useState, useEffect, useReducer } from 'react';
-
-// import { ComponentsData as IComponentsData, ReducerObject as IReducerObject } from '../hooks/IData';
+import React, { useEffect, useReducer } from 'react';
 //
-// import { reducer } from '../qa/reducer';
+// import { QABaseData as IQABaseData } from '../qaBase/IData/index';
+// import { QAData as IQChoicesAData } from '../qaChoices/IData/index';
+// import { VectorData as IVectorData } from '../vector/IData/index';
+//
+// export type IReducerObject = { reducerData: IQABaseData | IQChoicesAData | IVectorData | null };
+//
+// // 1. operates componentData (defined as prop or currentMaterial.data)
+// // 2. validate componentData with selected interfaces
+// // 3. manipulate data (pre redux)
+//
+// type Reducer<S, A> = (prevState: S, action: A) => S;
 //
 // // export function useComponentData(reducer: any, componentData: IComponentsData, currentMaterial: any) {
-// export function useComponentData(componentData: IComponentsData, currentMaterial: any) {
-//   // const initialState: IReducerObject = { data: null };
-//   const [data, dispatch] = useReducer(reducer, { data: null });
+// export function useComponentData(
+//   reducer: Reducer<IReducerObject, any>, // to change with out reducers types
+//   componentData: IQABaseData | IQChoicesAData | IVectorData,
+//   currentMaterial: any,
+// ) {
+//   // const initialState: IReducerObject = { reducerData: null };
+//   const initialState: any = { reducerData: null };
+//   const [data, dispatch] = useReducer(reducer, initialState);
 //
 //   useEffect((): void => {
-//     let initialData: IComponentsData = null;
+//     let initialData: IQABaseData | IQChoicesAData | IVectorData | null = null;
 //     if (currentMaterial && currentMaterial.data) {
+//       // set component data from loaded currentMaterial
 //       initialData = currentMaterial.data;
 //     } else if (componentData) {
+//       // set component data from component props
 //       initialData = componentData;
 //     }
-//     if (!data.data && initialData) {
+//     if (!data.reducerData && initialData) {
 //       dispatch({ type: 'REPLACE_DATA', payload: initialData });
 //     }
-//   }, [componentData, currentMaterial]);
+//   }, [componentData, currentMaterial, data.reducerData]);
 //
-//   // useEffect((): void => {
-//   //   if (currentMaterial && currentMaterial.data) {
-//   //     setData(currentMaterial.data);
-//   //   } else if (componentData) {
-//   //     setData(componentData);
-//   //   }
-//   // }, [componentData, currentMaterial]);
-//
-//   // 1. uses by all components
-//   // 2. operate componentData (defined as prop or currentMaterial.data)
-//   // 3. validate componentData with selected interfaces
-//   // 4. manipulate data (pre redux save material)
-//
-//   console.log(data);
-//
-//   return { data: data.data, dispatch };
-//   // return [data, setComponentData];
-//   // return [data.data, dispatch];
+//   return { data: data.reducerData, dispatch };
 // }

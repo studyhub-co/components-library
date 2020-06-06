@@ -14,7 +14,7 @@ import { QABaseData as IQABaseData } from './IData/index';
 
 import Question from '../common/question';
 
-import { Question as IQuestion } from '../common/IData/question';
+// import { Question as IQuestion } from '../common/IData/question';
 
 // hook to work with componentData
 import { useComponentData } from './componentData';
@@ -62,9 +62,10 @@ const Index: React.FC<IQAProps> = props => {
     }
   }, [editModeProp]);
 
-  useEffect(() => {
-    fetchMaterial(undefined);
-  }, [fetchMaterial]);
+  // TODO we don't know component type at this step, we need generic component type
+  // useEffect(() => {
+  //   fetchMaterial(undefined);
+  // }, [fetchMaterial]);
 
   // TODO move dispatch and question related funcs to Question component
   const onQuestionTextChange = (text: string): void => {

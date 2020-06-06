@@ -28,6 +28,7 @@ const fetchingMaterialSuccess = (material: Material) => {
 // actions
 export const fetchMaterial = (uuid: string | undefined) => {
   return (dispatch: any) => {
+    console.log('fetch');
     // dispatch(fetchingMaterial());
     // todo API get call with JSON data validation
     // dispatch(fetchingMaterialSuccess(mockMaterial));
