@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Switch from '@material-ui/core/Switch';
@@ -23,14 +23,14 @@ const Student: React.FC = () => {
   // load 1st material, get mat type and switch to related component?
   // we need data only from selected materials
 
-  // const problemTypeActions = useActions(materialActionCreators);
-
-  // console.log(problemTypeActions);
-
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     contentEditMode: false,
     currentMaterialUuid: materialsUuids[0],
   });
+
+  useEffect(() => {
+    materialActionCreators.fetchMaterial(state.currentMaterialUuid);
+  }, []);
 
   const handleContentEditModeChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, contentEditMode: event.target.checked });
@@ -57,7 +57,6 @@ const Student: React.FC = () => {
 
 export default connect(
   (state: any) => {
-    console.log(state);
     return { currentMaterial: state.material };
   },
   dispatch => bindActionCreators(materialActionCreators, dispatch),

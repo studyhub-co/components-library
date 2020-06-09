@@ -75,9 +75,10 @@ const Index: React.FC<IVectorProps> = props => {
     }
   }, [editModeProp]);
 
-  useEffect(() => {
-    fetchMaterial(undefined);
-  }, [fetchMaterial]);
+  // loaded in generic component type
+  // useEffect(() => {
+  //   fetchMaterial(undefined);
+  // }, [fetchMaterial]);
 
   const onQuestionTextChange = (text: string): void => {
     if (componentData) {

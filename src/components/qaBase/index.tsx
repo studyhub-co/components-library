@@ -62,7 +62,7 @@ const Index: React.FC<IQAProps> = props => {
     }
   }, [editModeProp]);
 
-  // TODO we don't know component type at this step, we need generic component type
+  // loaded in generic component type
   // useEffect(() => {
   //   fetchMaterial(undefined);
   // }, [fetchMaterial]);

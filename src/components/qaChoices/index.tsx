@@ -74,9 +74,10 @@ const Index: React.FC<IQAProps> = props => {
     }
   }, [editModeProp]);
 
-  useEffect(() => {
-    fetchMaterial(undefined);
-  }, [fetchMaterial]);
+  // loaded in generic component type
+  // useEffect(() => {
+  //   fetchMaterial(undefined);
+  // }, [fetchMaterial]);
 
   useEffect(() => {
     // if we have at least one image in choice enable cardMode

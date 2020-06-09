@@ -1,11 +1,16 @@
 import { MATERIAL_FETCHING, MATERIAL_FETCHING_SUCCESS } from './constants';
 import { Material } from '../../models/';
 
+import apiFactory, { Api } from './apiFactory';
+
 // import { QAData } from '../../components/qa/IData/index';
 
 // class MaterialRedux extends Material {
 //   public isFetching!: boolean;
 // }
+
+// todo make it configurable for lib user
+const BACKEND_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1/studio/';
 
 export interface MaterialRedux extends Material {
   isFetching: boolean;
@@ -26,10 +31,12 @@ const fetchingMaterialSuccess = (material: Material) => {
 };
 
 // actions
-export const fetchMaterial = (uuid: string | undefined) => {
+// export const fetchMaterial = (uuid: string | undefined) => {
+export const fetchMaterial = (uuid: string) => {
   return (dispatch: any) => {
-    console.log('fetch');
-    // dispatch(fetchingMaterial());
+    // todo move api creation to js module level
+    const api: Api = apiFactory(BACKEND_SERVER_API_URL);
+    dispatch(fetchingMaterial());
     // todo API get call with JSON data validation
     // dispatch(fetchingMaterialSuccess(mockMaterial));
   };

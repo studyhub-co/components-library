@@ -180,6 +180,7 @@
     "extends": "react-app"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "fabric": "^3.6.3",
     "immer": "^6.0.3"
   }
