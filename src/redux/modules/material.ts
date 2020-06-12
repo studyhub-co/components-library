@@ -37,8 +37,11 @@ export const fetchMaterial = (uuid: string) => {
     // todo move api creation to js module level
     const api: Api = apiFactory(BACKEND_SERVER_API_URL);
     dispatch(fetchingMaterial());
-    // todo API get call with JSON data validation
-    // dispatch(fetchingMaterialSuccess(mockMaterial));
+    const url = `materials/${uuid}/`;
+    api.get<Material>(url, {}).then((result: Material) => {
+      // todo API get call with JSON data validation
+      dispatch(fetchingMaterialSuccess(result));
+    });
   };
 };
 

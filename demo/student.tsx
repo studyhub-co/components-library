@@ -7,41 +7,46 @@ import { Paper } from '@material-ui/core';
 
 import * as materialActionCreators from '../src/redux/modules/material';
 
-import GenericComponent from '../src/components/generic';
+// import GenericComponent from './generic';
+import QAChoices from '../src/components/qaChoices';
+import QABase from '../src/components/qaBase';
+import Vector from '../src/components/vector';
 
 const BACKEND_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1/studio/';
-// const BACKEND_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1/studio/materials/'
-// const BACKEND_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1/studio/material-problem-type/'
-const materialsUuids = [
-  '2364969a-1516-493a-a5c8-1af2dd16a99f',
-  '0b012143-de14-46bd-9692-b52696951b42',
-  '5fb38617-c0d3-4f4e-9c8b-e13e74570ca5',
-];
+
+// we need to set Material component type, because we don't use sandbox code (we use Component directly)
+const materialsUuids = {
+  '2364969a-1516-493a-a5c8-1af2dd16a99f': QAChoices,
+  '0b012143-de14-46bd-9692-b52696951b42': Vector,
+  '5fb38617-c0d3-4f4e-9c8b-e13e74570ca5': QABase,
+};
 
 const Student: React.FC = () => {
   // TODO
-  // load 1st material, get mat type and switch to related component?
   // we need data only from selected materials
 
   const [state, setState] = useState({
     contentEditMode: false,
-    currentMaterialUuid: materialsUuids[0],
+    // currentMaterialUuid: materialsUuids[0],
+    currentMaterialUuid: Object.keys(materialsUuids)[0],
   });
 
   useEffect(() => {
     materialActionCreators.fetchMaterial(state.currentMaterialUuid);
-  }, []);
+  }, [state.currentMaterialUuid]);
 
   const handleContentEditModeChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, contentEditMode: event.target.checked });
   };
+
+  const GenericComponent = materialsUuids[state.currentMaterialUuid];
 
   return (
     <div>
       <Paper style={{ padding: '1rem' }}>
         BACKEND SERVER API URL: {BACKEND_SERVER_API_URL}
         <br />
-        Materials uuids: {materialsUuids.join(', ')}
+        Materials uuids: {Object.keys(materialsUuids).join(', ')}
         <br />
         <FormControlLabel
           control={
@@ -57,6 +62,7 @@ const Student: React.FC = () => {
 
 export default connect(
   (state: any) => {
+    // console.log(state);
     return { currentMaterial: state.material };
   },
   dispatch => bindActionCreators(materialActionCreators, dispatch),

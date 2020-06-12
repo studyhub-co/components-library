@@ -28,16 +28,25 @@ import Checkbox from '@material-ui/core/Checkbox';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IQAProps {
-  component: any;
-  currentMaterial: materialActionCreators.MaterialRedux;
+  // component: any;
+  // props
+  materialUuid: string | undefined;
   editMode: boolean;
   componentData: IQAData;
   // redux actions
-  fetchMaterial(uuid: string | undefined): void;
+  fetchMaterial(uuid: string): void;
+  // redux store
+  currentMaterial: materialActionCreators.MaterialRedux;
 }
 
 const Index: React.FC<IQAProps> = props => {
-  const { currentMaterial, editMode: editModeProp, fetchMaterial, componentData: componentDataProp } = props;
+  const {
+    currentMaterial,
+    editMode: editModeProp,
+    fetchMaterial,
+    componentData: componentDataProp,
+    materialUuid,
+  } = props;
   // const textInput = createRef<HTMLInputElement>();
 
   // const [state, setState] = React.useState({
@@ -74,10 +83,12 @@ const Index: React.FC<IQAProps> = props => {
     }
   }, [editModeProp]);
 
-  // loaded in generic component type
-  // useEffect(() => {
-  //   fetchMaterial(undefined);
-  // }, [fetchMaterial]);
+  useEffect(() => {
+    // load data with API backend
+    if (!componentData && materialUuid) {
+      fetchMaterial(materialUuid);
+    }
+  }, [componentData, fetchMaterial, materialUuid]);
 
   useEffect(() => {
     // if we have at least one image in choice enable cardMode

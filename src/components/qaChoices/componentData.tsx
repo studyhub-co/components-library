@@ -18,8 +18,13 @@ export function useComponentData(componentData: IQAData, currentMaterial: any) {
 
   useEffect((): void => {
     let initialData: IQAData | null = null;
+    // NOTE: types are used only during development and compile time.
+    // The type information is not translated in any way to the compiled JavaScript code.
+    // So we can't validate data, and we must use ts-interface-checker for this.
+
     if (currentMaterial && currentMaterial.data) {
       // set component data from loaded currentMaterial
+      console.log();
       initialData = currentMaterial.data;
     } else if (componentData) {
       // set component data from component props

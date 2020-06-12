@@ -19,9 +19,10 @@ export type Api = {
 
 export default (
   API_ROOT: string,
-  // config: {
-  //   onError: (error: string) => void;
-  // },
+  config?: {
+    // onError: (error: string) => void;
+    // sessionId?: string;
+  },
 ) => {
   // const showError = (error: any) => {
   //   config.onError(error.message);
@@ -43,7 +44,11 @@ export default (
 
   const api: Api = {
     get(path, params, options) {
-      return axios
+      // return axios
+      const instance = axios.create({
+        withCredentials: true,
+      });
+      return instance
         .get(API_ROOT + path, {
           params,
         })
