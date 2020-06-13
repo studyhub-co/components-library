@@ -3,7 +3,7 @@ import React, { useState, useEffect, useReducer } from 'react';
 // import { ComponentsData as IComponentsData, ReducerObject as IReducerObject } from '../hooks/IData';
 // import { ComponentsData as IComponentsData } from '../hooks/IData';
 
-import { QAData as IQAData } from './IData/index';
+import { QAData as IQAData, isQAData } from './IData/index';
 
 import { IReducerObject, reducer } from './reducer';
 
@@ -24,7 +24,7 @@ export function useComponentData(componentData: IQAData, currentMaterial: any) {
 
     if (currentMaterial && currentMaterial.data) {
       // set component data from loaded currentMaterial
-      console.log();
+      console.log(isQAData(currentMaterial.data));
       initialData = currentMaterial.data;
     } else if (componentData) {
       // set component data from component props
