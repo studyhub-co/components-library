@@ -37,6 +37,8 @@
     "@types/styled-components": "^5.0.1",
     "babel-preset-react-app": "^9.1.1",
     "clsx": "^1.1.0",
+    "fp-ts": "^2.6.5",
+    "io-ts": "^2.2.4",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-icons": "^3.9.0",
