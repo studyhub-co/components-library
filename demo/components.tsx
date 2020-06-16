@@ -7,7 +7,9 @@ import QAChoices from '../src/components/qaChoices';
 import QABase from '../src/components/qaBase';
 import Vector from '../src/components/vector';
 
-import { mockQaChoicesMaterial, mockVectorMaterial, mockQaBaseMaterial } from './mockData';
+import { mockQaChoices } from '../src/components/qaChoices/mockData';
+import { mockQaBase } from '../src/components/qaBase/mockData';
+import { mockVector } from '../src/components/vector/mockData';
 
 const Components: React.FC = () => {
   // const textInput = createRef<HTMLInputElement>();
@@ -30,11 +32,11 @@ const Components: React.FC = () => {
         label="Edit Mode"
       />
       <h1>Q&A Base</h1>
-      <QABase componentData={mockQaBaseMaterial.data} editMode={state.checkedEditMode} />
+      <QABase componentData={mockQaBase} editMode={state.checkedEditMode} />
       <h1>Q&A Choices</h1>
-      <QAChoices componentData={mockQaChoicesMaterial.data} editMode={state.checkedEditMode} />
+      <QAChoices componentData={mockQaChoices} editMode={state.checkedEditMode} />
       <h1>Vector</h1>
-      <Vector componentData={mockVectorMaterial.data} editMode={state.checkedEditMode} />
+      <Vector componentData={mockVector} editMode={state.checkedEditMode} />
     </div>
   );
 };

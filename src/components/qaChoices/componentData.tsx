@@ -6,6 +6,9 @@ import { QAData as IQAData, QADataIo } from './IData/index';
 
 import { IReducerObject, reducer } from './reducer';
 
+// import { mockQaChoicesMaterial } from '../mockData';
+import { mockQaChoices } from './mockData';
+
 // 1. operates componentData (defined as prop or currentMaterial.data)
 // 2. validate componentData with selected interfaces
 // 3. manipulate data (pre redux)
@@ -18,11 +21,17 @@ export function useComponentData(componentData: IQAData, currentMaterial: any) {
   useEffect((): void => {
     let initialData: IQAData | null = null;
 
-    // validate data from API
     // TODO notify user if isRight!=true
-    if (currentMaterial && currentMaterial.data && isRight(QADataIo.decode(currentMaterial.data))) {
+    if (currentMaterial && currentMaterial.data) {
       // set component data from loaded currentMaterial
-      initialData = currentMaterial.data;
+      // validate data from API
+      if (isRight(QADataIo.decode(currentMaterial.data))) {
+        initialData = currentMaterial.data;
+      } else {
+        // bad data structure - generate new empty one
+        // console.log(mockQaChoicesMaterial.data);
+        initialData = mockQaChoices;
+      }
     } else if (componentData) {
       // set component data from component props
       initialData = componentData;

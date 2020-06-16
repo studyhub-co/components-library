@@ -1,7 +1,7 @@
 import * as t from 'io-ts';
 
 export const VectorIo = t.interface({
-  text: t.number,
+  angle: t.number,
   xComponent: t.number,
   yComponent: t.number,
 });

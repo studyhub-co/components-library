@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer } from 'react';
 
-import { VectorData } from './IData/index';
+import { VectorData as IVectorData } from './IData/index';
 
 import { IReducerObject, reducer } from './reducer';
 
@@ -9,12 +9,12 @@ import { IReducerObject, reducer } from './reducer';
 // 3. manipulate data (pre redux)
 
 // export function useComponentData(reducer: any, componentData: IComponentsData, currentMaterial: any) {
-export function useComponentData(componentData: VectorData, currentMaterial: any) {
+export function useComponentData(componentData: IVectorData, currentMaterial: any) {
   const initialState: IReducerObject = { reducerData: null };
   const [data, dispatch] = useReducer(reducer, initialState);
 
   useEffect((): void => {
-    let initialData: VectorData | null = null;
+    let initialData: IVectorData | null = null;
     if (currentMaterial && currentMaterial.data) {
       // set component data from loaded currentMaterial
       initialData = currentMaterial.data;
