@@ -3,7 +3,7 @@ import { VectorData } from './IData/index';
 export const mockVector: VectorData = {
   question: {
     content: {
-      text: 'this is the question!',
+      text: 'Enter question text',
       image: '',
       hint: '',
     },
@@ -11,9 +11,9 @@ export const mockVector: VectorData = {
   },
   answer: {
     content: {
-      text: 'this is the answer!',
+      text: 'Enter answer text',
       image: '',
-      hint: 'this is the hint',
+      hint: '',
     },
     type: 'base',
   },

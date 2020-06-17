@@ -37,3 +37,14 @@ export const StyledChoiceButton = styled.div`
     border: 0.2rem solid #1caff6;
   }
 `;
+
+export const checkSaveButtonStyle = {
+  borderRadius: '12rem',
+  border: '.2rem solid #1caff6',
+  background: '#1caff6',
+  color: '#fff',
+  transition: 'color .5s,border .5s',
+  outline: 'none',
+  width: '60%',
+  margin: '2rem 0 2rem 0',
+};

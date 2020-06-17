@@ -30,18 +30,28 @@ const fetchingMaterialSuccess = (material: Material) => {
   };
 };
 
+const api: Api = apiFactory(BACKEND_SERVER_API_URL);
+
 // actions
 // export const fetchMaterial = (uuid: string | undefined) => {
 export const fetchMaterial = (uuid: string) => {
   return (dispatch: any) => {
-    // todo move api creation to js module level
-    const api: Api = apiFactory(BACKEND_SERVER_API_URL);
     dispatch(fetchingMaterial());
     const url = `materials/${uuid}/`;
     api.get<Material>(url, {}).then((result: Material) => {
-      // todo API get call with JSON data validation
       dispatch(fetchingMaterialSuccess(result));
     });
+  };
+};
+
+export const updateMaterial = (material: Material) => {
+  return (dispatch: any) => {
+    const url = `materials/${material.uuid}/`;
+    api
+      .patch<Material>(url, { ...material })
+      .then((result: Material) => {
+        dispatch(fetchingMaterialSuccess(result));
+      });
   };
 };
 

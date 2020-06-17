@@ -1,5 +1,8 @@
 import axios, { AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios';
 
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+axios.defaults.xsrfCookieName = 'csrftoken';
+
 export type Params = {
   [key: string]: string;
 };
@@ -56,25 +59,37 @@ export default (
         .catch(e => handleError(e));
     },
     post(path, body, options) {
-      return axios
+      const instance = axios.create({
+        withCredentials: true,
+      });
+      return instance
         .post(API_ROOT + path, body)
         .then(response => handleResponse(response))
         .catch(e => handleError(e));
     },
     patch(path, body, options) {
-      return axios
+      const instance = axios.create({
+        withCredentials: true,
+      });
+      return instance
         .patch(API_ROOT + path, body)
         .then(response => handleResponse(response))
         .catch(e => handleError(e));
     },
     put(path, body, options) {
-      return axios
+      const instance = axios.create({
+        withCredentials: true,
+      });
+      return instance
         .put(API_ROOT + path, body)
         .then(response => handleResponse(response))
         .catch(e => handleError(e));
     },
     delete(path, params, options) {
-      return axios
+      const instance = axios.create({
+        withCredentials: true,
+      });
+      return instance
         .delete(API_ROOT + path, {
           params,
         })
@@ -82,7 +97,10 @@ export default (
         .catch(e => handleError(e));
     },
     request(requestConfig, options) {
-      return axios
+      const instance = axios.create({
+        withCredentials: true,
+      });
+      return instance
         .request(
           Object.assign(requestConfig, {
             url: API_ROOT + requestConfig.url,

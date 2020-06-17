@@ -17,19 +17,21 @@ import { mockQaChoices } from './mockData';
 export function useComponentData(componentData: IQAData, currentMaterial: any) {
   const initialState: IReducerObject = { reducerData: null };
   const [data, dispatch] = useReducer(reducer, initialState);
+  // let useBackEndApi = false;
 
   useEffect((): void => {
     let initialData: IQAData | null = null;
 
     // TODO notify user if isRight!=true
     if (currentMaterial && currentMaterial.data) {
+      // // set
+      // useBackEndApi = true
       // set component data from loaded currentMaterial
       // validate data from API
       if (isRight(QADataIo.decode(currentMaterial.data))) {
         initialData = currentMaterial.data;
       } else {
         // bad data structure - generate new empty one
-        // console.log(mockQaChoicesMaterial.data);
         initialData = mockQaChoices;
       }
     } else if (componentData) {
@@ -41,5 +43,75 @@ export function useComponentData(componentData: IQAData, currentMaterial: any) {
     }
   }, [componentData, currentMaterial, data.reducerData]);
 
-  return { data: data.reducerData, dispatch };
+  const operateDataFunctions = getOperateDataFunctions(componentData, dispatch);
+
+  // return { data: data.reducerData, dispatch };
+  return { data: data.reducerData, operateDataFunctions };
+}
+
+function getOperateDataFunctions(componentData: IQAData, dispatch: any) {
+  const selectChoiceUuid = (uuid: string): void => {
+    // setSelectedChoiceUuid(uuid);
+    // TODO select uuid, unselect others
+    // if (componentData) {
+    // TODO add muliselect support
+    dispatch({ type: 'CHOICE_SELECT_CHANGE', payload: uuid });
+    // }
+  };
+
+  const deleteChoice = (uuid: string): void => {
+    if (componentData) {
+      dispatch({ type: 'DELETE_CHOICE', payload: uuid });
+    }
+  };
+
+  const onQuestionTextChange = (text: string): void => {
+    if (componentData) {
+      dispatch({ type: 'QUESTION_TEXT_CHANGE', payload: text });
+    }
+  };
+
+  const onQuestionHintChange = (image: string): void => {
+    if (componentData) {
+      dispatch({ type: 'QUESTION_HINT_CHANGE', payload: image });
+    }
+  };
+
+  const onQuestionImageChange = (image: string): void => {
+    if (componentData) {
+      dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
+    }
+  };
+
+  const onChoiceImageChange = (uuid: string, image: File): void => {
+    if (componentData) {
+      const newChoice = { uuid, image };
+      dispatch({ type: 'CHOICE_IMAGE_CHANGE', payload: newChoice });
+    }
+  };
+
+  const onChoiceTextChange = (uuid: string, text: string): void => {
+    if (componentData) {
+      const newChoice = { uuid, text };
+      dispatch({ type: 'CHOICE_TEXT_CHANGE', payload: newChoice });
+    }
+  };
+
+  const onAddChoice = (): void => {
+    // Add choice to data
+    if (componentData) {
+      dispatch({ type: 'ADD_CHOICE', payload: {} });
+    }
+  };
+
+  return {
+    selectChoiceUuid,
+    deleteChoice,
+    onQuestionTextChange,
+    onQuestionHintChange,
+    onQuestionImageChange,
+    onChoiceImageChange,
+    onChoiceTextChange,
+    onAddChoice,
+  };
 }

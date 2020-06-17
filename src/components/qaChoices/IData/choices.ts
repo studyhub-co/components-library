@@ -8,6 +8,7 @@ const ChoiceContentIo = t.interface({
 export const ChoiceIo = t.interface({
   uuid: t.string,
   position: t.number,
+  selected: t.boolean,
   type: t.literal('base'), // FIXME what types of choices do we need here? (was imagewtext)
   content: ChoiceContentIo,
 });

@@ -3,7 +3,7 @@ import { QAData } from './IData/index';
 export const mockQaChoices: QAData = {
   question: {
     content: {
-      text: 'this is the question!',
+      text: 'Enter question text',
       image: '',
       hint: '',
     },
@@ -13,8 +13,9 @@ export const mockQaChoices: QAData = {
     {
       content: {
         image: '',
-        text: 'this is the 1st choice',
+        text: '1st choice text',
       },
+      selected: true,
       type: 'base',
       uuid: 'uuid1',
       position: 0,
@@ -22,8 +23,9 @@ export const mockQaChoices: QAData = {
     {
       content: {
         image: '',
-        text: 'this is the 2nd choice',
+        text: '2nd choice text',
       },
+      selected: false,
       type: 'base',
       uuid: 'uuid2',
       position: 1,

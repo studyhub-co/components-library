@@ -3,12 +3,16 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { ThemeProvider } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 import Container from '../layout/Container/index';
 import ContainerItem from '../layout/ContainerItem/index';
 import Paper from '../layout/Paper/index';
 
 import * as materialActionCreators from '../../redux/modules/material';
+import { Material } from '../../models/';
 
 import Question from '../common/question';
 import Choice from './choice';
@@ -23,8 +27,7 @@ import { useComponentData } from './componentData';
 
 import { theme } from '../style';
 import { StyledChoiceButton } from './style';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import { checkSaveButtonStyle } from './style';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IQAProps {
@@ -35,6 +38,7 @@ interface IQAProps {
   componentData: IQAData;
   // redux actions
   fetchMaterial(uuid: string): void;
+  updateMaterial(material: Material): void;
   // redux store
   currentMaterial: materialActionCreators.MaterialRedux;
 }
@@ -44,6 +48,7 @@ const Index: React.FC<IQAProps> = props => {
     currentMaterial,
     editMode: editModeProp,
     fetchMaterial,
+    updateMaterial,
     componentData: componentDataProp,
     materialUuid,
   } = props;
@@ -53,11 +58,11 @@ const Index: React.FC<IQAProps> = props => {
   //   selectedChoiceUuid: '',
   //   editMode: editMode,
   // });
-  const [selectedChoiceUuid, setSelectedChoiceUuid] = useState('');
+  // const [selectedChoiceUuid, setSelectedChoiceUuid] = useState('');
   const [editMode, setEditMode] = useState(editModeProp);
   const [cardMode, setCardMode] = useState(false);
 
-  const { data: componentData, dispatch } = useComponentData(componentDataProp, currentMaterial);
+  const { data: componentData, operateDataFunctions } = useComponentData(componentDataProp, currentMaterial);
   // const { data: componentData, dispatch } = useComponentData(reducer, componentDataProp, currentMaterial);
 
   useEffect(() => {
@@ -93,74 +98,38 @@ const Index: React.FC<IQAProps> = props => {
   useEffect(() => {
     // if we have at least one image in choice enable cardMode
     if (componentData) {
-      let cardMode = false;
-      cardMode = componentData.choices.some(choice => choice.content.image);
+      const cardMode = componentData.choices.some(choice => choice.content.image);
       setCardMode(cardMode);
+      // // if we have currentMaterial loaded from backend API
+      // if (currentMaterial) {
+      //   currentMaterial.data = componentData;
+      //   updateMaterial(currentMaterial);
+      // }
     }
   }, [componentData]);
 
-  const selectChoiceUuid = (uuid: string): void => {
-    setSelectedChoiceUuid(uuid);
+  const handleSaveDataClick = () => {
+    const material: Material = { uuid: currentMaterial.uuid, data: componentData };
+    updateMaterial(material);
   };
 
-  const deleteChoice = (uuid: string): void => {
-    if (componentData) {
-      dispatch({ type: 'DELETE_CHOICE', payload: uuid });
-    }
-  };
-
-  const onQuestionTextChange = (text: string): void => {
-    if (componentData) {
-      dispatch({ type: 'QUESTION_TEXT_CHANGE', payload: text });
-    }
-  };
-
-  const onQuestionHintChange = (image: string): void => {
-    if (componentData) {
-      dispatch({ type: 'QUESTION_HINT_CHANGE', payload: image });
-    }
-  };
-
-  const onQuestionImageChange = (image: string): void => {
-    if (componentData) {
-      dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
-    }
-  };
-
-  const onChoiceImageChange = (uuid: string, image: File): void => {
-    if (componentData) {
-      const newChoice = { uuid, image };
-      dispatch({ type: 'CHOICE_IMAGE_CHANGE', payload: newChoice });
-    }
-  };
-
-  const onChoiceTextChange = (uuid: string, text: string): void => {
-    if (componentData) {
-      const newChoice = { uuid, text };
-      dispatch({ type: 'CHOICE_TEXT_CHANGE', payload: newChoice });
-    }
-  };
-
-  const onAddChoice = (): void => {
-    // Add choice to data
-    if (componentData) {
-      dispatch({ type: 'ADD_CHOICE', payload: {} });
-    }
-  };
+  // const selectAnswerChoiceUuid = (uuid: string): void => {
+  //   console.log(`answer with ${uuid} selected`);
+  // };
 
   return (
     <ThemeProvider theme={theme}>
-      <div style={{ flexGrow: 1, padding: '1rem' }}>
-        {componentData && ( // need to wait componentData
+      {componentData ? ( // need to wait componentData
+        <div style={{ flexGrow: 1, padding: '1rem' }}>
           <Container>
             <ContainerItem>
               <Paper>
                 <Question
-                  onHintChange={onQuestionHintChange}
+                  onHintChange={operateDataFunctions.onQuestionHintChange}
                   editMode={editMode}
                   question={componentData.question}
-                  onTextChange={onQuestionTextChange}
-                  onImageChange={onQuestionImageChange}
+                  onTextChange={operateDataFunctions.onQuestionTextChange}
+                  onImageChange={operateDataFunctions.onQuestionImageChange}
                 />
               </Paper>
             </ContainerItem>
@@ -171,15 +140,17 @@ const Index: React.FC<IQAProps> = props => {
                     {componentData.choices.map((choice: IChoice, index: number) => {
                       return (
                         <Choice
-                          selected={selectedChoiceUuid === choice.uuid}
-                          onSelect={uuid => selectChoiceUuid(uuid)}
+                          // selected={selectedChoiceUuid === choice.uuid}
+                          selected={choice.selected}
+                          // onSelect={editMode ? operateDataFunctions.selectChoiceUuid : selectAnswerChoiceUuid}
+                          onSelect={operateDataFunctions.selectChoiceUuid}
                           editMode={editMode}
-                          deleteChoice={deleteChoice}
+                          deleteChoice={operateDataFunctions.deleteChoice}
                           onImageChange={image => {
-                            onChoiceImageChange(choice.uuid, image);
+                            operateDataFunctions.onChoiceImageChange(choice.uuid, image);
                           }}
                           onTextChange={text => {
-                            onChoiceTextChange(choice.uuid, text);
+                            operateDataFunctions.onChoiceTextChange(choice.uuid, text);
                           }}
                           cardMode={cardMode}
                           key={choice.uuid}
@@ -197,7 +168,7 @@ const Index: React.FC<IQAProps> = props => {
                       label="Multi-select mode"
                     />
                     <br />
-                    <StyledChoiceButton onClick={onAddChoice} style={{ textAlign: 'center' }}>
+                    <StyledChoiceButton onClick={operateDataFunctions.onAddChoice} style={{ textAlign: 'center' }}>
                       + Add answer
                     </StyledChoiceButton>
                   </div>
@@ -205,8 +176,19 @@ const Index: React.FC<IQAProps> = props => {
               </Paper>
             </ContainerItem>
           </Container>
-        )}
-      </div>
+
+          <div style={{ textAlign: 'center' }}>
+            {/*<div style={{ position: 'fixed', bottom: theme.spacing(2), right: theme.spacing(2) }}>*/}
+            {editMode && currentMaterial && (
+              <Button style={checkSaveButtonStyle} variant="contained" color="primary" onClick={handleSaveDataClick}>
+                Save
+              </Button>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div>Loading...</div>
+      )}
     </ThemeProvider>
   );
 };

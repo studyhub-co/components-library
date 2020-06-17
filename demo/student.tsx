@@ -55,7 +55,7 @@ const Student: React.FC = () => {
           label="Content Edit Mode"
         />
       </Paper>
-      <GenericComponent materialUuid={state.currentMaterialUuid} />
+      <GenericComponent editMode={state.contentEditMode} materialUuid={state.currentMaterialUuid} />
     </div>
   );
 };
