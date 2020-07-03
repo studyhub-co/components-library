@@ -44,6 +44,7 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
         choice.content.image = image;
       }
     }
+
     if (action.type === 'QUESTION_TEXT_CHANGE') {
       draft.reducerData.question.content.text = action.payload;
     }

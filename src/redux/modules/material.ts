@@ -10,7 +10,7 @@ import apiFactory, { Api } from './apiFactory';
 // }
 
 // todo make it configurable for lib user
-const BACKEND_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1/studio/';
+const BACKEND_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1/';
 
 export interface MaterialRedux extends Material {
   isFetching: boolean;
@@ -37,7 +37,17 @@ const api: Api = apiFactory(BACKEND_SERVER_API_URL);
 export const fetchMaterial = (uuid: string) => {
   return (dispatch: any) => {
     dispatch(fetchingMaterial());
-    const url = `materials/${uuid}/`;
+    const url = `studio/materials/${uuid}/`;
+    api.get<Material>(url, {}).then((result: Material) => {
+      dispatch(fetchingMaterialSuccess(result));
+    });
+  };
+};
+
+export const fetchMaterialStudentView = (lessonUuid: string) => {
+  return (dispatch: any) => {
+    dispatch(fetchingMaterial());
+    const url = `courses/lessons/${lessonUuid}/next-material/`;
     api.get<Material>(url, {}).then((result: Material) => {
       dispatch(fetchingMaterialSuccess(result));
     });
@@ -46,11 +56,23 @@ export const fetchMaterial = (uuid: string) => {
 
 export const updateMaterial = (material: Material) => {
   return (dispatch: any) => {
-    const url = `materials/${material.uuid}/`;
+    const url = `studio/materials/${material.uuid}/`;
     api
       .patch<Material>(url, { ...material })
       .then((result: Material) => {
         dispatch(fetchingMaterialSuccess(result));
+      });
+  };
+};
+
+export const checkMaterialAnswer = (material: Material) => {
+  return (dispatch: any) => {
+    const url = `courses/materials/${material.uuid}/reaction/`;
+    api
+      .post<Material>(url, { ...material })
+      .then((result: any) => {
+        console.log(result);
+        // dispatch(fetchingMaterialSuccess(result));
       });
   };
 };

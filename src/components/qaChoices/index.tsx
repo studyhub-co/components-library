@@ -34,11 +34,14 @@ interface IQAProps {
   // component: any;
   // props
   materialUuid: string | undefined;
+  lessonUuid: string | undefined;
   editMode: boolean;
   componentData: IQAData;
   // redux actions
   fetchMaterial(uuid: string): void;
+  fetchMaterialStudentView(uuid: string): void;
   updateMaterial(material: Material): void;
+  checkMaterialAnswer(material: Material): void;
   // redux store
   currentMaterial: materialActionCreators.MaterialRedux;
 }
@@ -48,9 +51,12 @@ const Index: React.FC<IQAProps> = props => {
     currentMaterial,
     editMode: editModeProp,
     fetchMaterial,
+    fetchMaterialStudentView,
     updateMaterial,
+    checkMaterialAnswer,
     componentData: componentDataProp,
     materialUuid,
+    lessonUuid,
   } = props;
   // const textInput = createRef<HTMLInputElement>();
 
@@ -83,17 +89,22 @@ const Index: React.FC<IQAProps> = props => {
 
   useEffect(() => {
     setEditMode(editModeProp);
-    if (editModeProp === false) {
-      // TODO update componentData redux state
+    if (materialUuid) {
+      if (editModeProp === true) {
+        fetchMaterial(materialUuid);
+      } else if (lessonUuid) {
+        fetchMaterialStudentView(lessonUuid);
+      }
     }
-  }, [editModeProp]);
+  }, [editModeProp, fetchMaterial, fetchMaterialStudentView, materialUuid]);
 
-  useEffect(() => {
-    // load data with API backend
-    if (!componentData && materialUuid) {
-      fetchMaterial(materialUuid);
-    }
-  }, [componentData, fetchMaterial, materialUuid]);
+  // useEffect(() => {
+  //   // load data with API backend
+  //   // if (!componentData && materialUuid) {
+  //   //     //   // fetchMaterial(materialUuid);
+  //   //     //   fetchMaterialStudentView(materialUuid);
+  //   //     // }
+  // }, [componentData, fetchMaterial, fetchMaterialStudentView, materialUuid]);
 
   useEffect(() => {
     // if we have at least one image in choice enable cardMode
@@ -111,6 +122,11 @@ const Index: React.FC<IQAProps> = props => {
   const handleSaveDataClick = () => {
     const material: Material = { uuid: currentMaterial.uuid, data: componentData };
     updateMaterial(material);
+  };
+
+  const handleCheckClick = () => {
+    const material: Material = { uuid: currentMaterial.uuid, data: componentData };
+    checkMaterialAnswer(material);
   };
 
   // const selectAnswerChoiceUuid = (uuid: string): void => {
@@ -179,9 +195,13 @@ const Index: React.FC<IQAProps> = props => {
 
           <div style={{ textAlign: 'center' }}>
             {/*<div style={{ position: 'fixed', bottom: theme.spacing(2), right: theme.spacing(2) }}>*/}
-            {editMode && currentMaterial && (
+            {currentMaterial && editMode ? (
               <Button style={checkSaveButtonStyle} variant="contained" color="primary" onClick={handleSaveDataClick}>
                 Save
+              </Button>
+            ) : (
+              <Button style={checkSaveButtonStyle} variant="contained" color="primary" onClick={handleCheckClick}>
+                Check
               </Button>
             )}
           </div>

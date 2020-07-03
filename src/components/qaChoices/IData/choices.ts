@@ -5,12 +5,17 @@ const ChoiceContentIo = t.interface({
   image: t.string,
 });
 
+const HiddenFields = t.interface({
+  selected: t.boolean,
+});
+
 export const ChoiceIo = t.interface({
   uuid: t.string,
   position: t.number,
   selected: t.boolean,
   type: t.literal('base'), // FIXME what types of choices do we need here? (was imagewtext)
   content: ChoiceContentIo,
+  hiddenFields: HiddenFields,
 });
 
 export type Choice = t.TypeOf<typeof ChoiceIo>;

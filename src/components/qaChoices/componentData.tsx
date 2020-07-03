@@ -43,13 +43,13 @@ export function useComponentData(componentData: IQAData, currentMaterial: any) {
     }
   }, [componentData, currentMaterial, data.reducerData]);
 
-  const operateDataFunctions = getOperateDataFunctions(componentData, dispatch);
+  const operateDataFunctions = getOperateDataFunctions(dispatch);
 
   // return { data: data.reducerData, dispatch };
   return { data: data.reducerData, operateDataFunctions };
 }
 
-function getOperateDataFunctions(componentData: IQAData, dispatch: any) {
+function getOperateDataFunctions(dispatch: any) {
   const selectChoiceUuid = (uuid: string): void => {
     // setSelectedChoiceUuid(uuid);
     // TODO select uuid, unselect others
@@ -60,48 +60,34 @@ function getOperateDataFunctions(componentData: IQAData, dispatch: any) {
   };
 
   const deleteChoice = (uuid: string): void => {
-    if (componentData) {
-      dispatch({ type: 'DELETE_CHOICE', payload: uuid });
-    }
+    dispatch({ type: 'DELETE_CHOICE', payload: uuid });
   };
 
   const onQuestionTextChange = (text: string): void => {
-    if (componentData) {
-      dispatch({ type: 'QUESTION_TEXT_CHANGE', payload: text });
-    }
+    dispatch({ type: 'QUESTION_TEXT_CHANGE', payload: text });
   };
 
   const onQuestionHintChange = (image: string): void => {
-    if (componentData) {
-      dispatch({ type: 'QUESTION_HINT_CHANGE', payload: image });
-    }
+    dispatch({ type: 'QUESTION_HINT_CHANGE', payload: image });
   };
 
   const onQuestionImageChange = (image: string): void => {
-    if (componentData) {
-      dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
-    }
+    dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
   };
 
   const onChoiceImageChange = (uuid: string, image: File): void => {
-    if (componentData) {
-      const newChoice = { uuid, image };
-      dispatch({ type: 'CHOICE_IMAGE_CHANGE', payload: newChoice });
-    }
+    const newChoice = { uuid, image };
+    dispatch({ type: 'CHOICE_IMAGE_CHANGE', payload: newChoice });
   };
 
   const onChoiceTextChange = (uuid: string, text: string): void => {
-    if (componentData) {
-      const newChoice = { uuid, text };
-      dispatch({ type: 'CHOICE_TEXT_CHANGE', payload: newChoice });
-    }
+    const newChoice = { uuid, text };
+    dispatch({ type: 'CHOICE_TEXT_CHANGE', payload: newChoice });
   };
 
   const onAddChoice = (): void => {
     // Add choice to data
-    if (componentData) {
-      dispatch({ type: 'ADD_CHOICE', payload: {} });
-    }
+    dispatch({ type: 'ADD_CHOICE', payload: {} });
   };
 
   return {

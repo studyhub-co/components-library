@@ -12,7 +12,9 @@ import QAChoices from '../src/components/qaChoices';
 import QABase from '../src/components/qaBase';
 import Vector from '../src/components/vector';
 
-const BACKEND_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1/studio/';
+const BACKEND_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1/';
+
+const lessonUuid = '4dc51da2-c325-4b52-8003-4efe2be23821';
 
 // we need to set Material component type, because we don't use sandbox code (we use Component directly)
 const materialsUuids = {
@@ -55,7 +57,11 @@ const Student: React.FC = () => {
           label="Content Edit Mode"
         />
       </Paper>
-      <GenericComponent editMode={state.contentEditMode} materialUuid={state.currentMaterialUuid} />
+      <GenericComponent
+        lessonUuid={lessonUuid}
+        editMode={state.contentEditMode}
+        materialUuid={state.currentMaterialUuid}
+      />
     </div>
   );
 };

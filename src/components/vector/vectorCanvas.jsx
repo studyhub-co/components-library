@@ -481,7 +481,7 @@ export class VectorCanvas extends React.Component {
     if (!this.props.allowInput || this.state.submitted) {
       canvasStyle['pointerEvents'] = 'none';
       // $('.upper-canvas').css('pointer-events', 'none');
-      console.log(document.getElementsByClassName('.upper-canvas').style);
+      // console.log(document.getElementsByClassName('.upper-canvas').style);
       // document.getElementsByClassName('.upper-canvas').style.pointerEvents = 'none';
     } else {
       // $('.upper-canvas').css('pointer-events', '');
