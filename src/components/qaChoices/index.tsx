@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { ThemeProvider } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
@@ -12,7 +12,9 @@ import ContainerItem from '../layout/ContainerItem/index';
 import Paper from '../layout/Paper/index';
 
 import * as materialActionCreators from '../../redux/modules/material';
+import * as userMaterialReactionCreators from '../../redux/modules/userMaterialReactionResult';
 import { Material } from '../../models/';
+// , UserReactionResult as IUserReactionResult
 
 import Question from '../common/question';
 import Choice from './choice';
@@ -27,7 +29,8 @@ import { useComponentData } from './componentData';
 
 import { theme } from '../style';
 import { StyledChoiceButton } from './style';
-import { checkSaveButtonStyle } from './style';
+import CheckContinueButton from '../common/checkContinueButton';
+// import { checkSaveButtonStyle, checkSaveButtonStyleDisabled } from './style';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IQAProps {
@@ -41,19 +44,22 @@ interface IQAProps {
   fetchMaterial(uuid: string): void;
   fetchMaterialStudentView(uuid: string): void;
   updateMaterial(material: Material): void;
-  checkMaterialAnswer(material: Material): void;
+  checkUserMaterialReaction(material: Material): void;
   // redux store
   currentMaterial: materialActionCreators.MaterialRedux;
+  // userMaterialReactionResult: IUserReactionResult;
+  userMaterialReactionResult: userMaterialReactionCreators.UserReactionResultRedux;
 }
 
 const Index: React.FC<IQAProps> = props => {
   const {
     currentMaterial,
+    userMaterialReactionResult,
     editMode: editModeProp,
     fetchMaterial,
     fetchMaterialStudentView,
     updateMaterial,
-    checkMaterialAnswer,
+    checkUserMaterialReaction,
     componentData: componentDataProp,
     materialUuid,
     lessonUuid,
@@ -67,11 +73,10 @@ const Index: React.FC<IQAProps> = props => {
   // const [selectedChoiceUuid, setSelectedChoiceUuid] = useState('');
   const [editMode, setEditMode] = useState(editModeProp);
   const [cardMode, setCardMode] = useState(false);
+  const [disabledCheck, setSetDisabledCheck] = useState(true);
 
   const { data: componentData, operateDataFunctions } = useComponentData(componentDataProp, currentMaterial);
   // const { data: componentData, dispatch } = useComponentData(reducer, componentDataProp, currentMaterial);
-
-  // console.log(componentData);
 
   useEffect(() => {
     // catch parent event inside iframe
@@ -93,7 +98,6 @@ const Index: React.FC<IQAProps> = props => {
     setEditMode(editModeProp);
     if (materialUuid) {
       // if (componentData) operateDataFunctions.resetComponentData();
-      // console.log(componentData);
       if (editModeProp === true) {
         // load as data edit
         fetchMaterial(materialUuid);
@@ -102,27 +106,17 @@ const Index: React.FC<IQAProps> = props => {
         fetchMaterialStudentView(lessonUuid);
       }
     }
-  }, [editModeProp]);
+  }, [editModeProp, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid]);
   // }, [editModeProp, fetchMaterial, fetchMaterialStudentView, materialUuid]);
 
-  // useEffect(() => {
-  //   // load data with API backend
-  //   // if (!componentData && materialUuid) {
-  //   //     //   // fetchMaterial(materialUuid);
-  //   //     //   fetchMaterialStudentView(materialUuid);
-  //   //     // }
-  // }, [componentData, fetchMaterial, fetchMaterialStudentView, materialUuid]);
-
   useEffect(() => {
-    // if we have at least one image in choice enable cardMode
     if (componentData) {
+      // if we have at least one image in choice enable cardMode
       const cardMode = componentData.choices.some(choice => choice.content.image);
       setCardMode(cardMode);
-      // // if we have currentMaterial loaded from backend API
-      // if (currentMaterial) {
-      //   currentMaterial.data = componentData;
-      //   updateMaterial(currentMaterial);
-      // }
+      // if we have selected choices
+      const hasSelected = componentData.choices.some(choice => choice.selected);
+      setSetDisabledCheck(!hasSelected);
     }
   }, [componentData]);
 
@@ -133,14 +127,16 @@ const Index: React.FC<IQAProps> = props => {
 
   const handleCheckClick = () => {
     const material: Material = { uuid: currentMaterial.uuid, data: componentData };
-    checkMaterialAnswer(material);
+    checkUserMaterialReaction(material);
   };
 
   // const selectAnswerChoiceUuid = (uuid: string): void => {
   //   console.log(`answer with ${uuid} selected`);
   // };
 
-  console.log(componentData);
+  if (userMaterialReactionResult && userMaterialReactionResult.isFetching == false) {
+    // TODO show correct / wrong answer to the user
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -201,19 +197,32 @@ const Index: React.FC<IQAProps> = props => {
               </Paper>
             </ContainerItem>
           </Container>
-
-          <div style={{ textAlign: 'center' }}>
-            {/*<div style={{ position: 'fixed', bottom: theme.spacing(2), right: theme.spacing(2) }}>*/}
-            {currentMaterial && editMode ? (
-              <Button style={checkSaveButtonStyle} variant="contained" color="primary" onClick={handleSaveDataClick}>
-                Save
-              </Button>
-            ) : (
-              <Button style={checkSaveButtonStyle} variant="contained" color="primary" onClick={handleCheckClick}>
-                Check
-              </Button>
-            )}
-          </div>
+          <CheckContinueButton
+            editMode={editMode}
+            componentData={componentData}
+            checkUserMaterialReaction={checkUserMaterialReaction}
+            currentMaterial={currentMaterial}
+            disabledCheck={disabledCheck}
+            updateMaterial={updateMaterial}
+          />
+          {/*<div style={{ textAlign: 'center' }}>*/}
+          {/*  /!*<div style={{ position: 'fixed', bottom: theme.spacing(2), right: theme.spacing(2) }}>*!/*/}
+          {/*  {currentMaterial && editMode ? (*/}
+          {/*    <Button style={checkSaveButtonStyle} variant="contained" color="primary" onClick={handleSaveDataClick}>*/}
+          {/*      Save*/}
+          {/*    </Button>*/}
+          {/*  ) : (*/}
+          {/*    <Button*/}
+          {/*      disabled={disabledCheck}*/}
+          {/*      style={disabledCheck ? checkSaveButtonStyleDisabled : checkSaveButtonStyle}*/}
+          {/*      variant="contained"*/}
+          {/*      color="primary"*/}
+          {/*      onClick={handleCheckClick}*/}
+          {/*    >*/}
+          {/*      Check*/}
+          {/*    </Button>*/}
+          {/*  )}*/}
+          {/*</div>*/}
         </div>
       ) : (
         <div>Loading...</div>
@@ -224,7 +233,7 @@ const Index: React.FC<IQAProps> = props => {
 
 export default connect(
   (state: any) => {
-    return { currentMaterial: state.material };
+    return { currentMaterial: state.material, userMaterialReactionResult: state.userMaterialReactionResult };
   },
-  dispatch => bindActionCreators(materialActionCreators, dispatch),
+  dispatch => bindActionCreators({ ...materialActionCreators, ...userMaterialReactionCreators }, dispatch),
 )(Index);

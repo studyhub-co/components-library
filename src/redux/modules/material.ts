@@ -66,25 +66,13 @@ export const updateMaterial = (material: Material) => {
   };
 };
 
-export const checkMaterialAnswer = (material: Material) => {
-  return (dispatch: any) => {
-    const url = `courses/materials/${material.uuid}/reaction/`;
-    api
-      .post<Material>(url, { ...material })
-      .then((result: any) => {
-        // console.log(result);
-        // dispatch(fetchingMaterialSuccess(result));
-      });
-  };
-};
-
 const initialState: MaterialRedux = {
   uuid: null,
   isFetching: false,
   data: null,
 };
 
-// reducer
+// reducer // todo move to separated file?
 export default function material(state = initialState, action: any): MaterialRedux {
   switch (action.type) {
     case MATERIAL_FETCHING:

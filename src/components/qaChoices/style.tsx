@@ -13,13 +13,13 @@ import { makeStyles } from '@material-ui/core/styles';
 //     },
 // });
 
-export const useRadioStyle = makeStyles({
-  root: {
-    '&:hover': {
-      backgroundColor: 'transparent',
-    },
-  },
-});
+// export const useRadioStyle = makeStyles({
+//   root: {
+//     '&:hover': {
+//       backgroundColor: 'transparent',
+//     },
+//   },
+// });
 
 export const StyledChoiceButton = styled.div`
   border-radius: 12rem;
@@ -29,6 +29,7 @@ export const StyledChoiceButton = styled.div`
   background: rgba(255, 255, 255, 0);
   position: relative;
   color: gray;
+  flex-grow: 1;
   transition: color 0.3s, border 0.3s;
   text-align: justify;
   cursor: pointer;
@@ -38,13 +39,19 @@ export const StyledChoiceButton = styled.div`
   }
 `;
 
-export const checkSaveButtonStyle = {
-  borderRadius: '12rem',
-  border: '.2rem solid #1caff6',
-  background: '#1caff6',
-  color: '#fff',
-  transition: 'color .5s,border .5s',
-  outline: 'none',
-  width: '60%',
-  margin: '2rem 0 2rem 0',
-};
+// export const checkSaveButtonStyle = {
+//   borderRadius: '12rem',
+//   border: '.2rem solid #1caff6',
+//   background: '#1caff6',
+//   color: '#fff',
+//   transition: 'color .5s,border .5s',
+//   outline: 'none',
+//   width: '60%',
+//   margin: '2rem 0 2rem 0',
+// };
+//
+// export const checkSaveButtonStyleDisabled = {
+//   ...checkSaveButtonStyle,
+//   background: 'gray',
+//   border: '.2rem solid gray;',
+// };

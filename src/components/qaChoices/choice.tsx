@@ -152,7 +152,19 @@ const Choice: React.FC<ChoiceProps> = props => {
       </div>
     </Card>
   ) : (
-    <StyledChoiceButton style={{ flexGrow: 1 }} onClick={handleChange} onMouseOver={onHover} onMouseOut={onHoverOut}>
+    <StyledChoiceButton
+      style={
+        props.selected
+          ? {
+              color: '#1caff6',
+              border: '0.2rem solid #1caff6',
+            }
+          : {}
+      }
+      onClick={handleChange}
+      onMouseOver={onHover}
+      onMouseOut={onHoverOut}
+    >
       <Grid container direction="row" justify="center" alignItems="center">
         <Grid item xs={2} md={1}>
           <Grid container direction="row" alignItems="center">
