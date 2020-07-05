@@ -17,17 +17,14 @@ import { mockQaChoices } from './mockData';
 export function useComponentData(componentData: IQAData, currentMaterial: any) {
   const initialState: IReducerObject = { reducerData: null };
   const [data, dispatch] = useReducer(reducer, initialState);
-  // let useBackEndApi = false;
 
   useEffect((): void => {
     let initialData: IQAData | null = null;
 
     // TODO notify user if isRight!=true
     if (currentMaterial && currentMaterial.data) {
-      // // set
-      // useBackEndApi = true
       // set component data from loaded currentMaterial
-      // validate data from API
+      // validate data structure from API with io-ts model
       if (isRight(QADataIo.decode(currentMaterial.data))) {
         initialData = currentMaterial.data;
       } else {
@@ -38,10 +35,18 @@ export function useComponentData(componentData: IQAData, currentMaterial: any) {
       // set component data from component props
       initialData = componentData;
     }
-    if (!data.reducerData && initialData) {
-      dispatch({ type: 'REPLACE_DATA', payload: initialData });
+
+    // initialData = data from component props | currentMaterial.data
+    if (initialData) {
+      if (!currentMaterial.isFetching) {
+        dispatch({ type: 'REPLACE_DATA', payload: initialData });
+      } else {
+        // if is fetching from server process - reset current
+        dispatch({ type: 'REPLACE_DATA', payload: null });
+      }
     }
-  }, [componentData, currentMaterial, data.reducerData]);
+  }, [componentData, currentMaterial]);
+  // }, [componentData, currentMaterial, data.reducerData]);
 
   const operateDataFunctions = getOperateDataFunctions(dispatch);
 
@@ -90,6 +95,11 @@ function getOperateDataFunctions(dispatch: any) {
     dispatch({ type: 'ADD_CHOICE', payload: {} });
   };
 
+  // const resetComponentData = (): void => {
+  //   // remove data (before load new one from server). FixMe or it's good?
+  //   dispatch({ type: 'REPLACE_DATA', payload: null });
+  // };
+
   return {
     selectChoiceUuid,
     deleteChoice,
@@ -99,5 +109,6 @@ function getOperateDataFunctions(dispatch: any) {
     onChoiceImageChange,
     onChoiceTextChange,
     onAddChoice,
+    // resetComponentData,
   };
 }

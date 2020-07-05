@@ -12,6 +12,8 @@ import QAChoices from '../src/components/qaChoices';
 import QABase from '../src/components/qaBase';
 import Vector from '../src/components/vector';
 
+// README:
+// You need to set "SameSite: None" of "sessionid" and "csrftoken" Django cookies to use this API
 const BACKEND_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1/';
 
 const lessonUuid = '4dc51da2-c325-4b52-8003-4efe2be23821';

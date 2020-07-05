@@ -13,11 +13,13 @@ export type IReducerObject = { reducerData: QAData | null };
 export const reducer = (state: IReducerObject, action: { type: string; payload: any }) => {
   return produce(state, (draft: { reducerData: QAData }) => {
     if (action.type === 'ADD_CHOICE') {
-      const newChoice = {
+      const newChoice: IChoice = {
         content: {
           image: '',
           text: 'new answer',
         },
+        selected: false,
+        hiddenFields: { selected: false },
         type: 'base',
         uuid: uuidV4(),
         position: draft.reducerData.choices.length,

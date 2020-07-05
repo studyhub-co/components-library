@@ -2,6 +2,7 @@ import axios, { AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios';
 
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.withCredentials = true;
 
 export type Params = {
   [key: string]: string;
@@ -47,16 +48,18 @@ export default (
 
   const api: Api = {
     get(path, params, options) {
-      // return axios
-      const instance = axios.create({
-        withCredentials: true,
-      });
-      return instance
-        .get(API_ROOT + path, {
-          params,
-        })
-        .then(response => handleResponse(response))
-        .catch(e => handleError(e));
+      return (
+        axios
+          // const instance = axios.create({
+          //   withCredentials: true,
+          // });
+          // return instance
+          .get(API_ROOT + path, {
+            params,
+          })
+          .then(response => handleResponse(response))
+          .catch(e => handleError(e))
+      );
     },
     post(path, body, options) {
       const instance = axios.create({

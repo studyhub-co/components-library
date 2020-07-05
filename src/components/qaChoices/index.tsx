@@ -71,6 +71,8 @@ const Index: React.FC<IQAProps> = props => {
   const { data: componentData, operateDataFunctions } = useComponentData(componentDataProp, currentMaterial);
   // const { data: componentData, dispatch } = useComponentData(reducer, componentDataProp, currentMaterial);
 
+  // console.log(componentData);
+
   useEffect(() => {
     // catch parent event inside iframe
     window.addEventListener('message', ({ data }) => {
@@ -90,13 +92,18 @@ const Index: React.FC<IQAProps> = props => {
   useEffect(() => {
     setEditMode(editModeProp);
     if (materialUuid) {
+      // if (componentData) operateDataFunctions.resetComponentData();
+      // console.log(componentData);
       if (editModeProp === true) {
+        // load as data edit
         fetchMaterial(materialUuid);
       } else if (lessonUuid) {
+        // load as student edit (with hidden fields)
         fetchMaterialStudentView(lessonUuid);
       }
     }
-  }, [editModeProp, fetchMaterial, fetchMaterialStudentView, materialUuid]);
+  }, [editModeProp]);
+  // }, [editModeProp, fetchMaterial, fetchMaterialStudentView, materialUuid]);
 
   // useEffect(() => {
   //   // load data with API backend
@@ -132,6 +139,8 @@ const Index: React.FC<IQAProps> = props => {
   // const selectAnswerChoiceUuid = (uuid: string): void => {
   //   console.log(`answer with ${uuid} selected`);
   // };
+
+  console.log(componentData);
 
   return (
     <ThemeProvider theme={theme}>

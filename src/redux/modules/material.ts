@@ -60,7 +60,8 @@ export const updateMaterial = (material: Material) => {
     api
       .patch<Material>(url, { ...material })
       .then((result: Material) => {
-        dispatch(fetchingMaterialSuccess(result));
+        // not sure we need this
+        // dispatch(fetchingMaterialSuccess(result));
       });
   };
 };
@@ -71,7 +72,7 @@ export const checkMaterialAnswer = (material: Material) => {
     api
       .post<Material>(url, { ...material })
       .then((result: any) => {
-        console.log(result);
+        // console.log(result);
         // dispatch(fetchingMaterialSuccess(result));
       });
   };
