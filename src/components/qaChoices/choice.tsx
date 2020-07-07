@@ -33,6 +33,7 @@ interface ChoiceProps {
   // onChange: onChange;
   onImageChange: onImageChange;
   onTextChange: onTextChange;
+  userReactionState: string; // todo enum?
 }
 
 // card styles
@@ -66,7 +67,17 @@ const BlueRadio = withStyles({
 })((props: RadioProps) => <Radio color="default" {...props} />);
 
 const Choice: React.FC<ChoiceProps> = props => {
-  const { choice, index, editMode, onSelect, deleteChoice, onImageChange, onTextChange, cardMode } = props;
+  const {
+    choice,
+    index,
+    editMode,
+    onSelect,
+    deleteChoice,
+    onImageChange,
+    onTextChange,
+    cardMode,
+    userReactionState,
+  } = props;
   // const { choice, index, editMode, onSelect, deleteChoice, onChange } = props;
   // const classesRadio = useRadioStyle();
 
@@ -108,17 +119,13 @@ const Choice: React.FC<ChoiceProps> = props => {
     setState({ hovered: false });
   };
 
-  // const onTextChange = (text: string) => {
-  //   choice.content.text = text;
-  //   onChange(choice);
-  // };
-  //
-  // const onImageChange = (image: string) => {
-  //   // choice.content.text = text;
-  //   // onChange(choice);
-  // };
-
   const cardClasses = useCardStyles();
+
+  if (choice.reactionResult === 'wrong') {
+    console.log(choice);
+  }
+
+  // TODO process userReactionState==reaction && choice.reactionResult to show correct\wrong answers
 
   return cardMode ? (
     // return true ? (

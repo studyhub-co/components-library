@@ -28,7 +28,8 @@ export function useComponentData(componentData: IQAData, currentMaterial: any) {
       if (isRight(QADataIo.decode(currentMaterial.data))) {
         initialData = currentMaterial.data;
       } else {
-        // bad data structure - generate new empty one
+        // bad data structure - generate a new empty one
+        // TODO we need try to copy all possible fields data from old json structure
         initialData = mockQaChoices;
       }
     } else if (componentData) {
@@ -90,6 +91,11 @@ function getOperateDataFunctions(dispatch: any) {
     dispatch({ type: 'CHOICE_TEXT_CHANGE', payload: newChoice });
   };
 
+  const onChoiceReactionResultChange = (uuid: string, reactionResult: string): void => {
+    const newChoice = { uuid, reactionResult };
+    dispatch({ type: 'CHOICE_REACTION_RESULT_CHANGE', payload: newChoice });
+  };
+
   const onAddChoice = (): void => {
     // Add choice to data
     dispatch({ type: 'ADD_CHOICE', payload: {} });
@@ -109,6 +115,7 @@ function getOperateDataFunctions(dispatch: any) {
     onChoiceImageChange,
     onChoiceTextChange,
     onAddChoice,
+    onChoiceReactionResultChange,
     // resetComponentData,
   };
 }

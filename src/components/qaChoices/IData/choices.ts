@@ -16,6 +16,7 @@ export const ChoiceIo = t.interface({
   type: t.literal('base'), // FIXME what types of choices do we need here? (was imagewtext)
   content: ChoiceContentIo,
   hiddenFields: HiddenFields,
+  reactionResult: t.union([t.literal('none'), t.literal('correct'), t.literal('wrong')]), // FIXME we need use this only at the server side, but io-ts have not optional fields for now
 });
 
 export type Choice = t.TypeOf<typeof ChoiceIo>;

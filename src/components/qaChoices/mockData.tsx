@@ -1,4 +1,5 @@
 import { QAData } from './IData/index';
+import { uuidV4 } from '../../utils/index';
 
 export const mockQaChoices: QAData = {
   question: {
@@ -13,24 +14,26 @@ export const mockQaChoices: QAData = {
     {
       content: {
         image: '',
-        text: '1st choice text',
+        text: '1st choice',
       },
       selected: true,
       hiddenFields: { selected: false },
       type: 'base',
-      uuid: 'uuid1',
+      uuid: uuidV4(),
       position: 0,
+      reactionResult: 'none',
     },
     {
       content: {
         image: '',
-        text: '2nd choice text',
+        text: '2nd choice',
       },
       selected: false,
       hiddenFields: { selected: false },
       type: 'base',
-      uuid: 'uuid2',
+      uuid: uuidV4(),
       position: 1,
+      reactionResult: 'none',
     },
   ],
 };

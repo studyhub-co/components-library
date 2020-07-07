@@ -16,6 +16,8 @@ import * as userMaterialReactionCreators from '../../redux/modules/userMaterialR
 import { Material } from '../../models/';
 // , UserReactionResult as IUserReactionResult
 
+import { QAData } from '../qaChoices/IData/index';
+
 import Question from '../common/question';
 import Choice from './choice';
 
@@ -75,6 +77,9 @@ const Index: React.FC<IQAProps> = props => {
   const [cardMode, setCardMode] = useState(false);
   const [disabledCheck, setSetDisabledCheck] = useState(true);
 
+  // todo userReactionStateHook
+  const [userReactionState, setUserReactionState] = useState('start'); // 'start', 'reaction', etc
+
   const { data: componentData, operateDataFunctions } = useComponentData(componentDataProp, currentMaterial);
   // const { data: componentData, dispatch } = useComponentData(reducer, componentDataProp, currentMaterial);
 
@@ -118,25 +123,51 @@ const Index: React.FC<IQAProps> = props => {
       const hasSelected = componentData.choices.some(choice => choice.selected);
       setSetDisabledCheck(!hasSelected);
     }
-  }, [componentData]);
+  }, [componentData]); // calculate only if componentData changed
 
-  const handleSaveDataClick = () => {
-    const material: Material = { uuid: currentMaterial.uuid, data: componentData };
-    updateMaterial(material);
-  };
+  useEffect(() => {
+    if (componentData && userMaterialReactionResult && userMaterialReactionResult.isFetching === false) {
+      // TODO show correct / wrong answer to the user
+      // result statuses of choices list:
+      // 'none', 'correct', 'wrong'
 
-  const handleCheckClick = () => {
-    const material: Material = { uuid: currentMaterial.uuid, data: componentData };
-    checkUserMaterialReaction(material);
-  };
+      const correctData = userMaterialReactionResult.correct_data as QAData;
+
+      if (correctData?.choices) {
+        const correctChoices = correctData.choices;
+
+        componentData.choices.forEach(function(componentDataChoice) {
+          const correctChoice: IChoice = correctChoices.find(({ uuid }) => uuid === componentDataChoice.uuid)!; // not so good fixme
+
+          if (componentDataChoice.uuid === correctChoice.uuid) {
+            // status of reaction of choice - 'none', 'correct', 'wrong'.
+            if (correctChoice.selected) {
+              if (userMaterialReactionResult.was_correct) {
+                // TODO we have no correct_data if was_correct is true for now.
+                operateDataFunctions.onChoiceReactionResultChange(componentDataChoice.uuid, 'correct');
+              } else {
+                operateDataFunctions.onChoiceReactionResultChange(componentDataChoice.uuid, 'wrong');
+              }
+            }
+          }
+        });
+      }
+    }
+  }, [componentData, operateDataFunctions, userMaterialReactionResult]);
+
+  // const handleSaveDataClick = () => {
+  //   const material: Material = { uuid: currentMaterial.uuid, data: componentData };
+  //   updateMaterial(material);
+  // };
+  //
+  // const handleCheckClick = () => {
+  //   const material: Material = { uuid: currentMaterial.uuid, data: componentData };
+  //   checkUserMaterialReaction(material);
+  // };
 
   // const selectAnswerChoiceUuid = (uuid: string): void => {
   //   console.log(`answer with ${uuid} selected`);
   // };
-
-  if (userMaterialReactionResult && userMaterialReactionResult.isFetching == false) {
-    // TODO show correct / wrong answer to the user
-  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -161,10 +192,10 @@ const Index: React.FC<IQAProps> = props => {
                     {componentData.choices.map((choice: IChoice, index: number) => {
                       return (
                         <Choice
-                          // selected={selectedChoiceUuid === choice.uuid}
+                          // student mode params
                           selected={choice.selected}
-                          // onSelect={editMode ? operateDataFunctions.selectChoiceUuid : selectAnswerChoiceUuid}
                           onSelect={operateDataFunctions.selectChoiceUuid}
+                          // edit mode
                           editMode={editMode}
                           deleteChoice={operateDataFunctions.deleteChoice}
                           onImageChange={image => {
@@ -177,6 +208,7 @@ const Index: React.FC<IQAProps> = props => {
                           key={choice.uuid}
                           index={index + 1}
                           choice={choice}
+                          userReactionState={userReactionState}
                         />
                       );
                     })}
@@ -200,29 +232,14 @@ const Index: React.FC<IQAProps> = props => {
           <CheckContinueButton
             editMode={editMode}
             componentData={componentData}
-            checkUserMaterialReaction={checkUserMaterialReaction}
+            checkUserMaterialReaction={material => {
+              setUserReactionState('reaction');
+              checkUserMaterialReaction(material);
+            }}
             currentMaterial={currentMaterial}
             disabledCheck={disabledCheck}
             updateMaterial={updateMaterial}
           />
-          {/*<div style={{ textAlign: 'center' }}>*/}
-          {/*  /!*<div style={{ position: 'fixed', bottom: theme.spacing(2), right: theme.spacing(2) }}>*!/*/}
-          {/*  {currentMaterial && editMode ? (*/}
-          {/*    <Button style={checkSaveButtonStyle} variant="contained" color="primary" onClick={handleSaveDataClick}>*/}
-          {/*      Save*/}
-          {/*    </Button>*/}
-          {/*  ) : (*/}
-          {/*    <Button*/}
-          {/*      disabled={disabledCheck}*/}
-          {/*      style={disabledCheck ? checkSaveButtonStyleDisabled : checkSaveButtonStyle}*/}
-          {/*      variant="contained"*/}
-          {/*      color="primary"*/}
-          {/*      onClick={handleCheckClick}*/}
-          {/*    >*/}
-          {/*      Check*/}
-          {/*    </Button>*/}
-          {/*  )}*/}
-          {/*</div>*/}
         </div>
       ) : (
         <div>Loading...</div>

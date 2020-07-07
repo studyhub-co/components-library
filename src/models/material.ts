@@ -9,7 +9,7 @@ export interface Material {
 
 export interface UserReactionResult {
   completed_on: null | string;
-  correct_data?: QAData | VectorData | QABaseData | null;
+  correct_data?: QAData | VectorData | QABaseData;
   required_score: number;
   score: number;
   status: number;

@@ -23,6 +23,7 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
         type: 'base',
         uuid: uuidV4(),
         position: draft.reducerData.choices.length,
+        reactionResult: 'none',
       } as IChoice;
       draft.reducerData.choices.push(newChoice);
     }
@@ -39,6 +40,13 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
         choice.content.text = text;
       }
     }
+    if (action.type === 'CHOICE_REACTION_RESULT_CHANGE') {
+      const { uuid, reactionResult } = action.payload;
+      const choice = draft.reducerData.choices.find(x => x.uuid === uuid);
+      if (choice) {
+        choice.reactionResult = reactionResult;
+      }
+    }
     if (action.type === 'CHOICE_IMAGE_CHANGE') {
       const { uuid, image } = action.payload;
       const choice = draft.reducerData.choices.find(x => x.uuid === uuid);
@@ -46,7 +54,6 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
         choice.content.image = image;
       }
     }
-
     if (action.type === 'QUESTION_TEXT_CHANGE') {
       draft.reducerData.question.content.text = action.payload;
     }
