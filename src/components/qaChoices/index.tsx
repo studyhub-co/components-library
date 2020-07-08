@@ -139,13 +139,17 @@ const Index: React.FC<IQAProps> = props => {
         componentData.choices.forEach(function(componentDataChoice) {
           const correctChoice: IChoice = correctChoices.find(({ uuid }) => uuid === componentDataChoice.uuid)!; // not so good fixme
 
-          if (componentDataChoice.uuid === correctChoice.uuid) {
-            // status of reaction of choice - 'none', 'correct', 'wrong'.
-            if (correctChoice.selected) {
-              if (userMaterialReactionResult.was_correct) {
-                // TODO we have no correct_data if was_correct is true for now.
-                operateDataFunctions.onChoiceReactionResultChange(componentDataChoice.uuid, 'correct');
-              } else {
+          // status of reaction of choice - 'none', 'correct', 'wrong'.
+          if (userMaterialReactionResult.was_correct) {
+            // we have no correct_data if was_correct is true, mark existing selection as correct
+            if (componentDataChoice.selected) {
+              operateDataFunctions.onChoiceReactionResultChange(componentDataChoice.uuid, 'correct');
+            }
+          } else {
+            // was not correct
+            if (componentDataChoice.uuid === correctChoice.uuid) {
+              if (correctChoice.selected) {
+                // mark correct answer as wrong
                 operateDataFunctions.onChoiceReactionResultChange(componentDataChoice.uuid, 'wrong');
               }
             }
@@ -155,19 +159,14 @@ const Index: React.FC<IQAProps> = props => {
     }
   }, [componentData, operateDataFunctions, userMaterialReactionResult]);
 
-  // const handleSaveDataClick = () => {
-  //   const material: Material = { uuid: currentMaterial.uuid, data: componentData };
-  //   updateMaterial(material);
-  // };
-  //
-  // const handleCheckClick = () => {
-  //   const material: Material = { uuid: currentMaterial.uuid, data: componentData };
-  //   checkUserMaterialReaction(material);
-  // };
-
-  // const selectAnswerChoiceUuid = (uuid: string): void => {
-  //   console.log(`answer with ${uuid} selected`);
-  // };
+  // disable Check / Continue button while user result react fetching
+  useEffect(() => {
+    if (userMaterialReactionResult?.isFetching) {
+      setSetDisabledCheck(true);
+    } else {
+      setSetDisabledCheck(false);
+    }
+  }, [userMaterialReactionResult]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -239,6 +238,7 @@ const Index: React.FC<IQAProps> = props => {
             currentMaterial={currentMaterial}
             disabledCheck={disabledCheck}
             updateMaterial={updateMaterial}
+            userReactionState={userReactionState}
           />
         </div>
       ) : (

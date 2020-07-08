@@ -15,10 +15,19 @@ interface CheckContinueProps {
   updateMaterial(material: Material): void;
   checkUserMaterialReaction(material: Material): void;
   componentData: IQAData; // Any component IData
+  userReactionState: string; // todo enum?
 }
 
 const CheckContinueButton: React.FC<CheckContinueProps> = props => {
-  const { currentMaterial, editMode, disabledCheck, updateMaterial, checkUserMaterialReaction, componentData } = props;
+  const {
+    currentMaterial,
+    editMode,
+    disabledCheck,
+    updateMaterial,
+    checkUserMaterialReaction,
+    componentData,
+    userReactionState,
+  } = props;
 
   const handleSaveDataClick = () => {
     const material: Material = { uuid: currentMaterial.uuid, data: componentData };
@@ -28,6 +37,12 @@ const CheckContinueButton: React.FC<CheckContinueProps> = props => {
   const handleCheckClick = () => {
     const material: Material = { uuid: currentMaterial.uuid, data: componentData };
     checkUserMaterialReaction(material);
+  };
+
+  const handleContinueClick = () => {
+    const material: Material = { uuid: currentMaterial.uuid, data: componentData };
+    console.log('get next question');
+    // checkUserMaterialReaction(material);
   };
 
   return (
@@ -42,9 +57,10 @@ const CheckContinueButton: React.FC<CheckContinueProps> = props => {
           style={disabledCheck ? checkSaveButtonStyleDisabled : checkSaveButtonStyle}
           variant="contained"
           color="primary"
-          onClick={handleCheckClick}
+          onClick={userReactionState === 'start' ? handleCheckClick : handleContinueClick}
         >
-          Check
+          {userReactionState === 'start' && 'Check'}
+          {userReactionState === 'reaction' && 'Continue'}
         </Button>
       )}
     </div>

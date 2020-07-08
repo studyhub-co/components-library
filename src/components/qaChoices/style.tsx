@@ -2,16 +2,15 @@ import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 // import { base } from '../../style';
 
-// export const useStyles = makeStyles({
-//     root: {
-//         // padding: 0,
-//         // marginTop: '1%',
-//         borderRadius: '1vw',
-//         minHeight: '50vh',
-//         backgroundColor: 'white',
-//         boxShadow: '0 0 1vw #d8d8d8',
-//     },
-// });
+export const useStyles = makeStyles({
+  choiceButtonWrong: {
+    boxShadow: 'rgb(255, 0, 0) 0px 0px 10px',
+  },
+  choiceButtonCorrect: {
+    boxShadow: 'green 0px 0px 15px',
+    border: '2px solid rgb(79, 212, 24)',
+  },
+});
 
 // export const useRadioStyle = makeStyles({
 //   root: {

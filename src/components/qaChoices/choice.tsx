@@ -11,7 +11,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 
-import { StyledChoiceButton } from './style';
+import { StyledChoiceButton, useStyles } from './style';
+
 import EditableLabel from '../editable/label';
 import EditableThumbnail from '../editable/thumbnail';
 import { Choice as IChoice } from './IData/choices';
@@ -78,25 +79,13 @@ const Choice: React.FC<ChoiceProps> = props => {
     cardMode,
     userReactionState,
   } = props;
-  // const { choice, index, editMode, onSelect, deleteChoice, onChange } = props;
-  // const classesRadio = useRadioStyle();
+
+  const classes = useStyles();
 
   const [state, setState] = React.useState({
     hovered: false,
+    choiceStyleName: '',
   });
-  // const [imageSrc, setImageSrc] = useState<string>('');
-
-  // useEffect(() => {
-  //   if (
-  //     choice &&
-  //     choice.content &&
-  //     choice.content.image instanceof File &&
-  //     choice.content.image.type.startsWith('image/')
-  //   ) {
-  //     const objectUrl = URL.createObjectURL(choice.content.image);
-  //     setImageSrc(objectUrl);
-  //   }
-  // }, [choice]);
 
   const onDeleteChoiceClick = (e: any): void => {
     e.stopPropagation(); // do not select choice
@@ -109,21 +98,31 @@ const Choice: React.FC<ChoiceProps> = props => {
 
   const onHover = (): void => {
     if (editMode) {
-      setState({ hovered: true });
+      setState({ ...state, hovered: true });
     } else {
-      setState({ hovered: false });
+      setState({ ...state, hovered: false });
     }
   };
 
   const onHoverOut = (): void => {
-    setState({ hovered: false });
+    setState({ ...state, hovered: false });
   };
 
   const cardClasses = useCardStyles();
 
-  if (choice.reactionResult === 'wrong') {
-    console.log(choice);
-  }
+  let choiceStyleName = '';
+
+  useEffect(() => {
+    if (userReactionState === 'reaction') {
+      if (choice.reactionResult === 'wrong') {
+        choiceStyleName = classes.choiceButtonWrong;
+        setState({ ...state, choiceStyleName: choiceStyleName });
+      } else if (choice.reactionResult === 'correct') {
+        choiceStyleName = classes.choiceButtonCorrect;
+        setState({ ...state, choiceStyleName: choiceStyleName });
+      }
+    }
+  }, [userReactionState, choice.reactionResult]);
 
   // TODO process userReactionState==reaction && choice.reactionResult to show correct\wrong answers
 
@@ -168,6 +167,7 @@ const Choice: React.FC<ChoiceProps> = props => {
             }
           : {}
       }
+      className={state.choiceStyleName}
       onClick={handleChange}
       onMouseOver={onHover}
       onMouseOut={onHoverOut}
