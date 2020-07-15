@@ -41,10 +41,12 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
       }
     }
     if (action.type === 'CHOICE_REACTION_RESULT_CHANGE') {
-      const { uuid, reactionResult } = action.payload;
-      const choice = draft.reducerData.choices.find(x => x.uuid === uuid);
-      if (choice) {
-        choice.reactionResult = reactionResult;
+      if (draft.reducerData) {
+        const { uuid, reactionResult } = action.payload;
+        const choice = draft.reducerData.choices.find(x => x.uuid === uuid);
+        if (choice) {
+          choice.reactionResult = reactionResult;
+        }
       }
     }
     if (action.type === 'CHOICE_IMAGE_CHANGE') {

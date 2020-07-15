@@ -25,25 +25,43 @@ const materialsUuids = {
   '5fb38617-c0d3-4f4e-9c8b-e13e74570ca5': QABase,
 };
 
-const Student: React.FC = () => {
-  // TODO
+const Student: React.FC = ({ currentMaterial, fetchMaterialStudentView }) => {
   // we need data only from selected materials
 
   const [state, setState] = useState({
     contentEditMode: false,
-    // currentMaterialUuid: materialsUuids[0],
     currentMaterialUuid: Object.keys(materialsUuids)[0],
+    previousMaterialUuid: null,
+    // genericComponent: null,
   });
 
-  useEffect(() => {
-    materialActionCreators.fetchMaterial(state.currentMaterialUuid);
-  }, [state.currentMaterialUuid]);
+  // useEffect(() => {
+  //   materialActionCreators.fetchMaterial(state.currentMaterialUuid);
+  // }, [state.currentMaterialUuid]);
 
   const handleContentEditModeChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, contentEditMode: event.target.checked });
   };
 
+  const moveToNextComponent = (lessonUuid, previousMaterialUuid) => {
+    // in the sandbox it will be iframe reloading with new /evaluation/<uuid:pt_uuid>/<uuid:material_uuid>/ ?
+    // setState({ ...state, currentMaterialUuid: null, previousMaterialUuid: previousMaterialUuid });
+    setState({ ...state, previousMaterialUuid: previousMaterialUuid });
+  };
+
+  // useEffect(() => {
+  //   fetchMaterialStudentView(lessonUuid, state.previousMaterialUuid);
+  // }, [state.currentMaterialUuid]);
+
   const GenericComponent = materialsUuids[state.currentMaterialUuid];
+
+  useEffect(() => {
+    if (!currentMaterial?.isFetching) {
+      if (currentMaterial.uuid) {
+        setState({ ...state, currentMaterialUuid: currentMaterial.uuid });
+      }
+    }
+  }, [currentMaterial]);
 
   return (
     <div>
@@ -59,11 +77,15 @@ const Student: React.FC = () => {
           label="Content Edit Mode"
         />
       </Paper>
-      <GenericComponent
-        lessonUuid={lessonUuid}
-        editMode={state.contentEditMode}
-        materialUuid={state.currentMaterialUuid}
-      />
+      {GenericComponent && (
+        <GenericComponent
+          previousMaterialUuid={state.previousMaterialUuid}
+          lessonUuid={lessonUuid}
+          editMode={state.contentEditMode}
+          materialUuid={state.currentMaterialUuid}
+          moveToNextComponent={moveToNextComponent}
+        />
+      )}
     </div>
   );
 };

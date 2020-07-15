@@ -13,6 +13,7 @@ interface CheckContinueProps {
   editMode: boolean;
   disabledCheck: boolean;
   updateMaterial(material: Material): void;
+  moveToNextComponent(previousMaterialUuid: string): void;
   checkUserMaterialReaction(material: Material): void;
   componentData: IQAData; // Any component IData
   userReactionState: string; // todo enum?
@@ -27,6 +28,7 @@ const CheckContinueButton: React.FC<CheckContinueProps> = props => {
     checkUserMaterialReaction,
     componentData,
     userReactionState,
+    moveToNextComponent,
   } = props;
 
   const handleSaveDataClick = () => {
@@ -40,9 +42,9 @@ const CheckContinueButton: React.FC<CheckContinueProps> = props => {
   };
 
   const handleContinueClick = () => {
-    const material: Material = { uuid: currentMaterial.uuid, data: componentData };
-    console.log('get next question');
-    // checkUserMaterialReaction(material);
+    if (currentMaterial.uuid) {
+      moveToNextComponent(currentMaterial.uuid);
+    }
   };
 
   return (

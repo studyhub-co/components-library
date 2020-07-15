@@ -24,32 +24,46 @@ import { theme } from '../style';
 import EditableLabel from '../editable/label';
 import Question from '../common/question';
 
+import { Material } from '../../models/';
+
 import { useComponentData } from './componentData';
 
 // import { StyledChoiceButton } from './style';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IVectorProps {
-  component: any;
+  // direct props
+  materialUuid: string | undefined;
+  lessonUuid: string | undefined;
+  previousMaterialUuid: string | undefined;
   currentMaterial: materialActionCreators.MaterialRedux;
   editMode: boolean;
   componentData: IVectorData;
   // redux actions
   fetchMaterial(uuid: string | undefined): void;
+  fetchMaterialStudentView(lessonUuid: string | undefined, previousMaterialUuid: string | undefined): void;
+  updateMaterial(material: Material): void;
+  checkUserMaterialReaction(material: Material): void;
 }
 
 const Index: React.FC<IVectorProps> = props => {
-  const { currentMaterial, editMode: editModeProp, fetchMaterial, componentData: componentDataProp } = props;
-  // const textInput = createRef<HTMLInputElement>();
+  const {
+    editMode: editModeProp,
+    componentData: componentDataProp,
+    materialUuid,
+    lessonUuid,
+    previousMaterialUuid,
+    currentMaterial,
+    // actions
+    fetchMaterial,
+    fetchMaterialStudentView,
+    checkUserMaterialReaction,
+    updateMaterial,
+  } = props;
 
-  // const [state, setState] = React.useState({
-  //   selectedChoiceUuid: '',
-  //   editMode: editMode,
-  // });
-  const [selectedChoiceUuid, setSelectedChoiceUuid] = useState('');
   const [editMode, setEditMode] = useState(editModeProp);
 
-  const { data: componentData, dispatch } = useComponentData(componentDataProp, currentMaterial);
+  const { data: componentData, operateDataFunctions } = useComponentData(componentDataProp, currentMaterial);
 
   // TODO move to common hooks
   useEffect(() => {
@@ -70,51 +84,54 @@ const Index: React.FC<IVectorProps> = props => {
 
   useEffect(() => {
     setEditMode(editModeProp);
-    if (editModeProp === false) {
-      // TODO update componentData redux state
-    }
-  }, [editModeProp]);
+    // console.log(currentMaterial);
 
-  // loaded in generic component type
-  // useEffect(() => {
-  //   fetchMaterial(undefined);
-  // }, [fetchMaterial]);
-
-  const onQuestionTextChange = (text: string): void => {
-    if (componentData) {
-      dispatch({ type: 'QUESTION_TEXT_CHANGE', payload: text });
+    if (editModeProp === true) {
+      // load as data edit
+      if (materialUuid) {
+        fetchMaterial(materialUuid);
+      }
+    } else if (lessonUuid) {
+      // load as student view (with hidden fields)
+      fetchMaterialStudentView(lessonUuid, previousMaterialUuid);
     }
-  };
+  }, [editModeProp, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid, previousMaterialUuid]);
 
-  const onQuestionTextOnly = (checked: boolean): void => {
-    if (componentData) {
-      dispatch({ type: 'QUESTION_TEXT_ONLY', payload: checked });
-    }
-  };
-
-  const onQuestionImageChange = (image: string): void => {
-    if (componentData) {
-      dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
-    }
-  };
-
-  const onAnswerImageChange = (image: string): void => {
-    if (componentData) {
-      dispatch({ type: 'ANSWER_IMAGE_CHANGE', payload: image });
-    }
-  };
-
-  const onAnswerTextChange = (text: string): void => {
-    if (componentData) {
-      dispatch({ type: 'ANSWER_TEXT_CHANGE', payload: text });
-    }
-  };
-
-  const onQuestionHintChange = (text: string): void => {
-    if (componentData) {
-      dispatch({ type: 'QUESTION_HINT_CHANGE', payload: text });
-    }
-  };
+  // const onQuestionTextChange = (text: string): void => {
+  //   if (componentData) {
+  //     dispatch({ type: 'QUESTION_TEXT_CHANGE', payload: text });
+  //   }
+  // };
+  //
+  // const onQuestionTextOnly = (checked: boolean): void => {
+  //   if (componentData) {
+  //     dispatch({ type: 'QUESTION_TEXT_ONLY', payload: checked });
+  //   }
+  // };
+  //
+  // const onQuestionImageChange = (image: string): void => {
+  //   if (componentData) {
+  //     dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
+  //   }
+  // };
+  //
+  // const onAnswerImageChange = (image: string): void => {
+  //   if (componentData) {
+  //     dispatch({ type: 'ANSWER_IMAGE_CHANGE', payload: image });
+  //   }
+  // };
+  //
+  // const onAnswerTextChange = (text: string): void => {
+  //   if (componentData) {
+  //     dispatch({ type: 'ANSWER_TEXT_CHANGE', payload: text });
+  //   }
+  // };
+  //
+  // const onQuestionHintChange = (text: string): void => {
+  //   if (componentData) {
+  //     dispatch({ type: 'QUESTION_HINT_CHANGE', payload: text });
+  //   }
+  // };
 
   return (
     <ThemeProvider theme={theme}>
@@ -124,11 +141,11 @@ const Index: React.FC<IVectorProps> = props => {
             <ContainerItem>
               <Paper>
                 <Question
+                  onHintChange={operateDataFunctions.onQuestionHintChange}
                   editMode={editMode}
                   question={componentData.question}
-                  onTextChange={onQuestionTextChange}
-                  onImageChange={onQuestionImageChange}
-                  onHintChange={onQuestionHintChange}
+                  onTextChange={operateDataFunctions.onQuestionTextChange}
+                  onImageChange={operateDataFunctions.onQuestionImageChange}
                 />
                 <br />
                 <VectorCanvas
@@ -146,7 +163,7 @@ const Index: React.FC<IVectorProps> = props => {
                         <Checkbox
                           checked={componentData.questionTextOnly}
                           onChange={(e, checked) => {
-                            onQuestionTextOnly(checked);
+                            operateDataFunctions.onQuestionTextOnly(checked);
                           }}
                           name="checkedB"
                           color="primary"
@@ -168,8 +185,8 @@ const Index: React.FC<IVectorProps> = props => {
                 <Question
                   editMode={editMode}
                   question={componentData.answer}
-                  onTextChange={onAnswerTextChange}
-                  onImageChange={onAnswerImageChange}
+                  onTextChange={operateDataFunctions.onAnswerTextChange}
+                  onImageChange={operateDataFunctions.onAnswerImageChange}
                 />
                 <br />
                 <VectorCanvas

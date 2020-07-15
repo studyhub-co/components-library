@@ -44,10 +44,14 @@ export const fetchMaterial = (uuid: string) => {
   };
 };
 
-export const fetchMaterialStudentView = (lessonUuid: string) => {
+export const fetchMaterialStudentView = (lessonUuid: string, previousMaterialUuid: string | undefined) => {
   return (dispatch: any) => {
+    // console.log('fetchMaterialStudentView');
     dispatch(fetchingMaterial());
-    const url = `courses/lessons/${lessonUuid}/next-material/`;
+    let url = `courses/lessons/${lessonUuid}/next-material/`;
+    if (previousMaterialUuid) {
+      url = `${url}?previous_material=${previousMaterialUuid}`;
+    }
     api.get<Material>(url, {}).then((result: Material) => {
       dispatch(fetchingMaterialSuccess(result));
     });

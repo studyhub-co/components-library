@@ -25,57 +25,53 @@ import { Choice as IChoice } from './IData/choices';
 import { QAData as IQAData } from './IData/index';
 
 // hook to work with componentData
-// import { useComponentData } from '../hooks/componentData';
-// import { reducer } from './reducer';
 import { useComponentData } from './componentData';
 
 import { theme } from '../style';
 import { StyledChoiceButton } from './style';
 import CheckContinueButton from '../common/checkContinueButton';
-// import { checkSaveButtonStyle, checkSaveButtonStyleDisabled } from './style';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IQAProps {
-  // component: any;
   // props
   materialUuid: string | undefined;
   lessonUuid: string | undefined;
+  previousMaterialUuid: string | undefined;
   editMode: boolean;
   componentData: IQAData;
   // redux actions
   fetchMaterial(uuid: string): void;
-  fetchMaterialStudentView(uuid: string): void;
+  fetchMaterialStudentView(lessonUuid: string | undefined, previousMaterialUuid: string | undefined): void;
   updateMaterial(material: Material): void;
   checkUserMaterialReaction(material: Material): void;
   // redux store
   currentMaterial: materialActionCreators.MaterialRedux;
-  // userMaterialReactionResult: IUserReactionResult;
   userMaterialReactionResult: userMaterialReactionCreators.UserReactionResultRedux;
+  moveToNextComponent(lessonUuid: string | undefined, previousMaterialUuid: string | undefined): void;
 }
 
 const Index: React.FC<IQAProps> = props => {
   const {
-    currentMaterial,
-    userMaterialReactionResult,
-    editMode: editModeProp,
-    fetchMaterial,
-    fetchMaterialStudentView,
-    updateMaterial,
-    checkUserMaterialReaction,
+    // direct props
+    moveToNextComponent,
     componentData: componentDataProp,
     materialUuid,
     lessonUuid,
+    editMode: editModeProp,
+    // redux store
+    userMaterialReactionResult,
+    currentMaterial,
+    // actions
+    fetchMaterial,
+    fetchMaterialStudentView,
+    checkUserMaterialReaction,
+    updateMaterial,
+    previousMaterialUuid,
   } = props;
-  // const textInput = createRef<HTMLInputElement>();
 
-  // const [state, setState] = React.useState({
-  //   selectedChoiceUuid: '',
-  //   editMode: editMode,
-  // });
-  // const [selectedChoiceUuid, setSelectedChoiceUuid] = useState('');
   const [editMode, setEditMode] = useState(editModeProp);
   const [cardMode, setCardMode] = useState(false);
-  const [disabledCheck, setSetDisabledCheck] = useState(true);
+  const [disabledCheck, setDisabledCheck] = useState(true);
 
   // todo userReactionStateHook
   const [userReactionState, setUserReactionState] = useState('start'); // 'start', 'reaction', etc
@@ -101,29 +97,31 @@ const Index: React.FC<IQAProps> = props => {
 
   useEffect(() => {
     setEditMode(editModeProp);
-    if (materialUuid) {
-      // if (componentData) operateDataFunctions.resetComponentData();
-      if (editModeProp === true) {
-        // load as data edit
+    if (editModeProp === true) {
+      // load as data edit
+      if (materialUuid) {
         fetchMaterial(materialUuid);
-      } else if (lessonUuid) {
-        // load as student edit (with hidden fields)
-        fetchMaterialStudentView(lessonUuid);
       }
+    } else if (lessonUuid) {
+      // load as student view (with hidden fields)
+      fetchMaterialStudentView(lessonUuid, previousMaterialUuid);
     }
-  }, [editModeProp, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid]);
-  // }, [editModeProp, fetchMaterial, fetchMaterialStudentView, materialUuid]);
+  }, [editModeProp, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid, previousMaterialUuid]);
 
   useEffect(() => {
     if (componentData) {
       // if we have at least one image in choice enable cardMode
-      const cardMode = componentData.choices.some(choice => choice.content.image);
-      setCardMode(cardMode);
+      const newCardMode = componentData.choices.some(choice => choice.content.image);
+      if (cardMode !== newCardMode) {
+        setCardMode(cardMode);
+      }
       // if we have selected choices
       const hasSelected = componentData.choices.some(choice => choice.selected);
-      setSetDisabledCheck(!hasSelected);
+      if (hasSelected !== disabledCheck) {
+        setDisabledCheck(!hasSelected);
+      }
     }
-  }, [componentData]); // calculate only if componentData changed
+  }, [cardMode, componentData, disabledCheck]); // calculate only if componentData changed
 
   useEffect(() => {
     if (componentData && userMaterialReactionResult && userMaterialReactionResult.isFetching === false) {
@@ -133,38 +131,34 @@ const Index: React.FC<IQAProps> = props => {
 
       const correctData = userMaterialReactionResult.correct_data as QAData;
 
-      if (correctData?.choices) {
-        const correctChoices = correctData.choices;
-
-        componentData.choices.forEach(function(componentDataChoice) {
-          const correctChoice: IChoice = correctChoices.find(({ uuid }) => uuid === componentDataChoice.uuid)!; // not so good fixme
+      componentData.choices.forEach(function(componentDataChoice) {
+        // we have no correctData?.choices if was correct = true
+        if (userMaterialReactionResult.was_correct) {
+          if (componentDataChoice.selected) {
+            // mark correct choice only if it was correct.
+            operateDataFunctions.onChoiceReactionResultChange(componentDataChoice.uuid, 'correct');
+          }
+        }
+        if (correctData?.choices && !userMaterialReactionResult.was_correct) {
+          // find correct choice
+          const correctChoice: IChoice = correctData?.choices.find(({ uuid }) => uuid === componentDataChoice.uuid)!;
 
           // status of reaction of choice - 'none', 'correct', 'wrong'.
-          if (userMaterialReactionResult.was_correct) {
-            // we have no correct_data if was_correct is true, mark existing selection as correct
-            if (componentDataChoice.selected) {
-              operateDataFunctions.onChoiceReactionResultChange(componentDataChoice.uuid, 'correct');
-            }
-          } else {
-            // was not correct
-            if (componentDataChoice.uuid === correctChoice.uuid) {
-              if (correctChoice.selected) {
-                // mark correct answer as wrong
-                operateDataFunctions.onChoiceReactionResultChange(componentDataChoice.uuid, 'wrong');
-              }
-            }
+          if (correctChoice.selected) {
+            // mark correct answer as was wrong (red)
+            operateDataFunctions.onChoiceReactionResultChange(componentDataChoice.uuid, 'wrong');
           }
-        });
-      }
+        }
+      });
     }
   }, [componentData, operateDataFunctions, userMaterialReactionResult]);
 
   // disable Check / Continue button while user result react fetching
   useEffect(() => {
     if (userMaterialReactionResult?.isFetching) {
-      setSetDisabledCheck(true);
+      setDisabledCheck(true);
     } else {
-      setSetDisabledCheck(false);
+      setDisabledCheck(false);
     }
   }, [userMaterialReactionResult]);
 
@@ -229,6 +223,11 @@ const Index: React.FC<IQAProps> = props => {
             </ContainerItem>
           </Container>
           <CheckContinueButton
+            moveToNextComponent={prevMaterialUuid => {
+              // operateDataFunctions.resetComponentData();
+              moveToNextComponent(lessonUuid, prevMaterialUuid);
+              // fetchMaterialStudentView(lessonUuid, prevMaterialUuid);
+            }}
             editMode={editMode}
             componentData={componentData}
             checkUserMaterialReaction={material => {
