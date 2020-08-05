@@ -31,7 +31,7 @@ const Student: React.FC = ({ currentMaterial, fetchMaterialStudentView }) => {
   const [state, setState] = useState({
     contentEditMode: false,
     currentMaterialUuid: Object.keys(materialsUuids)[0],
-    previousMaterialUuid: null,
+    // previousMaterialUuid: null,
     // genericComponent: null,
   });
 
@@ -43,10 +43,11 @@ const Student: React.FC = ({ currentMaterial, fetchMaterialStudentView }) => {
     setState({ ...state, contentEditMode: event.target.checked });
   };
 
-  const moveToNextComponent = (lessonUuid, previousMaterialUuid) => {
+  const moveToNextComponent = (lessonUuid, nextMaterialUuid) => {
     // in the sandbox it will be iframe reloading with new /evaluation/<uuid:pt_uuid>/<uuid:material_uuid>/ ?
     // setState({ ...state, currentMaterialUuid: null, previousMaterialUuid: previousMaterialUuid });
-    setState({ ...state, previousMaterialUuid: previousMaterialUuid });
+    // setState({ ...state, previousMaterialUuid: previousMaterialUuid });
+    setState({ ...state, currentMaterialUuid: nextMaterialUuid });
   };
 
   // useEffect(() => {
@@ -79,7 +80,7 @@ const Student: React.FC = ({ currentMaterial, fetchMaterialStudentView }) => {
       </Paper>
       {GenericComponent && (
         <GenericComponent
-          previousMaterialUuid={state.previousMaterialUuid}
+          // previousMaterialUuid={state.previousMaterialUuid}
           lessonUuid={lessonUuid}
           editMode={state.contentEditMode}
           materialUuid={state.currentMaterialUuid}

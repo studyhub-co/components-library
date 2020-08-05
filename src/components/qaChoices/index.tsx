@@ -41,13 +41,18 @@ interface IQAProps {
   componentData: IQAData;
   // redux actions
   fetchMaterial(uuid: string): void;
-  fetchMaterialStudentView(lessonUuid: string | undefined, previousMaterialUuid: string | undefined): void;
+  // fetchMaterialStudentView(lessonUuid: string | undefined, previousMaterialUuid: string | undefined): void;
+  fetchMaterialStudentView(lessonUuid: string | undefined, materialUuid: string | undefined): void;
   updateMaterial(material: Material): void;
   checkUserMaterialReaction(material: Material): void;
   // redux store
   currentMaterial: materialActionCreators.MaterialRedux;
   userMaterialReactionResult: userMaterialReactionCreators.UserReactionResultRedux;
-  moveToNextComponent(lessonUuid: string | undefined, previousMaterialUuid: string | undefined): void;
+  moveToNextComponent(
+    lessonUuid: string | undefined,
+    // previousMaterialUuid: string | undefined,
+    nextMaterialUuid: string | undefined,
+  ): void;
 }
 
 const Index: React.FC<IQAProps> = props => {
@@ -83,7 +88,7 @@ const Index: React.FC<IQAProps> = props => {
     // catch parent event inside iframe
     window.addEventListener('message', ({ data }) => {
       if (data.hasOwnProperty('type')) {
-        if (data.type === 'pib_edit_mode') {
+        if (data.type === 'edit_mode') {
           if (data.data === 'edit') {
             setEditMode(true);
           } else {
@@ -104,7 +109,8 @@ const Index: React.FC<IQAProps> = props => {
       }
     } else if (lessonUuid) {
       // load as student view (with hidden fields)
-      fetchMaterialStudentView(lessonUuid, previousMaterialUuid);
+      // fetchMaterialStudentView(lessonUuid, previousMaterialUuid);
+      fetchMaterialStudentView(lessonUuid, materialUuid);
     }
   }, [editModeProp, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid, previousMaterialUuid]);
 
@@ -117,11 +123,11 @@ const Index: React.FC<IQAProps> = props => {
       }
       // if we have selected choices
       const hasSelected = componentData.choices.some(choice => choice.selected);
-      if (hasSelected !== disabledCheck) {
-        setDisabledCheck(!hasSelected);
-      }
+      // if (hasSelected !== disabledCheck) {
+      setDisabledCheck(!hasSelected);
+      // } disabledCheck
     }
-  }, [cardMode, componentData, disabledCheck]); // calculate only if componentData changed
+  }, [cardMode, componentData]); // calculate only if componentData changed
 
   useEffect(() => {
     if (componentData && userMaterialReactionResult && userMaterialReactionResult.isFetching === false) {
@@ -161,6 +167,8 @@ const Index: React.FC<IQAProps> = props => {
       setDisabledCheck(false);
     }
   }, [userMaterialReactionResult]);
+
+  // console.log(userMaterialReactionResult.next_material_uuid);
 
   return (
     <ThemeProvider theme={theme}>
@@ -225,7 +233,7 @@ const Index: React.FC<IQAProps> = props => {
           <CheckContinueButton
             moveToNextComponent={prevMaterialUuid => {
               // operateDataFunctions.resetComponentData();
-              moveToNextComponent(lessonUuid, prevMaterialUuid);
+              moveToNextComponent(lessonUuid, userMaterialReactionResult.next_material_uuid);
               // fetchMaterialStudentView(lessonUuid, prevMaterialUuid);
             }}
             editMode={editMode}

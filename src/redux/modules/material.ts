@@ -44,13 +44,27 @@ export const fetchMaterial = (uuid: string) => {
   };
 };
 
-export const fetchMaterialStudentView = (lessonUuid: string, previousMaterialUuid: string | undefined) => {
+// export const fetchMaterialStudentView = (lessonUuid: string, previousMaterialUuid: string | undefined) => {
+//   return (dispatch: any) => {
+//     // console.log('fetchMaterialStudentView');
+//     dispatch(fetchingMaterial());
+//     let url = `courses/lessons/${lessonUuid}/next-material/`;
+//     if (previousMaterialUuid) {
+//       url = `${url}?previous_material=${previousMaterialUuid}`;
+//     }
+//     api.get<Material>(url, {}).then((result: Material) => {
+//       dispatch(fetchingMaterialSuccess(result));
+//     });
+//   };
+// };
+
+export const fetchMaterialStudentView = (lessonUuid: string, materialUuid: string | undefined) => {
   return (dispatch: any) => {
     // console.log('fetchMaterialStudentView');
     dispatch(fetchingMaterial());
     let url = `courses/lessons/${lessonUuid}/next-material/`;
-    if (previousMaterialUuid) {
-      url = `${url}?previous_material=${previousMaterialUuid}`;
+    if (materialUuid) {
+      url = `${url}?material_uuid=${materialUuid}`;
     }
     api.get<Material>(url, {}).then((result: Material) => {
       dispatch(fetchingMaterialSuccess(result));

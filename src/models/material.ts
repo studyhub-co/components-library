@@ -14,4 +14,5 @@ export interface UserReactionResult {
   score: number;
   status: number;
   was_correct: boolean;
+  next_material_uuid: string;
 }

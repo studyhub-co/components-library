@@ -35,13 +35,14 @@ interface IVectorProps {
   // direct props
   materialUuid: string | undefined;
   lessonUuid: string | undefined;
-  previousMaterialUuid: string | undefined;
+  // previousMaterialUuid: string | undefined;
   currentMaterial: materialActionCreators.MaterialRedux;
   editMode: boolean;
   componentData: IVectorData;
   // redux actions
   fetchMaterial(uuid: string | undefined): void;
-  fetchMaterialStudentView(lessonUuid: string | undefined, previousMaterialUuid: string | undefined): void;
+  // fetchMaterialStudentView(lessonUuid: string | undefined, previousMaterialUuid: string | undefined): void;
+  fetchMaterialStudentView(lessonUuid: string | undefined, materialUuid: string | undefined): void;
   updateMaterial(material: Material): void;
   checkUserMaterialReaction(material: Material): void;
 }
@@ -52,7 +53,7 @@ const Index: React.FC<IVectorProps> = props => {
     componentData: componentDataProp,
     materialUuid,
     lessonUuid,
-    previousMaterialUuid,
+    // previousMaterialUuid,
     currentMaterial,
     // actions
     fetchMaterial,
@@ -93,9 +94,10 @@ const Index: React.FC<IVectorProps> = props => {
       }
     } else if (lessonUuid) {
       // load as student view (with hidden fields)
-      fetchMaterialStudentView(lessonUuid, previousMaterialUuid);
+      // fetchMaterialStudentView(lessonUuid, previousMaterialUuid);
+      fetchMaterialStudentView(lessonUuid, materialUuid);
     }
-  }, [editModeProp, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid, previousMaterialUuid]);
+  }, [editModeProp, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid]);
 
   // const onQuestionTextChange = (text: string): void => {
   //   if (componentData) {
