@@ -1,6 +1,6 @@
 {
   "name": "@physicsisbeautiful/pib-eval-library",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "Physics is beautiful (https://www.physicsisbeautiful.com)",
   "license": "MIT",
   "private": false,
@@ -68,6 +68,7 @@
     "babel-jest": "^24.9.0",
     "babel-loader": "8.0.6",
     "babel-plugin-named-asset-import": "^0.3.6",
+    "babel-plugin-transform-node-env-inline": "^0.4.3",
     "babel-preset-react-app": "^9.1.1",
     "camelcase": "^5.3.1",
     "case-sensitive-paths-webpack-plugin": "2.3.0",
