@@ -6,7 +6,8 @@ import { Material } from '../../models/';
 import apiFactory, { Api } from './apiFactory';
 
 // todo make it configurable for lib user
-const BACKEND_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1/';
+// const BACKEND_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1/';
+const BACKEND_SERVER_API_URL = process.env['NODE_ENV'] === 'development' ? 'http://127.0.0.1:8000/api/v1/' : '/api/v1/';
 
 export interface UserReactionResultRedux extends UserReactionResult {
   isFetching: boolean;

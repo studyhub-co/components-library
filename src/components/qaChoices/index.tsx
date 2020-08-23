@@ -81,6 +81,8 @@ const Index: React.FC<IQAProps> = props => {
   // todo userReactionStateHook
   const [userReactionState, setUserReactionState] = useState('start'); // 'start', 'reaction', etc
 
+  // todo set disable buttons after Check action
+
   const { data: componentData, operateDataFunctions } = useComponentData(componentDataProp, currentMaterial);
   // const { data: componentData, dispatch } = useComponentData(reducer, componentDataProp, currentMaterial);
 
@@ -102,6 +104,7 @@ const Index: React.FC<IQAProps> = props => {
 
   useEffect(() => {
     setEditMode(editModeProp);
+    setUserReactionState('start');
     if (editModeProp === true) {
       // load as data edit
       if (materialUuid) {
@@ -109,7 +112,6 @@ const Index: React.FC<IQAProps> = props => {
       }
     } else if (lessonUuid) {
       // load as student view (with hidden fields)
-      // fetchMaterialStudentView(lessonUuid, previousMaterialUuid);
       fetchMaterialStudentView(lessonUuid, materialUuid);
     }
   }, [editModeProp, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid, previousMaterialUuid]);
@@ -130,7 +132,12 @@ const Index: React.FC<IQAProps> = props => {
   }, [cardMode, componentData]); // calculate only if componentData changed
 
   useEffect(() => {
-    if (componentData && userMaterialReactionResult && userMaterialReactionResult.isFetching === false) {
+    if (
+      componentData &&
+      userMaterialReactionResult &&
+      userMaterialReactionResult.isFetching === false &&
+      userMaterialReactionResult.next_material_uuid !== materialUuid
+    ) {
       // TODO show correct / wrong answer to the user
       // result statuses of choices list:
       // 'none', 'correct', 'wrong'
@@ -157,9 +164,9 @@ const Index: React.FC<IQAProps> = props => {
         }
       });
     }
-  }, [componentData, operateDataFunctions, userMaterialReactionResult]);
+  }, [componentData, materialUuid, operateDataFunctions, userMaterialReactionResult]);
 
-  // disable Check / Continue button while user result react fetching
+  // disable Check / Continue button while user result reaction is fetching
   useEffect(() => {
     if (userMaterialReactionResult?.isFetching) {
       setDisabledCheck(true);
@@ -167,8 +174,6 @@ const Index: React.FC<IQAProps> = props => {
       setDisabledCheck(false);
     }
   }, [userMaterialReactionResult]);
-
-  // console.log(userMaterialReactionResult.next_material_uuid);
 
   return (
     <ThemeProvider theme={theme}>
@@ -249,7 +254,7 @@ const Index: React.FC<IQAProps> = props => {
           />
         </div>
       ) : (
-        <div>Loading...</div>
+        <div>Loading...</div> // TODO replace with spinner
       )}
     </ThemeProvider>
   );

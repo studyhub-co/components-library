@@ -14,16 +14,22 @@ import Vector from '../src/components/vector';
 
 // README:
 // You need to set "SameSite: None" of "sessionid" and "csrftoken" Django cookies to use this API
-const BACKEND_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1/';
+// const BACKEND_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1/';
 
-const lessonUuid = '4dc51da2-c325-4b52-8003-4efe2be23821';
+// TODO make it configurable
+const lessonUuid = '3a484714-dc4a-4f30-bae3-7ba0c6ad7a72';
 
 // we need to set Material component type, because we don't use sandbox code (we use Component directly)
 const materialsUuids = {
-  '2364969a-1516-493a-a5c8-1af2dd16a99f': QAChoices,
-  '0b012143-de14-46bd-9692-b52696951b42': Vector,
-  '5fb38617-c0d3-4f4e-9c8b-e13e74570ca5': QABase,
+  'a8970b5b-22b8-4792-ac37-8109244e3a75': QAChoices,
+  'd60ddf14-f4b6-4188-b5de-54fc3a16311c': QAChoices,
+  // '0b012143-de14-46bd-9692-b52696951b42': Vector,
+  // '5fb38617-c0d3-4f4e-9c8b-e13e74570ca5': QABase,
 };
+
+// const componentOptions = {
+//   BACKEND_SERVER_API_URL: BACKEND_SERVER_API_URL,
+// };
 
 const Student: React.FC = ({ currentMaterial, fetchMaterialStudentView }) => {
   // we need data only from selected materials
@@ -67,7 +73,7 @@ const Student: React.FC = ({ currentMaterial, fetchMaterialStudentView }) => {
   return (
     <div>
       <Paper style={{ padding: '1rem' }}>
-        BACKEND SERVER API URL: {BACKEND_SERVER_API_URL}
+        {/*BACKEND SERVER API URL: {BACKEND_SERVER_API_URL}*/}
         <br />
         Materials uuids: {Object.keys(materialsUuids).join(', ')}
         <br />
