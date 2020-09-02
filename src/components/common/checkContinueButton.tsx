@@ -15,7 +15,7 @@ interface CheckContinueProps {
   updateMaterial(material: Material): void;
   moveToNextComponent(previousMaterialUuid: string): void;
   checkUserMaterialReaction(material: Material): void;
-  componentData: IQAData; // Any component IData
+  componentData: IQAData | null; // Any component IData
   userReactionState: string; // todo enum?
 }
 

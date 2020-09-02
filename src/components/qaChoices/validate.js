@@ -1,12 +1,15 @@
-// FIXME you need to copy this file at the root of the sandbox
+// FIXME you need to copy this file at the root of the sandbox to able to load this code on the server side
 const validate = (correctData, userReactionData) => {
   // check that all correct choices was selected
-  userReactionData.choices.forEach(function(userReactionChoice) {
-    correctData.choices.some(function(correctChoice) {
-      if (correctChoice.selected !== userReactionChoice.selected) {
-        return false;
-      }
-    });
+  let correct = true;
+
+  correctData.choices.forEach(function(choicefromCorrectData) {
+    const userReactionChoice = userReactionData.choices.find((choice)=>{
+      return choice.uuid === choicefromCorrectData.uuid;
+    })
+    if (choicefromCorrectData.selected !== userReactionChoice.selected) {
+      correct = false;
+    }
   });
-  return true;
+  return correct;
 };

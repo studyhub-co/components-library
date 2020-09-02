@@ -29,7 +29,8 @@ import { useComponentData } from './componentData';
 
 import { theme } from '../style';
 import { StyledChoiceButton } from './style';
-import CheckContinueButton from '../common/checkContinueButton';
+// import CheckContinueButton from '../common/checkContinueButton';
+import Footer from '../common/footer';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IQAProps {
@@ -138,7 +139,7 @@ const Index: React.FC<IQAProps> = props => {
       userMaterialReactionResult.isFetching === false &&
       userMaterialReactionResult.next_material_uuid !== materialUuid
     ) {
-      // TODO show correct / wrong answer to the user
+      // show correct / wrong answer to the user
       // result statuses of choices list:
       // 'none', 'correct', 'wrong'
 
@@ -235,27 +236,44 @@ const Index: React.FC<IQAProps> = props => {
               </Paper>
             </ContainerItem>
           </Container>
-          <CheckContinueButton
-            moveToNextComponent={prevMaterialUuid => {
-              // operateDataFunctions.resetComponentData();
-              moveToNextComponent(lessonUuid, userMaterialReactionResult.next_material_uuid);
-              // fetchMaterialStudentView(lessonUuid, prevMaterialUuid);
-            }}
-            editMode={editMode}
-            componentData={componentData}
-            checkUserMaterialReaction={material => {
-              setUserReactionState('reaction');
-              checkUserMaterialReaction(material);
-            }}
-            currentMaterial={currentMaterial}
-            disabledCheck={disabledCheck}
-            updateMaterial={updateMaterial}
-            userReactionState={userReactionState}
-          />
+          {/*<CheckContinueButton*/}
+          {/*  moveToNextComponent={prevMaterialUuid => {*/}
+          {/*    // operateDataFunctions.resetComponentData();*/}
+          {/*    moveToNextComponent(lessonUuid, userMaterialReactionResult.next_material_uuid);*/}
+          {/*    // fetchMaterialStudentView(lessonUuid, prevMaterialUuid);*/}
+          {/*  }}*/}
+          {/*  editMode={editMode}*/}
+          {/*  componentData={componentData}*/}
+          {/*  checkUserMaterialReaction={material => {*/}
+          {/*    setUserReactionState('reaction');*/}
+          {/*    checkUserMaterialReaction(material);*/}
+          {/*  }}*/}
+          {/*  currentMaterial={currentMaterial}*/}
+          {/*  disabledCheck={disabledCheck}*/}
+          {/*  updateMaterial={updateMaterial}*/}
+          {/*  userReactionState={userReactionState}*/}
+          {/*/>*/}
         </div>
       ) : (
         <div>Loading...</div> // TODO replace with spinner
       )}
+      <Footer
+        moveToNextComponent={prevMaterialUuid => {
+          // operateDataFunctions.resetComponentData();
+          moveToNextComponent(lessonUuid, userMaterialReactionResult.next_material_uuid);
+          // fetchMaterialStudentView(lessonUuid, prevMaterialUuid);
+        }}
+        editMode={editMode}
+        componentData={componentData}
+        checkUserMaterialReaction={material => {
+          setUserReactionState('reaction');
+          checkUserMaterialReaction(material);
+        }}
+        currentMaterial={currentMaterial}
+        disabledCheck={disabledCheck}
+        updateMaterial={updateMaterial}
+        userReactionState={userReactionState}
+      />
     </ThemeProvider>
   );
 };
