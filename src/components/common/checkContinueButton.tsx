@@ -62,7 +62,7 @@ const CheckContinueButton: React.FC<CheckContinueProps> = props => {
           onClick={userReactionState === 'start' ? handleCheckClick : handleContinueClick}
         >
           {userReactionState === 'start' && 'Check'}
-          {userReactionState === 'reaction' && 'Continue'}
+          {userReactionState === 'checked' && 'Continue'}
         </Button>
       )}
     </div>

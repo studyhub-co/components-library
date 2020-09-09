@@ -77,20 +77,47 @@ const Index: React.FC<IQAProps> = props => {
 
   const [editMode, setEditMode] = useState(editModeProp);
   const [cardMode, setCardMode] = useState(false);
-  const [disabledCheck, setDisabledCheck] = useState(true);
+  const [disabledCheck, setDisabledCheckS] = useState(true);
+
+  const setDisabledCheck = (value: boolean) => {
+    setDisabledCheckS(value);
+    // send disabled check the SPA
+    window.parent.postMessage(
+      {
+        type: 'disabled_check_button',
+        data: value,
+      },
+      '*',
+    );
+  };
 
   // todo userReactionStateHook
-  const [userReactionState, setUserReactionState] = useState('start'); // 'start', 'reaction', etc
+  const [userReactionState, setUserReactionState] = useState('start'); // 'start', 'checked', etc
 
-  // todo set disable buttons after Check action
+  useEffect(() => {
+    console.log(userReactionState);
+
+    window.parent.postMessage(
+      {
+        type: 'user_reaction_state',
+        data: {
+          state: userReactionState,
+          user_lesson_score: userMaterialReactionResult.score,
+          was_correct: userMaterialReactionResult.was_correct,
+        },
+      },
+      '*',
+    );
+  }, [userReactionState, userMaterialReactionResult]);
 
   const { data: componentData, operateDataFunctions } = useComponentData(componentDataProp, currentMaterial);
   // const { data: componentData, dispatch } = useComponentData(reducer, componentDataProp, currentMaterial);
 
   useEffect(() => {
     // catch parent event inside iframe
-    window.addEventListener('message', ({ data }) => {
+    const messageListener = ({ data }: { data: any }): any => {
       if (data.hasOwnProperty('type')) {
+        // got edit_mode from parent window
         if (data.type === 'edit_mode') {
           if (data.data === 'edit') {
             setEditMode(true);
@@ -98,10 +125,43 @@ const Index: React.FC<IQAProps> = props => {
             setEditMode(false);
           }
         }
+        if (data.type === 'check_user_reaction') {
+          if (!currentMaterial.isFetching && currentMaterial.uuid && componentData) {
+            const reactionMaterial: Material = { uuid: currentMaterial.uuid, data: componentData };
+            setUserReactionState('checked');
+            checkUserMaterialReaction(reactionMaterial);
+          }
+        }
       }
-      return window.removeEventListener('message', () => {});
-    });
-  }, []);
+    };
+
+    // TODO check that we have only the one Listener
+    window.addEventListener('message', messageListener);
+
+    return () => {
+      window.removeEventListener('message', messageListener);
+    };
+  }, [checkUserMaterialReaction, currentMaterial, componentData]);
+
+  useEffect(() => {
+    if (currentMaterial.isFetching === false && currentMaterial.uuid) {
+      // send message to parent with loaded material
+      window.parent.postMessage(
+        {
+          type: 'current_material',
+          data: currentMaterial,
+        },
+        '*',
+      );
+    }
+    // window.parent.postMessage(
+    //   {
+    //     type: "redirect_to_material",
+    //     data: { lessonUuid, nextMaterialUuid }
+    //   },
+    //   "*"
+    // );
+  }, [checkUserMaterialReaction, currentMaterial]);
 
   useEffect(() => {
     setEditMode(editModeProp);
@@ -142,7 +202,6 @@ const Index: React.FC<IQAProps> = props => {
       // show correct / wrong answer to the user
       // result statuses of choices list:
       // 'none', 'correct', 'wrong'
-
       const correctData = userMaterialReactionResult.correct_data as QAData;
 
       componentData.choices.forEach(function(componentDataChoice) {
@@ -236,23 +295,6 @@ const Index: React.FC<IQAProps> = props => {
               </Paper>
             </ContainerItem>
           </Container>
-          {/*<CheckContinueButton*/}
-          {/*  moveToNextComponent={prevMaterialUuid => {*/}
-          {/*    // operateDataFunctions.resetComponentData();*/}
-          {/*    moveToNextComponent(lessonUuid, userMaterialReactionResult.next_material_uuid);*/}
-          {/*    // fetchMaterialStudentView(lessonUuid, prevMaterialUuid);*/}
-          {/*  }}*/}
-          {/*  editMode={editMode}*/}
-          {/*  componentData={componentData}*/}
-          {/*  checkUserMaterialReaction={material => {*/}
-          {/*    setUserReactionState('reaction');*/}
-          {/*    checkUserMaterialReaction(material);*/}
-          {/*  }}*/}
-          {/*  currentMaterial={currentMaterial}*/}
-          {/*  disabledCheck={disabledCheck}*/}
-          {/*  updateMaterial={updateMaterial}*/}
-          {/*  userReactionState={userReactionState}*/}
-          {/*/>*/}
         </div>
       ) : (
         <div>Loading...</div> // TODO replace with spinner
@@ -266,7 +308,7 @@ const Index: React.FC<IQAProps> = props => {
         editMode={editMode}
         componentData={componentData}
         checkUserMaterialReaction={material => {
-          setUserReactionState('reaction');
+          setUserReactionState('checked');
           checkUserMaterialReaction(material);
         }}
         currentMaterial={currentMaterial}

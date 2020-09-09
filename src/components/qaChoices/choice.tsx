@@ -113,7 +113,7 @@ const Choice: React.FC<ChoiceProps> = props => {
   let choiceStyleName = '';
 
   useEffect(() => {
-    if (userReactionState === 'reaction') {
+    if (userReactionState === 'checked') {
       if (choice.reactionResult === 'wrong') {
         choiceStyleName = classes.choiceButtonWrong;
         setState({ ...state, choiceStyleName: choiceStyleName });
