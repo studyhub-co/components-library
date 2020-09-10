@@ -1,5 +1,5 @@
 import { MATERIAL_USER_REACTION_REQUESTING, MATERIAL_USER_REACTION_SUCCESS } from './constants';
-import { UserReactionResult } from '../../models/';
+import { UserReactionResult } from '../../models/index';
 
 import { Material } from '../../models/';
 
@@ -20,7 +20,7 @@ const userMaterialReactionRequesting = () => {
   };
 };
 
-const userMaterialReactionSuccess = (userReaction: UserReactionResult) => {
+const userMaterialReactionSuccess = (userReaction: UserReactionResult | {} | null) => {
   return {
     type: MATERIAL_USER_REACTION_SUCCESS,
     userReaction,
@@ -39,6 +39,12 @@ export const checkUserMaterialReaction = (material: Material) => {
       .then((result: any) => {
         dispatch(userMaterialReactionSuccess(result));
       });
+  };
+};
+
+export const resetUserMaterialReaction = () => {
+  return (dispatch: any) => {
+    dispatch(userMaterialReactionSuccess(null));
   };
 };
 

@@ -2,6 +2,7 @@ import { MATERIAL_FETCHING, MATERIAL_FETCHING_SUCCESS } from './constants';
 import { Material } from '../../models/';
 
 import apiFactory, { Api } from './apiFactory';
+import { resetUserMaterialReaction } from './userMaterialReactionResult';
 
 // import { QAData } from '../../components/qa/IData/index';
 
@@ -69,6 +70,7 @@ export const fetchMaterialStudentView = (lessonUuid: string, materialUuid: strin
     }
     api.get<Material>(url, {}).then((result: Material) => {
       dispatch(fetchingMaterialSuccess(result));
+      resetUserMaterialReaction();
     });
   };
 };

@@ -39,6 +39,7 @@ interface IQAProps {
   lessonUuid: string | undefined;
   previousMaterialUuid: string | undefined;
   editMode: boolean;
+  showFooter: boolean | undefined;
   componentData: IQAData;
   // redux actions
   fetchMaterial(uuid: string): void;
@@ -50,7 +51,7 @@ interface IQAProps {
   currentMaterial: materialActionCreators.MaterialRedux;
   userMaterialReactionResult: userMaterialReactionCreators.UserReactionResultRedux;
   moveToNextComponent(
-    lessonUuid: string | undefined,
+    // lessonUuid: string | undefined,
     // previousMaterialUuid: string | undefined,
     nextMaterialUuid: string | undefined,
   ): void;
@@ -62,6 +63,7 @@ const Index: React.FC<IQAProps> = props => {
     moveToNextComponent,
     componentData: componentDataProp,
     materialUuid,
+    showFooter,
     lessonUuid,
     editMode: editModeProp,
     // redux store
@@ -95,15 +97,20 @@ const Index: React.FC<IQAProps> = props => {
   const [userReactionState, setUserReactionState] = useState('start'); // 'start', 'checked', etc
 
   useEffect(() => {
-    console.log(userReactionState);
+    // console.log(userReactionState);
+    // console.log(userMaterialReactionResult);
+
+    if (userMaterialReactionResult) {
+      setUserReactionState('checked');
+    }
 
     window.parent.postMessage(
       {
         type: 'user_reaction_state',
         data: {
           state: userReactionState,
-          user_lesson_score: userMaterialReactionResult.score,
-          was_correct: userMaterialReactionResult.was_correct,
+          userLessonScore: userMaterialReactionResult?.score,
+          wasCorrect: userMaterialReactionResult?.was_correct,
         },
       },
       '*',
@@ -128,8 +135,21 @@ const Index: React.FC<IQAProps> = props => {
         if (data.type === 'check_user_reaction') {
           if (!currentMaterial.isFetching && currentMaterial.uuid && componentData) {
             const reactionMaterial: Material = { uuid: currentMaterial.uuid, data: componentData };
-            setUserReactionState('checked');
             checkUserMaterialReaction(reactionMaterial);
+          }
+        }
+        if (data.type === 'continue') {
+          if (currentMaterial.uuid) {
+            setUserReactionState('start');
+            moveToNextComponent(userMaterialReactionResult.next_material_uuid);
+            // send redirect url tp parent
+            window.parent.postMessage(
+              {
+                type: 'redirect_to_material',
+                data: { lessonUuid, nextMaterialUuid: userMaterialReactionResult.next_material_uuid },
+              },
+              '*',
+            );
           }
         }
       }
@@ -141,7 +161,14 @@ const Index: React.FC<IQAProps> = props => {
     return () => {
       window.removeEventListener('message', messageListener);
     };
-  }, [checkUserMaterialReaction, currentMaterial, componentData]);
+  }, [
+    checkUserMaterialReaction,
+    currentMaterial,
+    componentData,
+    userMaterialReactionResult,
+    moveToNextComponent,
+    lessonUuid,
+  ]);
 
   useEffect(() => {
     if (currentMaterial.isFetching === false && currentMaterial.uuid) {
@@ -156,12 +183,12 @@ const Index: React.FC<IQAProps> = props => {
     }
     // window.parent.postMessage(
     //   {
-    //     type: "redirect_to_material",
-    //     data: { lessonUuid, nextMaterialUuid }
+    //     type: 'redirect_to_material',
+    //     data: { lessonUuid, nextMaterialUuid },
     //   },
-    //   "*"
+    //   '*',
     // );
-  }, [checkUserMaterialReaction, currentMaterial]);
+  }, [checkUserMaterialReaction, currentMaterial, lessonUuid]);
 
   useEffect(() => {
     setEditMode(editModeProp);
@@ -175,7 +202,7 @@ const Index: React.FC<IQAProps> = props => {
       // load as student view (with hidden fields)
       fetchMaterialStudentView(lessonUuid, materialUuid);
     }
-  }, [editModeProp, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid, previousMaterialUuid]);
+  }, [editModeProp, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid]);
 
   useEffect(() => {
     if (componentData) {
@@ -200,8 +227,7 @@ const Index: React.FC<IQAProps> = props => {
       userMaterialReactionResult.next_material_uuid !== materialUuid
     ) {
       // show correct / wrong answer to the user
-      // result statuses of choices list:
-      // 'none', 'correct', 'wrong'
+      // result statuses of choices list: 'none', 'correct', 'wrong'
       const correctData = userMaterialReactionResult.correct_data as QAData;
 
       componentData.choices.forEach(function(componentDataChoice) {
@@ -299,23 +325,24 @@ const Index: React.FC<IQAProps> = props => {
       ) : (
         <div>Loading...</div> // TODO replace with spinner
       )}
-      <Footer
-        moveToNextComponent={prevMaterialUuid => {
-          // operateDataFunctions.resetComponentData();
-          moveToNextComponent(lessonUuid, userMaterialReactionResult.next_material_uuid);
-          // fetchMaterialStudentView(lessonUuid, prevMaterialUuid);
-        }}
-        editMode={editMode}
-        componentData={componentData}
-        checkUserMaterialReaction={material => {
-          setUserReactionState('checked');
-          checkUserMaterialReaction(material);
-        }}
-        currentMaterial={currentMaterial}
-        disabledCheck={disabledCheck}
-        updateMaterial={updateMaterial}
-        userReactionState={userReactionState}
-      />
+      {showFooter && (
+        <Footer
+          moveToNextComponent={() => {
+            setUserReactionState('start');
+            moveToNextComponent(userMaterialReactionResult.next_material_uuid);
+          }}
+          editMode={editMode}
+          componentData={componentData}
+          checkUserMaterialReaction={material => {
+            setUserReactionState('checked');
+            checkUserMaterialReaction(material);
+          }}
+          currentMaterial={currentMaterial}
+          disabledCheck={disabledCheck}
+          updateMaterial={updateMaterial}
+          userReactionState={userReactionState}
+        />
+      )}
     </ThemeProvider>
   );
 };

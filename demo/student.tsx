@@ -23,7 +23,7 @@ const lessonUuid = '3a484714-dc4a-4f30-bae3-7ba0c6ad7a72';
 const materialsUuids = {
   'a8970b5b-22b8-4792-ac37-8109244e3a75': QAChoices,
   'd60ddf14-f4b6-4188-b5de-54fc3a16311c': QAChoices,
-  // '0b012143-de14-46bd-9692-b52696951b42': Vector,
+  'ad589acf-9d01-40fe-a2ef-253cd6cee48a': Vector,
   // '5fb38617-c0d3-4f4e-9c8b-e13e74570ca5': QABase,
 };
 
@@ -49,7 +49,7 @@ const Student: React.FC = ({ currentMaterial, fetchMaterialStudentView }) => {
     setState({ ...state, contentEditMode: event.target.checked });
   };
 
-  const moveToNextComponent = (lessonUuid, nextMaterialUuid) => {
+  const moveToNextComponent = nextMaterialUuid => {
     // in the sandbox it will be iframe reloading with new /evaluation/<uuid:pt_uuid>/<uuid:material_uuid>/ ?
     // setState({ ...state, currentMaterialUuid: null, previousMaterialUuid: previousMaterialUuid });
     // setState({ ...state, previousMaterialUuid: previousMaterialUuid });
@@ -87,6 +87,7 @@ const Student: React.FC = ({ currentMaterial, fetchMaterialStudentView }) => {
       {GenericComponent && (
         <GenericComponent
           // previousMaterialUuid={state.previousMaterialUuid}
+          showFooter={true}
           lessonUuid={lessonUuid}
           editMode={state.contentEditMode}
           materialUuid={state.currentMaterialUuid}
