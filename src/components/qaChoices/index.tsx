@@ -27,6 +27,8 @@ import { QAData as IQAData } from './IData/index';
 // hook to work with componentData
 import { useComponentData } from './componentData';
 
+import { useSpaEventsHook } from '../hooks/spaEvents';
+
 import { theme } from '../style';
 import { StyledChoiceButton } from './style';
 // import CheckContinueButton from '../common/checkContinueButton';
@@ -120,55 +122,66 @@ const Index: React.FC<IQAProps> = props => {
   const { data: componentData, operateDataFunctions } = useComponentData(componentDataProp, currentMaterial);
   // const { data: componentData, dispatch } = useComponentData(reducer, componentDataProp, currentMaterial);
 
-  useEffect(() => {
-    // catch parent event inside iframe
-    const messageListener = ({ data }: { data: any }): any => {
-      if (data.hasOwnProperty('type')) {
-        // got edit_mode from parent window
-        if (data.type === 'edit_mode') {
-          if (data.data === 'edit') {
-            setEditMode(true);
-          } else {
-            setEditMode(false);
-          }
-        }
-        if (data.type === 'check_user_reaction') {
-          if (!currentMaterial.isFetching && currentMaterial.uuid && componentData) {
-            const reactionMaterial: Material = { uuid: currentMaterial.uuid, data: componentData };
-            checkUserMaterialReaction(reactionMaterial);
-          }
-        }
-        if (data.type === 'continue') {
-          if (currentMaterial.uuid) {
-            setUserReactionState('start');
-            moveToNextComponent(userMaterialReactionResult.next_material_uuid);
-            // send redirect url tp parent
-            window.parent.postMessage(
-              {
-                type: 'redirect_to_material',
-                data: { lessonUuid, nextMaterialUuid: userMaterialReactionResult.next_material_uuid },
-              },
-              '*',
-            );
-          }
-        }
-      }
-    };
-
-    // TODO check that we have only the one Listener
-    window.addEventListener('message', messageListener);
-
-    return () => {
-      window.removeEventListener('message', messageListener);
-    };
-  }, [
+  useSpaEventsHook(
     checkUserMaterialReaction,
     currentMaterial,
     componentData,
     userMaterialReactionResult,
     moveToNextComponent,
     lessonUuid,
-  ]);
+    setEditMode,
+    setUserReactionState,
+  );
+
+  // useEffect(() => {
+  //   // catch parent event inside iframe
+  //   const messageListener = ({ data }: { data: any }): any => {
+  //     if (data.hasOwnProperty('type')) {
+  //       // got edit_mode from parent window
+  //       if (data.type === 'edit_mode') {
+  //         if (data.data === 'edit') {
+  //           setEditMode(true);
+  //         } else {
+  //           setEditMode(false);
+  //         }
+  //       }
+  //       if (data.type === 'check_user_reaction') {
+  //         if (!currentMaterial.isFetching && currentMaterial.uuid && componentData) {
+  //           const reactionMaterial: Material = { uuid: currentMaterial.uuid, data: componentData };
+  //           checkUserMaterialReaction(reactionMaterial);
+  //         }
+  //       }
+  //       if (data.type === 'continue') {
+  //         if (currentMaterial.uuid) {
+  //           setUserReactionState('start');
+  //           moveToNextComponent(userMaterialReactionResult.next_material_uuid);
+  //           // send redirect url tp parent
+  //           window.parent.postMessage(
+  //             {
+  //               type: 'redirect_to_material',
+  //               data: { lessonUuid, nextMaterialUuid: userMaterialReactionResult.next_material_uuid },
+  //             },
+  //             '*',
+  //           );
+  //         }
+  //       }
+  //     }
+  //   };
+  //
+  //   // TODO check that we have only the one Listener
+  //   window.addEventListener('message', messageListener);
+  //
+  //   return () => {
+  //     window.removeEventListener('message', messageListener);
+  //   };
+  // }, [
+  //   checkUserMaterialReaction,
+  //   currentMaterial,
+  //   componentData,
+  //   userMaterialReactionResult,
+  //   moveToNextComponent,
+  //   lessonUuid,
+  // ]);
 
   useEffect(() => {
     if (currentMaterial.isFetching === false && currentMaterial.uuid) {
