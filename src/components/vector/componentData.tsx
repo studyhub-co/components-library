@@ -79,11 +79,6 @@ function getOperateDataFunctions(dispatch: any) {
     dispatch({ type: 'ANSWER_IMAGE_CHANGE', payload: image });
   };
 
-  // const resetComponentData = (): void => {
-  //   // remove data (before load new one from server). FixMe or it's good?
-  //   dispatch({ type: 'REPLACE_DATA', payload: null });
-  // };
-
   return {
     onQuestionTextChange,
     onQuestionHintChange,

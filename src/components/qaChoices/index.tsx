@@ -39,7 +39,7 @@ interface IQAProps {
   // props
   materialUuid: string | undefined;
   lessonUuid: string | undefined;
-  previousMaterialUuid: string | undefined;
+  // previousMaterialUuid: string | undefined;
   editMode: boolean;
   showFooter: boolean | undefined;
   componentData: IQAData;
@@ -65,7 +65,7 @@ const Index: React.FC<IQAProps> = props => {
     moveToNextComponent,
     componentData: componentDataProp,
     materialUuid,
-    showFooter,
+    showFooter: showFooterProp,
     lessonUuid,
     editMode: editModeProp,
     // redux store
@@ -76,12 +76,28 @@ const Index: React.FC<IQAProps> = props => {
     fetchMaterialStudentView,
     checkUserMaterialReaction,
     updateMaterial,
-    previousMaterialUuid,
+    // previousMaterialUuid,
   } = props;
 
   const [editMode, setEditMode] = useState(editModeProp);
   const [cardMode, setCardMode] = useState(false);
+  const [showFooter, setShowFooter] = useState(showFooterProp || false);
   const [disabledCheck, setDisabledCheckS] = useState(true);
+  const { data: componentData, operateDataFunctions } = useComponentData(componentDataProp, currentMaterial);
+  // todo userReactionStateHook
+  const [userReactionState, setUserReactionState] = useState('start'); // 'start', 'checked', etc
+
+  useSpaEventsHook(
+    checkUserMaterialReaction,
+    currentMaterial,
+    componentData,
+    userMaterialReactionResult,
+    moveToNextComponent,
+    lessonUuid,
+    setEditMode,
+    setUserReactionState,
+    setShowFooter,
+  );
 
   const setDisabledCheck = (value: boolean) => {
     setDisabledCheckS(value);
@@ -95,13 +111,7 @@ const Index: React.FC<IQAProps> = props => {
     );
   };
 
-  // todo userReactionStateHook
-  const [userReactionState, setUserReactionState] = useState('start'); // 'start', 'checked', etc
-
   useEffect(() => {
-    // console.log(userReactionState);
-    // console.log(userMaterialReactionResult);
-
     if (userMaterialReactionResult) {
       setUserReactionState('checked');
     }
@@ -119,70 +129,6 @@ const Index: React.FC<IQAProps> = props => {
     );
   }, [userReactionState, userMaterialReactionResult]);
 
-  const { data: componentData, operateDataFunctions } = useComponentData(componentDataProp, currentMaterial);
-  // const { data: componentData, dispatch } = useComponentData(reducer, componentDataProp, currentMaterial);
-
-  useSpaEventsHook(
-    checkUserMaterialReaction,
-    currentMaterial,
-    componentData,
-    userMaterialReactionResult,
-    moveToNextComponent,
-    lessonUuid,
-    setEditMode,
-    setUserReactionState,
-  );
-
-  // useEffect(() => {
-  //   // catch parent event inside iframe
-  //   const messageListener = ({ data }: { data: any }): any => {
-  //     if (data.hasOwnProperty('type')) {
-  //       // got edit_mode from parent window
-  //       if (data.type === 'edit_mode') {
-  //         if (data.data === 'edit') {
-  //           setEditMode(true);
-  //         } else {
-  //           setEditMode(false);
-  //         }
-  //       }
-  //       if (data.type === 'check_user_reaction') {
-  //         if (!currentMaterial.isFetching && currentMaterial.uuid && componentData) {
-  //           const reactionMaterial: Material = { uuid: currentMaterial.uuid, data: componentData };
-  //           checkUserMaterialReaction(reactionMaterial);
-  //         }
-  //       }
-  //       if (data.type === 'continue') {
-  //         if (currentMaterial.uuid) {
-  //           setUserReactionState('start');
-  //           moveToNextComponent(userMaterialReactionResult.next_material_uuid);
-  //           // send redirect url tp parent
-  //           window.parent.postMessage(
-  //             {
-  //               type: 'redirect_to_material',
-  //               data: { lessonUuid, nextMaterialUuid: userMaterialReactionResult.next_material_uuid },
-  //             },
-  //             '*',
-  //           );
-  //         }
-  //       }
-  //     }
-  //   };
-  //
-  //   // TODO check that we have only the one Listener
-  //   window.addEventListener('message', messageListener);
-  //
-  //   return () => {
-  //     window.removeEventListener('message', messageListener);
-  //   };
-  // }, [
-  //   checkUserMaterialReaction,
-  //   currentMaterial,
-  //   componentData,
-  //   userMaterialReactionResult,
-  //   moveToNextComponent,
-  //   lessonUuid,
-  // ]);
-
   useEffect(() => {
     if (currentMaterial.isFetching === false && currentMaterial.uuid) {
       // send message to parent with loaded material
@@ -194,13 +140,6 @@ const Index: React.FC<IQAProps> = props => {
         '*',
       );
     }
-    // window.parent.postMessage(
-    //   {
-    //     type: 'redirect_to_material',
-    //     data: { lessonUuid, nextMaterialUuid },
-    //   },
-    //   '*',
-    // );
   }, [checkUserMaterialReaction, currentMaterial, lessonUuid]);
 
   useEffect(() => {

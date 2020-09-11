@@ -15,18 +15,21 @@ import ContainerItem from '../layout/ContainerItem/index';
 import Paper from '../layout/Paper/index';
 
 import * as materialActionCreators from '../../redux/modules/material';
+import * as userMaterialReactionCreators from '../../redux/modules/userMaterialReactionResult';
 
 import { VectorData as IVectorData } from './IData/index';
 
 import { VectorCanvas } from './vectorCanvas';
 
 import { theme } from '../style';
-import EditableLabel from '../editable/label';
+// import EditableLabel from '../editable/label';
 import Question from '../common/question';
 
 import { Material } from '../../models/';
 
 import { useComponentData } from './componentData';
+import { useSpaEventsHook } from '../hooks/spaEvents';
+import Footer from '../common/footer';
 
 // import { StyledChoiceButton } from './style';
 
@@ -39,21 +42,27 @@ interface IVectorProps {
   currentMaterial: materialActionCreators.MaterialRedux;
   editMode: boolean;
   componentData: IVectorData;
+  showFooter: boolean | undefined;
   // redux actions
   fetchMaterial(uuid: string | undefined): void;
-  // fetchMaterialStudentView(lessonUuid: string | undefined, previousMaterialUuid: string | undefined): void;
+  userMaterialReactionResult: userMaterialReactionCreators.UserReactionResultRedux;
   fetchMaterialStudentView(lessonUuid: string | undefined, materialUuid: string | undefined): void;
   updateMaterial(material: Material): void;
   checkUserMaterialReaction(material: Material): void;
+  moveToNextComponent(nextMaterialUuid: string | undefined): void;
 }
 
 const Index: React.FC<IVectorProps> = props => {
   const {
+    moveToNextComponent,
     editMode: editModeProp,
     componentData: componentDataProp,
     materialUuid,
+    showFooter: showFooterProp,
     lessonUuid,
     // previousMaterialUuid,
+    // redux store
+    userMaterialReactionResult,
     currentMaterial,
     // actions
     fetchMaterial,
@@ -63,77 +72,55 @@ const Index: React.FC<IVectorProps> = props => {
   } = props;
 
   const [editMode, setEditMode] = useState(editModeProp);
-
+  const [userReactionState, setUserReactionState] = useState('start'); // 'start', 'checked', etc
   const { data: componentData, operateDataFunctions } = useComponentData(componentDataProp, currentMaterial);
+  const [showFooter, setShowFooter] = useState(showFooterProp || false);
+  const [disabledCheck, setDisabledCheckS] = useState(true);
 
-  // TODO move to common hooks
+  const setDisabledCheck = (value: boolean) => {
+    setDisabledCheckS(value);
+    // send disabled check the SPA
+    window.parent.postMessage(
+      {
+        type: 'disabled_check_button',
+        data: value,
+      },
+      '*',
+    );
+  };
+
+  useSpaEventsHook(
+    checkUserMaterialReaction,
+    currentMaterial,
+    componentData,
+    userMaterialReactionResult,
+    moveToNextComponent,
+    lessonUuid,
+    setEditMode,
+    setUserReactionState,
+    setShowFooter,
+  );
+
   useEffect(() => {
-    // catch parent event inside iframe
-    window.addEventListener('message', ({ data }) => {
-      if (data.hasOwnProperty('type')) {
-        if (data.type === 'pib_edit_mode') {
-          if (data.data === 'edit') {
-            setEditMode(true);
-          } else {
-            setEditMode(false);
-          }
-        }
-      }
-      return window.removeEventListener('message', () => {});
-    });
-  }, []);
-
-  useEffect(() => {
-    setEditMode(editModeProp);
-    // console.log(currentMaterial);
-
-    if (editModeProp === true) {
+    if (editMode === true) {
       // load as data edit
       if (materialUuid) {
         fetchMaterial(materialUuid);
       }
     } else if (lessonUuid) {
       // load as student view (with hidden fields)
-      // fetchMaterialStudentView(lessonUuid, previousMaterialUuid);
       fetchMaterialStudentView(lessonUuid, materialUuid);
     }
-  }, [editModeProp, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid]);
+  }, [editMode, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid]);
 
-  // const onQuestionTextChange = (text: string): void => {
-  //   if (componentData) {
-  //     dispatch({ type: 'QUESTION_TEXT_CHANGE', payload: text });
-  //   }
-  // };
-  //
-  // const onQuestionTextOnly = (checked: boolean): void => {
-  //   if (componentData) {
-  //     dispatch({ type: 'QUESTION_TEXT_ONLY', payload: checked });
-  //   }
-  // };
-  //
-  // const onQuestionImageChange = (image: string): void => {
-  //   if (componentData) {
-  //     dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
-  //   }
-  // };
-  //
-  // const onAnswerImageChange = (image: string): void => {
-  //   if (componentData) {
-  //     dispatch({ type: 'ANSWER_IMAGE_CHANGE', payload: image });
-  //   }
-  // };
-  //
-  // const onAnswerTextChange = (text: string): void => {
-  //   if (componentData) {
-  //     dispatch({ type: 'ANSWER_TEXT_CHANGE', payload: text });
-  //   }
-  // };
-  //
-  // const onQuestionHintChange = (text: string): void => {
-  //   if (componentData) {
-  //     dispatch({ type: 'QUESTION_HINT_CHANGE', payload: text });
-  //   }
-  // };
+  // disable Check / Continue button while user result reaction is fetching
+  useEffect(() => {
+    if (userMaterialReactionResult?.isFetching) {
+      setDisabledCheck(true);
+    } else {
+      setDisabledCheck(false);
+    }
+  }, [userMaterialReactionResult]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -227,6 +214,24 @@ const Index: React.FC<IVectorProps> = props => {
           </Container>
         )}
       </div>
+      {showFooter && (
+        <Footer
+          moveToNextComponent={() => {
+            setUserReactionState('start');
+            moveToNextComponent(userMaterialReactionResult.next_material_uuid);
+          }}
+          editMode={editMode}
+          componentData={componentData}
+          checkUserMaterialReaction={material => {
+            setUserReactionState('checked');
+            checkUserMaterialReaction(material);
+          }}
+          currentMaterial={currentMaterial}
+          disabledCheck={disabledCheck}
+          updateMaterial={updateMaterial}
+          userReactionState={userReactionState}
+        />
+      )}
     </ThemeProvider>
   );
 };
