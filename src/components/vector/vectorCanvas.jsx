@@ -10,6 +10,7 @@ export class Vector {
   }
 }
 
+// This is the vector itself
 export class CanvasVector {
   constructor(canvas, pointer, color) {
     this.canvas = canvas;
@@ -230,41 +231,42 @@ class NullVector {
   delete() {}
 }
 
-class NullCheckbox extends React.Component {
-  onChange(event) {
-    this.props.onChange(event);
-  }
+// class NullCheckbox extends React.Component {
+//   onChange(event) {
+//     this.props.onChange(event);
+//   }
+//
+//   render() {
+//     const divStyle = {};
+//     const labelStyle = {};
+//     let checked = this.props.checked;
+//     if (this.props.isAnswer) {
+//       divStyle['pointerEvents'] = 'none';
+//       labelStyle['backgroundColor'] = 'rgb(127, 250, 127)';
+//       checked = true;
+//     } else if (this.props.isNotAnswer) {
+//       divStyle['pointerEvents'] = 'none';
+//       labelStyle['backgroundColor'] = 'red';
+//       checked = true;
+//     } else if (!this.props.allowInput || this.props.submitted) {
+//       divStyle['pointerEvents'] = 'none';
+//     }
+//     return (
+//       <div id="nullVector" className="checkbox" style={divStyle}>
+//         <label id="highlightGreen" style={labelStyle}>
+//           <input id="nullVectorCheckbox" type="checkbox" checked={checked} onChange={this.onChange.bind(this)} />
+//           Null vector
+//         </label>
+//       </div>
+//     );
+//   }
+// }
 
-  render() {
-    const divStyle = {};
-    const labelStyle = {};
-    let checked = this.props.checked;
-    if (this.props.isAnswer) {
-      divStyle['pointerEvents'] = 'none';
-      labelStyle['backgroundColor'] = 'rgb(127, 250, 127)';
-      checked = true;
-    } else if (this.props.isNotAnswer) {
-      divStyle['pointerEvents'] = 'none';
-      labelStyle['backgroundColor'] = 'red';
-      checked = true;
-    } else if (!this.props.allowInput || this.props.submitted) {
-      divStyle['pointerEvents'] = 'none';
-    }
-    return (
-      <div id="nullVector" className="checkbox" style={divStyle}>
-        <label id="highlightGreen" style={labelStyle}>
-          <input id="nullVectorCheckbox" type="checkbox" checked={checked} onChange={this.onChange.bind(this)} />
-          Null vector
-        </label>
-      </div>
-    );
-  }
-}
-
+// This is the Grid canvas for CanvasVectors
 export class VectorCanvas extends React.Component {
   // NOTE It might be better to store the arrow in state
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.objects = [];
     this.state = {
       checked: false, // TODO rename to isNullVector
@@ -305,19 +307,25 @@ export class VectorCanvas extends React.Component {
 
   refreshAnswer() {
     // populate answer in external component
-    if (!this.props.question) {
-      return;
-    }
+    // if (!this.props.question) {
+    //   return;
+    // }
     if (this.arrow) {
-      this.props.updateAnswer([
-        this.props.question.uuid,
-        {
-          vector: {
-            xComponent: this.arrow.getXComponent(),
-            yComponent: this.arrow.getYComponent(),
-          },
+      this.props.updateAnswer({
+        vector: {
+          xComponent: this.arrow.getXComponent(),
+          yComponent: this.arrow.getYComponent(),
         },
-      ]);
+      });
+      // this.props.updateAnswer([
+      //   this.props.question.uuid,
+      //   {
+      //     vector: {
+      //       xComponent: this.arrow.getXComponent(),
+      //       yComponent: this.arrow.getYComponent(),
+      //     },
+      //   },
+      // ]);
     }
   }
 
@@ -375,26 +383,26 @@ export class VectorCanvas extends React.Component {
     this.refreshAnswer();
   }
 
-  nullBoxCheck(event) {
-    const newState = !this.state.checked;
-    if (newState) {
-      if (this.arrow) {
-        this.arrow.delete();
-      }
-      this.arrow = new NullVector();
-
-      if (this.props.onComplete) {
-        this.props.onComplete(this.arrow);
-      }
-    } else {
-      if (this.arrow) {
-        this.arrow.delete();
-      }
-      this.arrow = null;
-    }
-    this.setState({ checked: newState });
-    this.refreshAnswer();
-  }
+  // nullBoxCheck(event) {
+  //   const newState = !this.state.checked;
+  //   if (newState) {
+  //     if (this.arrow) {
+  //       this.arrow.delete();
+  //     }
+  //     this.arrow = new NullVector();
+  //
+  //     if (this.props.onComplete) {
+  //       this.props.onComplete(this.arrow);
+  //     }
+  //   } else {
+  //     if (this.arrow) {
+  //       this.arrow.delete();
+  //     }
+  //     this.arrow = null;
+  //   }
+  //   this.setState({ checked: newState });
+  //   this.refreshAnswer();
+  // }
 
   static calcVectorXStart(value) {
     if (value > 2) {
@@ -487,19 +495,19 @@ export class VectorCanvas extends React.Component {
       // $('.upper-canvas').css('pointer-events', '');
       // document.getElementsByClassName('.upper-canvas').style.pointerEvents = '';
     }
-    let nullBox = '';
-    if (this.props.allowNull) {
-      nullBox = (
-        <NullCheckbox
-          allowInput={this.props.allowInput}
-          submitted={this.state.submitted}
-          isAnswer={this.props.isNullAnswer}
-          isNotAnswer={this.props.isNotNullAnswer}
-          checked={this.state.checked}
-          onChange={this.nullBoxCheck.bind(this)}
-        />
-      );
-    }
+    // let nullBox = '';
+    // if (this.props.allowNull) {
+    //   nullBox = (
+    //     <NullCheckbox
+    //       allowInput={this.props.allowInput}
+    //       submitted={this.state.submitted}
+    //       isAnswer={this.props.isNullAnswer}
+    //       isNotAnswer={this.props.isNotNullAnswer}
+    //       checked={this.state.checked}
+    //       onChange={this.nullBoxCheck.bind(this)}
+    //     />
+    //   );
+    // }
     // var checkButton = '';
     // if (this.props.manualCheck) {
     //     var buttonClass = 'btn btn-primary';
@@ -515,7 +523,7 @@ export class VectorCanvas extends React.Component {
     return (
       <div>
         <canvas id={this.props.canvasId} width="300" height="300" className="lower-canvas" style={canvasStyle} />
-        <div>{nullBox}</div>
+        {/*<div>{nullBox}</div>*/}
         {/* <div>{checkButton}</div> */}
         {/* {typeof this.props.continueBtn !== 'undefined' ? this.props.continueBtn : ''} */}
       </div>

@@ -12,6 +12,9 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
     if (action.type === 'QUESTION_TEXT_ONLY') {
       draft.reducerData.questionTextOnly = action.payload;
     }
+    if (action.type === 'QUESTION_VECTOR_IS_NULL') {
+      draft.reducerData.questionVectorIsNull = action.payload;
+    }
     if (action.type === 'QUESTION_IMAGE_CHANGE') {
       draft.reducerData.question.content.image = action.payload;
     }
@@ -26,6 +29,18 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
     }
     if (action.type === 'ANSWER_TEXT_CHANGE') {
       draft.reducerData.answer.content.text = action.payload;
+    }
+    if (action.type === 'ANSWER_VECTOR_IS_NULL') {
+      draft.reducerData.answerVectorIsNull = action.payload;
+    }
+    if (action.type === 'ANSWER_TEXT_ONLY') {
+      draft.reducerData.answerTextOnly = action.payload;
+    }
+    if (action.type === 'ANSWER_NULLABLE_VECTOR') {
+      draft.reducerData.answerNullableVector = action.payload;
+    }
+    if (action.type === 'ANSWER_TO_CHECK') {
+      draft.reducerData.answerToCheck = action.payload;
     }
   });
 };

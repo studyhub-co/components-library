@@ -3,6 +3,7 @@ import React, { useState, useEffect, useReducer } from 'react';
 import { isRight } from 'fp-ts/lib/Either';
 
 import { VectorData as IVectorData, VectorDataIo } from './IData/index';
+import { Vector as IVector } from './IData/vector';
 
 import { IReducerObject, reducer } from './reducer';
 
@@ -79,12 +80,43 @@ function getOperateDataFunctions(dispatch: any) {
     dispatch({ type: 'ANSWER_IMAGE_CHANGE', payload: image });
   };
 
+  const onQuestionIsNullVector = (checked: boolean): void => {
+    dispatch({ type: 'QUESTION_VECTOR_IS_NULL', payload: checked });
+  };
+
+  const onAnswerIsNullVector = (checked: boolean): void => {
+    dispatch({ type: 'ANSWER_VECTOR_IS_NULL', payload: checked });
+  };
+
+  const onAnswerTextOnly = (checked: boolean): void => {
+    dispatch({ type: 'ANSWER_TEXT_ONLY', payload: checked });
+  };
+
+  const onAnswerNullableVector = (checked: boolean): void => {
+    dispatch({ type: 'ANSWER_NULLABLE_VECTOR', payload: checked });
+  };
+
+  const onAnswerToCheck = (checked: number): void => {
+    dispatch({ type: 'ANSWER_TO_CHECK', payload: checked });
+  };
+
+  const onAnswerVectorAdd = (vector: IVector): void => {
+    console.log(vector);
+    dispatch({ type: 'ANSWER_VECTOR_ADD', payload: vector });
+  };
+
   return {
     onQuestionTextChange,
     onQuestionHintChange,
     onQuestionImageChange,
     onQuestionTextOnly,
+    onQuestionIsNullVector,
     onAnswerTextChange,
     onAnswerImageChange,
+    onAnswerIsNullVector,
+    onAnswerTextOnly,
+    onAnswerNullableVector,
+    onAnswerToCheck,
+    onAnswerVectorAdd,
   };
 }

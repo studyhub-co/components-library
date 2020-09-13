@@ -9,6 +9,8 @@ import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import ClearIcon from '@material-ui/icons/Clear';
+import IconButton from '@material-ui/core/IconButton';
 
 import Container from '../layout/Container/index';
 import ContainerItem from '../layout/ContainerItem/index';
@@ -30,6 +32,7 @@ import { Material } from '../../models/';
 import { useComponentData } from './componentData';
 import { useSpaEventsHook } from '../hooks/spaEvents';
 import Footer from '../common/footer';
+import { Vector } from './IData/vector';
 
 // import { StyledChoiceButton } from './style';
 
@@ -102,6 +105,8 @@ const Index: React.FC<IVectorProps> = props => {
   );
 
   useEffect(() => {
+    setEditMode(editModeProp);
+    setUserReactionState('start');
     if (editMode === true) {
       // load as data edit
       if (materialUuid) {
@@ -111,7 +116,7 @@ const Index: React.FC<IVectorProps> = props => {
       // load as student view (with hidden fields)
       fetchMaterialStudentView(lessonUuid, materialUuid);
     }
-  }, [editMode, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid]);
+  }, [editMode, editModeProp, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid]);
 
   // disable Check / Continue button while user result reaction is fetching
   useEffect(() => {
@@ -147,22 +152,41 @@ const Index: React.FC<IVectorProps> = props => {
                 />
                 {editMode && (
                   <React.Fragment>
+                    <IconButton
+                      color="primary"
+                      onClick={() => {
+                        alert('clear clicked');
+                      }}
+                      component="div"
+                    >
+                      <ClearIcon /> clear
+                    </IconButton>
+                    {/*<br />*/}
+                    {/*<FormControlLabel*/}
+                    {/*  control={*/}
+                    {/*    <Checkbox*/}
+                    {/*      checked={componentData.questionTextOnly}*/}
+                    {/*      onChange={(e, checked) => {*/}
+                    {/*        operateDataFunctions.onQuestionTextOnly(checked);*/}
+                    {/*      }}*/}
+                    {/*      name="checkedQTextOnly"*/}
+                    {/*      color="primary"*/}
+                    {/*    />*/}
+                    {/*  }*/}
+                    {/*  label="Question text only"*/}
+                    {/*/>*/}
+                    <br />
                     <FormControlLabel
                       control={
                         <Checkbox
-                          checked={componentData.questionTextOnly}
+                          checked={componentData.questionVectorIsNull}
                           onChange={(e, checked) => {
-                            operateDataFunctions.onQuestionTextOnly(checked);
+                            operateDataFunctions.onQuestionIsNullVector(checked);
                           }}
-                          name="checkedB"
+                          name="checkedQNUlll"
                           color="primary"
                         />
                       }
-                      label="Question text only"
-                    />
-                    <br />
-                    <FormControlLabel
-                      control={<Checkbox checked={false} onChange={() => {}} name="checkedB" color="primary" />}
                       label="Null vector"
                     />
                   </React.Fragment>
@@ -171,37 +195,92 @@ const Index: React.FC<IVectorProps> = props => {
             </ContainerItem>
             <ContainerItem>
               <Paper>
-                <Question
-                  editMode={editMode}
-                  question={componentData.answer}
-                  onTextChange={operateDataFunctions.onAnswerTextChange}
-                  onImageChange={operateDataFunctions.onAnswerImageChange}
-                />
+                {editMode && (
+                  <Question
+                    editMode={editMode}
+                    question={componentData.answer}
+                    onTextChange={operateDataFunctions.onAnswerTextChange}
+                    onImageChange={operateDataFunctions.onAnswerImageChange}
+                  />
+                )}
                 <br />
                 <VectorCanvas
                   clear={true}
                   canvasId={'answer'}
-                  // objects={objects}
+                  // objects={objects} // objects -> objects that we need to draw on Canvas
                   allowInput={true}
+                  updateAnswer={(ans: any) => {
+                    operateDataFunctions.onAnswerVectorAdd(ans as Vector);
+                  }}
                   // updateAnswer={ans => this.props.onVectorChanged(ans[1].vector.x_component, ans[1].vector.y_component)}
                   // question={{ uuid: this.props.question }}
                 />
                 <br />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={componentData.answerVectorIsNull}
+                      onChange={(e, checked) => {
+                        operateDataFunctions.onAnswerIsNullVector(checked);
+                      }}
+                      name="checkedANull"
+                      color="primary"
+                    />
+                  }
+                  label="Null vector"
+                />
+                <br />
                 {editMode && (
                   <React.Fragment>
-                    <FormControlLabel
-                      control={<Checkbox checked={false} onChange={() => {}} name="checkedB" color="primary" />}
-                      label="Answer text only"
-                    />
+                    <IconButton
+                      color="primary"
+                      onClick={() => {
+                        alert('clear clicked');
+                      }}
+                      component="div"
+                    >
+                      <ClearIcon /> clear
+                    </IconButton>
+                    {/*<br />*/}
+                    {/*<FormControlLabel*/}
+                    {/*  control={*/}
+                    {/*    <Checkbox*/}
+                    {/*      checked={componentData.answerTextOnly}*/}
+                    {/*      onChange={(e, checked) => {*/}
+                    {/*        operateDataFunctions.onAnswerTextOnly(checked);*/}
+                    {/*      }}*/}
+                    {/*      name="checkedATextOnly"*/}
+                    {/*      color="primary"*/}
+                    {/*    />*/}
+                    {/*  }*/}
+                    {/*  label="Answer text only"*/}
+                    {/*/>*/}
                     <br />
                     <FormControlLabel
-                      control={<Checkbox checked={false} onChange={() => {}} name="checkedB" color="primary" />}
-                      label="Null vector"
+                      control={
+                        <Checkbox
+                          checked={componentData.answerNullableVector}
+                          onChange={(e, checked) => {
+                            operateDataFunctions.onAnswerNullableVector(checked);
+                          }}
+                          name="checkedANullable"
+                          color="primary"
+                        />
+                      }
+                      label="Nullable vector (Show 'Null vector' checkbox for student)"
                     />
                     <br />
                     <FormControl>
                       <InputLabel id="demo-simple-select-label">To check:</InputLabel>
-                      <Select labelId="demo-simple-select-label" id="demo-simple-select" value={10} onChange={() => {}}>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={componentData.answerToCheck}
+                        onChange={event => {
+                          const value: number = event.target.value as number;
+                          operateDataFunctions.onAnswerToCheck(value);
+                        }}
+                      >
                         <MenuItem value={10}>Full vector match</MenuItem>
                         <MenuItem value={20}>Magnitude only</MenuItem>
                         <MenuItem value={30}>Angle only</MenuItem>

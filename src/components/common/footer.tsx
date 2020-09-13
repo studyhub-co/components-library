@@ -43,7 +43,6 @@ const Footer: React.FC<FooterProps> = props => {
 
   return (
     <div style={{ textAlign: 'center' }}>
-      <div>Footer from eval</div>
       <CheckContinueButton
         moveToNextComponent={moveToNextComponent}
         editMode={editMode}
