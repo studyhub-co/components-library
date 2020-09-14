@@ -23,22 +23,32 @@ export const mockVector: VectorData = {
   },
   questionTextOnly: false,
   questionVectorIsNull: false,
-  hiddenFields: { answerVectors: false, answer: false },
-  questionVectors: [
-    {
-      angle: 0,
-      xComponent: 0,
-      yComponent: 0,
-      magnitude: 0,
+  hiddenFields: {
+    answerVectors: [],
+    answer: {
+      content: {
+        text: '',
+        image: '',
+        hint: '',
+      },
+      type: 'base',
     },
+  },
+  questionVectors: [
+    // {
+    //   angle: 0,
+    //   xComponent: 0,
+    //   yComponent: 0,
+    //   magnitude: 0,
+    // },
   ],
   answerVectors: [
-    {
-      angle: 0,
-      xComponent: 0,
-      yComponent: 0,
-      magnitude: 0,
-    },
+    // {
+    //   angle: 0,
+    //   xComponent: 0,
+    //   yComponent: 0,
+    //   magnitude: 0,
+    // },
   ],
   answerVectorIsNull: false,
   answerTextOnly: false,

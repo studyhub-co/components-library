@@ -25,6 +25,7 @@ export function useComponentData(componentData: IVectorData, currentMaterial: an
     if (currentMaterial && currentMaterial.data) {
       // set component data from loaded currentMaterial
       // validate data structure from API with io-ts model
+      console.log(currentMaterial.data);
       if (isRight(VectorDataIo.decode(currentMaterial.data))) {
         initialData = currentMaterial.data;
       } else {
@@ -47,11 +48,9 @@ export function useComponentData(componentData: IVectorData, currentMaterial: an
       }
     }
   }, [componentData, currentMaterial]);
-  // }, [componentData, currentMaterial, data.reducerData]);
 
   const operateDataFunctions = getOperateDataFunctions(dispatch);
 
-  // return { data: data.reducerData, dispatch };
   return { data: data.reducerData, operateDataFunctions };
 }
 
@@ -84,6 +83,14 @@ function getOperateDataFunctions(dispatch: any) {
     dispatch({ type: 'QUESTION_VECTOR_IS_NULL', payload: checked });
   };
 
+  const onQuestionClearVector = (): void => {
+    dispatch({ type: 'QUESTION_SET_VECTORS', payload: [] });
+  };
+
+  const onQuestionVectorAdd = (vector: IVector): void => {
+    dispatch({ type: 'QUESTION_VECTOR_ADD', payload: vector });
+  };
+
   const onAnswerIsNullVector = (checked: boolean): void => {
     dispatch({ type: 'ANSWER_VECTOR_IS_NULL', payload: checked });
   };
@@ -101,8 +108,11 @@ function getOperateDataFunctions(dispatch: any) {
   };
 
   const onAnswerVectorAdd = (vector: IVector): void => {
-    console.log(vector);
     dispatch({ type: 'ANSWER_VECTOR_ADD', payload: vector });
+  };
+
+  const onAnswerClearVector = (): void => {
+    dispatch({ type: 'ANSWER_SET_VECTORS', payload: [] });
   };
 
   return {
@@ -111,6 +121,8 @@ function getOperateDataFunctions(dispatch: any) {
     onQuestionImageChange,
     onQuestionTextOnly,
     onQuestionIsNullVector,
+    onQuestionVectorAdd,
+    onQuestionClearVector,
     onAnswerTextChange,
     onAnswerImageChange,
     onAnswerIsNullVector,
@@ -118,5 +130,6 @@ function getOperateDataFunctions(dispatch: any) {
     onAnswerNullableVector,
     onAnswerToCheck,
     onAnswerVectorAdd,
+    onAnswerClearVector,
   };
 }

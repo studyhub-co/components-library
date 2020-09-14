@@ -21,7 +21,7 @@ import * as userMaterialReactionCreators from '../../redux/modules/userMaterialR
 
 import { VectorData as IVectorData } from './IData/index';
 
-import { VectorCanvas } from './vectorCanvas';
+import { VectorCanvas, CanvasVector } from './vectorCanvas';
 
 import { theme } from '../style';
 // import EditableLabel from '../editable/label';
@@ -54,6 +54,8 @@ interface IVectorProps {
   checkUserMaterialReaction(material: Material): void;
   moveToNextComponent(nextMaterialUuid: string | undefined): void;
 }
+
+const VECTOR_COLORS = ['red', 'blue', 'green', 'yellow'];
 
 const Index: React.FC<IVectorProps> = props => {
   const {
@@ -107,7 +109,7 @@ const Index: React.FC<IVectorProps> = props => {
   useEffect(() => {
     setEditMode(editModeProp);
     setUserReactionState('start');
-    if (editMode === true) {
+    if (editModeProp === true) {
       // load as data edit
       if (materialUuid) {
         fetchMaterial(materialUuid);
@@ -116,7 +118,7 @@ const Index: React.FC<IVectorProps> = props => {
       // load as student view (with hidden fields)
       fetchMaterialStudentView(lessonUuid, materialUuid);
     }
-  }, [editMode, editModeProp, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid]);
+  }, [editModeProp, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid]);
 
   // disable Check / Continue button while user result reaction is fetching
   useEffect(() => {
@@ -126,6 +128,25 @@ const Index: React.FC<IVectorProps> = props => {
       setDisabledCheck(false);
     }
   }, [userMaterialReactionResult]);
+
+  const vectorCanvases = (vectorsList: Array<any>) => {
+    const objects = [];
+    for (const i in vectorsList) {
+      const pointer = {
+        x: VectorCanvas.calcVectorXStart(vectorsList[i].xComponent),
+        y: VectorCanvas.calcVectorYStart(vectorsList[i].yComponent),
+      };
+      const endPointer = {
+        x: pointer['x'] + VectorCanvas.calcCanvasMagnitude(vectorsList[i].xComponent),
+        y: pointer['y'] - VectorCanvas.calcCanvasMagnitude(vectorsList[i].yComponent),
+      };
+
+      const v = new CanvasVector(null, pointer, VECTOR_COLORS[i]);
+      v.complete(endPointer);
+      objects.push(v);
+    }
+    return objects;
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -145,20 +166,18 @@ const Index: React.FC<IVectorProps> = props => {
                 <VectorCanvas
                   clear={true}
                   canvasId={'question'}
+                  objects={vectorCanvases(componentData.questionVectors)}
                   // objects={objects}
                   allowInput={true}
+                  updateAnswer={(ans: any) => {
+                    operateDataFunctions.onQuestionVectorAdd(ans.vector as Vector);
+                  }}
                   // updateAnswer={ans => this.props.onVectorChanged(ans[1].vector.x_component, ans[1].vector.y_component)}
                   // question={{ uuid: this.props.question }}
                 />
                 {editMode && (
                   <React.Fragment>
-                    <IconButton
-                      color="primary"
-                      onClick={() => {
-                        alert('clear clicked');
-                      }}
-                      component="div"
-                    >
+                    <IconButton color="primary" onClick={operateDataFunctions.onQuestionClearVector} component="div">
                       <ClearIcon /> clear
                     </IconButton>
                     {/*<br />*/}
@@ -208,9 +227,10 @@ const Index: React.FC<IVectorProps> = props => {
                   clear={true}
                   canvasId={'answer'}
                   // objects={objects} // objects -> objects that we need to draw on Canvas
-                  allowInput={true}
+                  objects={vectorCanvases(componentData.answerVectors)}
+                  allowInput={componentData.answerVectors.length < 4}
                   updateAnswer={(ans: any) => {
-                    operateDataFunctions.onAnswerVectorAdd(ans as Vector);
+                    operateDataFunctions.onAnswerVectorAdd(ans.vector as Vector);
                   }}
                   // updateAnswer={ans => this.props.onVectorChanged(ans[1].vector.x_component, ans[1].vector.y_component)}
                   // question={{ uuid: this.props.question }}
@@ -232,13 +252,7 @@ const Index: React.FC<IVectorProps> = props => {
                 <br />
                 {editMode && (
                   <React.Fragment>
-                    <IconButton
-                      color="primary"
-                      onClick={() => {
-                        alert('clear clicked');
-                      }}
-                      component="div"
-                    >
+                    <IconButton color="primary" onClick={operateDataFunctions.onAnswerClearVector} component="div">
                       <ClearIcon /> clear
                     </IconButton>
                     {/*<br />*/}

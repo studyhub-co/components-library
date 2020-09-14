@@ -24,6 +24,12 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
     if (action.type === 'QUESTION_TEXT_CHANGE') {
       draft.reducerData.question.content.text = action.payload;
     }
+    if (action.type === 'QUESTION_VECTOR_ADD') {
+      draft.reducerData.questionVectors.push(action.payload);
+    }
+    if (action.type === 'QUESTION_SET_VECTORS') {
+      draft.reducerData.questionVectors = action.payload;
+    }
     if (action.type === 'ANSWER_IMAGE_CHANGE') {
       draft.reducerData.answer.content.image = action.payload;
     }
@@ -41,6 +47,12 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
     }
     if (action.type === 'ANSWER_TO_CHECK') {
       draft.reducerData.answerToCheck = action.payload;
+    }
+    if (action.type === 'ANSWER_VECTOR_ADD') {
+      draft.reducerData.answerVectors.push(action.payload);
+    }
+    if (action.type === 'ANSWER_SET_VECTORS') {
+      draft.reducerData.answerVectors = action.payload;
     }
   });
 };

@@ -4,8 +4,8 @@ import { QuestionIo } from '../../common/IData/question';
 import { VectorIo } from './vector';
 
 const HiddenFields = t.interface({
-  answerVectors: t.boolean,
-  answer: t.boolean,
+  answerVectors: t.array(VectorIo),
+  answer: QuestionIo,
 });
 
 export const VectorDataIo = t.interface({

@@ -289,7 +289,7 @@ export class VectorCanvas extends React.Component {
     // this.setState({checked: false});
     // $('#checkAnswer').click(this.checkAnswer.bind(this));
 
-    this.fixCanvas();
+    // this.fixCanvas();
   }
 
   componentDidUpdate() {
@@ -311,10 +311,14 @@ export class VectorCanvas extends React.Component {
     //   return;
     // }
     if (this.arrow) {
+      console.log(this.arrow);
+
       this.props.updateAnswer({
         vector: {
+          angle: this.arrow.getVectorAngle(),
           xComponent: this.arrow.getXComponent(),
           yComponent: this.arrow.getYComponent(),
+          magnitude: this.arrow.getVectorMagnitude(),
         },
       });
       // this.props.updateAnswer([
@@ -376,7 +380,7 @@ export class VectorCanvas extends React.Component {
     } else if (this.arrow.getYComponent() === 0 && this.arrow.getXComponent() === 0) {
       this.arrow.delete();
       this.arrow = new NullVector();
-      this.nullBoxCheck();
+      // this.nullBoxCheck();
     } else if (this.props.onComplete) {
       this.props.onComplete(this.arrow);
     }
@@ -452,18 +456,18 @@ export class VectorCanvas extends React.Component {
 
   // Waits till at least one canvas container is loaded onto the page.
   // Note that we are only going to have one.
-  fixCanvas() {
-    const noScroll = document.getElementsByClassName('canvas-container');
-    for (let i = 0; i < noScroll.length; i++) {
-      noScroll[i].addEventListener(
-        'touchmove',
-        function(e) {
-          e.preventDefault();
-        },
-        false,
-      );
-    }
-  }
+  // fixCanvas() {
+  //   const noScroll = document.getElementsByClassName('canvas-container');
+  //   for (let i = 0; i < noScroll.length; i++) {
+  //     noScroll[i].addEventListener(
+  //       'touchmove',
+  //       function(e) {
+  //         e.preventDefault();
+  //       },
+  //       false,
+  //     );
+  //   }
+  // }
 
   render() {
     if (this.props.clear) {
@@ -486,8 +490,10 @@ export class VectorCanvas extends React.Component {
     const canvasStyle = {
       border: '1px solid #ccc',
     };
+    const wrapperStyle = {};
+
     if (!this.props.allowInput || this.state.submitted) {
-      canvasStyle['pointerEvents'] = 'none';
+      wrapperStyle['pointerEvents'] = 'none';
       // $('.upper-canvas').css('pointer-events', 'none');
       // console.log(document.getElementsByClassName('.upper-canvas').style);
       // document.getElementsByClassName('.upper-canvas').style.pointerEvents = 'none';
@@ -495,6 +501,7 @@ export class VectorCanvas extends React.Component {
       // $('.upper-canvas').css('pointer-events', '');
       // document.getElementsByClassName('.upper-canvas').style.pointerEvents = '';
     }
+
     // let nullBox = '';
     // if (this.props.allowNull) {
     //   nullBox = (
@@ -521,7 +528,7 @@ export class VectorCanvas extends React.Component {
     //     );
     // }
     return (
-      <div>
+      <div style={wrapperStyle}>
         <canvas id={this.props.canvasId} width="300" height="300" className="lower-canvas" style={canvasStyle} />
         {/*<div>{nullBox}</div>*/}
         {/* <div>{checkButton}</div> */}
