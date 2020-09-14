@@ -9,7 +9,9 @@ import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import ClearIcon from '@material-ui/icons/Clear';
+// replace with react icons to reduce bundle size
+// import ClearIcon from '@material-ui/icons/Clear';
+import { FaTimes } from 'react-icons/fa';
 import IconButton from '@material-ui/core/IconButton';
 
 import Container from '../layout/Container/index';
@@ -178,7 +180,7 @@ const Index: React.FC<IVectorProps> = props => {
                 {editMode && (
                   <React.Fragment>
                     <IconButton color="primary" onClick={operateDataFunctions.onQuestionClearVector} component="div">
-                      <ClearIcon /> clear
+                      <FaTimes /> clear
                     </IconButton>
                     {/*<br />*/}
                     {/*<FormControlLabel*/}
@@ -253,7 +255,7 @@ const Index: React.FC<IVectorProps> = props => {
                 {editMode && (
                   <React.Fragment>
                     <IconButton color="primary" onClick={operateDataFunctions.onAnswerClearVector} component="div">
-                      <ClearIcon /> clear
+                      <FaTimes /> clear
                     </IconButton>
                     {/*<br />*/}
                     {/*<FormControlLabel*/}
