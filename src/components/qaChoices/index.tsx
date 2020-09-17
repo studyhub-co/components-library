@@ -88,6 +88,7 @@ const Index: React.FC<IQAProps> = props => {
   const [userReactionState, setUserReactionState] = useState('start'); // 'start', 'checked', etc
 
   useSpaEventsHook(
+    updateMaterial,
     checkUserMaterialReaction,
     currentMaterial,
     componentData,
@@ -144,8 +145,11 @@ const Index: React.FC<IQAProps> = props => {
 
   useEffect(() => {
     setEditMode(editModeProp);
+  }, [editModeProp]);
+
+  useEffect(() => {
     setUserReactionState('start');
-    if (editModeProp === true) {
+    if (editMode === true) {
       // load as data edit
       if (materialUuid) {
         fetchMaterial(materialUuid);
@@ -154,7 +158,7 @@ const Index: React.FC<IQAProps> = props => {
       // load as student view (with hidden fields)
       fetchMaterialStudentView(lessonUuid, materialUuid);
     }
-  }, [editModeProp, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid]);
+  }, [editMode, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid]);
 
   useEffect(() => {
     if (componentData) {

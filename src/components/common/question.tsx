@@ -12,70 +12,38 @@ import EditableThumbnail from '../editable/thumbnail';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IQuestionProps {
-  // material: materialActionCreators.MaterialRedux;
   editMode: boolean;
   question: IQuestion;
-  // onChange: (question: IQuestion) => void;
+  mathButtons?: undefined | string[];
+  mathMode?: boolean;
   onTextChange: (text: string) => void;
   onImageChange: (image: any) => void;
   onHintChange?: (text: string) => void;
 }
 
 const Question: React.FC<IQuestionProps> = props => {
-  const { question, onTextChange, editMode, onHintChange, onImageChange } = props;
+  const { question, onTextChange, editMode, onHintChange, onImageChange, mathButtons, mathMode } = props;
 
   const [showHint, setShowHint] = useState(false);
-  // const [imageSrc, setImageSrc] = useState<string>('');
 
   const handleShowHintChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setShowHint(event.target.checked);
   };
 
-  // const selectImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
-  //   if (event.target.files && event.target.files.length > 0) {
-  //     onImageChange(event.target.files[0]);
-  //   }
-  // };
-  //
-  // useEffect(() => {
-  //   if (
-  //     question.content.image &&
-  //     question.content.image instanceof File &&
-  //     question.content.image.type.startsWith('image/')
-  //   ) {
-  //     const objectUrl = URL.createObjectURL(question.content.image);
-  //     setImageSrc(objectUrl);
-  //   }
-  // }, [question.content.image]);
-  // console.log(onImageChange);
-
   return (
     <React.Fragment>
       <React.Fragment>
-        <EditableLabel onChange={onTextChange} value={question.content.text} editMode={editMode} cursorPointer={true} />
+        <EditableLabel
+          mathButtons={mathButtons}
+          onChange={onTextChange}
+          value={question.content.text}
+          editMode={editMode}
+          mathMode={mathMode}
+          cursorPointer={true}
+        />
       </React.Fragment>
       <br />
       <EditableThumbnail editMode={editMode} image={question.content.image} onImageChange={onImageChange} />
-      {/*{!editMode && question.content.image && imageSrc && <img width={'100%'} src={imageSrc} />}*/}
-      {/*{editMode && (*/}
-      {/*  <React.Fragment>*/}
-      {/*    <input*/}
-      {/*      accept="image/*"*/}
-      {/*      style={{ display: 'none' }}*/}
-      {/*      id="select-img"*/}
-      {/*      multiple*/}
-      {/*      type="file"*/}
-      {/*      onChange={selectImage}*/}
-      {/*    />*/}
-      {/*    <label htmlFor="select-img">*/}
-      {/*      {question.content.image && imageSrc ? (*/}
-      {/*        <img width={'100%'} src={imageSrc} style={{ cursor: 'pointer' }} />*/}
-      {/*      ) : (*/}
-      {/*        <FaFileImage style={{ cursor: 'pointer' }} size={'5rem'} />*/}
-      {/*      )}*/}
-      {/*    </label>*/}
-      {/*  </React.Fragment>*/}
-      {/*)}*/}
       {editMode && onHintChange && (
         <EditableLabel
           placeholder="Hint text"

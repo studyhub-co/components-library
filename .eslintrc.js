@@ -27,6 +27,7 @@ module.exports =  {
     "@typescript-eslint/no-namespace": 0,
     "@typescript-eslint/no-empty-function": 0,
     "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/ban-ts-ignore": "warn", // temp fix of react-mathquill issues/5 - todo remove this
   },
   settings:  {
     react:  {

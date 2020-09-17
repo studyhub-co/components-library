@@ -98,6 +98,7 @@ const Index: React.FC<IVectorProps> = props => {
 
   useSpaEventsHook(
     checkUserMaterialReaction,
+    updateMaterial,
     currentMaterial,
     componentData,
     userMaterialReactionResult,
@@ -110,8 +111,11 @@ const Index: React.FC<IVectorProps> = props => {
 
   useEffect(() => {
     setEditMode(editModeProp);
+  }, [editModeProp]);
+
+  useEffect(() => {
     setUserReactionState('start');
-    if (editModeProp === true) {
+    if (editMode === true) {
       // load as data edit
       if (materialUuid) {
         fetchMaterial(materialUuid);
@@ -120,7 +124,7 @@ const Index: React.FC<IVectorProps> = props => {
       // load as student view (with hidden fields)
       fetchMaterialStudentView(lessonUuid, materialUuid);
     }
-  }, [editModeProp, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid]);
+  }, [editMode, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid]);
 
   // disable Check / Continue button while user result reaction is fetching
   useEffect(() => {
@@ -163,6 +167,7 @@ const Index: React.FC<IVectorProps> = props => {
                   question={componentData.question}
                   onTextChange={operateDataFunctions.onQuestionTextChange}
                   onImageChange={operateDataFunctions.onQuestionImageChange}
+                  mathMode={true}
                 />
                 <br />
                 <VectorCanvas
@@ -216,21 +221,24 @@ const Index: React.FC<IVectorProps> = props => {
             </ContainerItem>
             <ContainerItem>
               <Paper>
-                {editMode && (
-                  <Question
-                    editMode={editMode}
-                    question={componentData.answer}
-                    onTextChange={operateDataFunctions.onAnswerTextChange}
-                    onImageChange={operateDataFunctions.onAnswerImageChange}
-                  />
-                )}
+                {/*{editMode && (*/}
+                {/* show always */}
+                <Question
+                  editMode={true}
+                  question={componentData.answer}
+                  onTextChange={operateDataFunctions.onAnswerTextChange}
+                  onImageChange={operateDataFunctions.onAnswerImageChange}
+                  mathButtons={editMode ? ['\\hat{x}', '\\hat{y}', '1', '2', '3', '4', '+', '-'] : []}
+                  mathMode={true}
+                />
+                {/*)}*/}
                 <br />
                 <VectorCanvas
                   clear={true}
                   canvasId={'answer'}
                   // objects={objects} // objects -> objects that we need to draw on Canvas
-                  objects={vectorCanvases(componentData.answerVectors)}
-                  allowInput={componentData.answerVectors.length < 4}
+                  objects={vectorCanvases(componentData?.answerVectors)}
+                  allowInput={componentData?.answerVectors?.length < 4}
                   updateAnswer={(ans: any) => {
                     operateDataFunctions.onAnswerVectorAdd(ans.vector as Vector);
                   }}
@@ -335,5 +343,5 @@ export default connect(
   (state: any) => {
     return { currentMaterial: state.material };
   },
-  dispatch => bindActionCreators(materialActionCreators, dispatch),
+  dispatch => bindActionCreators({ ...materialActionCreators, ...userMaterialReactionCreators }, dispatch),
 )(Index);

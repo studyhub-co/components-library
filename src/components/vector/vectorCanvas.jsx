@@ -311,8 +311,6 @@ export class VectorCanvas extends React.Component {
     //   return;
     // }
     if (this.arrow) {
-      console.log(this.arrow);
-
       this.props.updateAnswer({
         vector: {
           angle: this.arrow.getVectorAngle(),

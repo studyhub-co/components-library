@@ -9,6 +9,7 @@ import * as userMaterialReactionCreators from '../../redux/modules/userMaterialR
 
 export function useSpaEventsHook(
   checkUserMaterialReaction: (material: Material) => void,
+  updateMaterial: (material: Material) => void,
   currentMaterial: materialActionCreators.MaterialRedux,
   componentData: any,
   userMaterialReactionResult: userMaterialReactionCreators.UserReactionResultRedux,
@@ -36,6 +37,12 @@ export function useSpaEventsHook(
           if (!currentMaterial.isFetching && currentMaterial.uuid && componentData) {
             const reactionMaterial: Material = { uuid: currentMaterial.uuid, data: componentData };
             checkUserMaterialReaction(reactionMaterial);
+          }
+        }
+        if (data.type === 'save_data') {
+          if (!currentMaterial.isFetching && currentMaterial.uuid && componentData) {
+            const reactionMaterial: Material = { uuid: currentMaterial.uuid, data: componentData };
+            updateMaterial(reactionMaterial);
           }
         }
         if (data.type === 'continue') {

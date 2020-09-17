@@ -12,6 +12,8 @@ import QAChoices from '../src/components/qaChoices';
 import QABase from '../src/components/qaBase';
 import Vector from '../src/components/vector';
 
+// import ValidateVector from '../src/components/vector/validate';
+
 // README:
 // You need to set "SameSite: None" of "sessionid" Django cookies to use this API
 // You need to create csrftoken cookie with the same value as http://127.0.0.1:8000 for domain http://127.0.0.1:3000 (to able to set axios xsrfHeader from xsrfCookie)
@@ -93,6 +95,13 @@ const Student: React.FC = ({ currentMaterial, fetchMaterialStudentView }) => {
           editMode={state.contentEditMode}
           materialUuid={state.currentMaterialUuid}
           moveToNextComponent={moveToNextComponent}
+          checkUserMaterialReaction={material => {
+            // material.data userReactionData
+            if (GenericComponent === Vector) {
+              // we have full json data only in edit mode: todo use studio data to implement front end validation
+              // ValidateVector(currentMaterial.data, material.data)
+            }
+          }}
         />
       )}
     </div>

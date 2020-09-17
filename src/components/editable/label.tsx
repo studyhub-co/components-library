@@ -1,30 +1,30 @@
 import React from 'react';
 
-import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
+import { addStyles, StaticMathField, EditableMathField } from 'react-mathquill';
 import Input, { InputProps } from '@material-ui/core/Input';
 import { FaPencilAlt } from 'react-icons/fa';
 import { withStyles } from '@material-ui/core';
-import { blue } from '@material-ui/core/colors';
 
-import TextField from '@material-ui/core/TextField';
-import { Question as IQuestion } from '../common/IData/question';
+import { StyledMathButton } from './style';
 
-export const DEFAULT_MATHJAX_OPTIONS = {
-  extensions: ['tex2jax.js'],
-  jax: ['input/TeX', 'output/HTML-CSS'],
-  tex2jax: {
-    inlineMath: [
-      ['$', '$'],
-      ['\\(', '\\)'],
-    ],
-    displayMath: [
-      ['$$', '$$'],
-      ['\\[', '\\]'],
-    ],
-    processEscapes: true,
-  },
-  'HTML-CSS': { availableFonts: ['TeX'] },
-};
+import './style.css';
+
+// export const DEFAULT_MATHJAX_OPTIONS = {
+//   extensions: ['tex2jax.js'],
+//   jax: ['input/TeX', 'output/HTML-CSS'],
+//   tex2jax: {
+//     inlineMath: [
+//       ['$', '$'],
+//       ['\\(', '\\)'],
+//     ],
+//     displayMath: [
+//       ['$$', '$$'],
+//       ['\\[', '\\]'],
+//     ],
+//     processEscapes: true,
+//   },
+//   'HTML-CSS': { availableFonts: ['TeX'] },
+// };
 
 //  remove color from Material UI to all change with parent hover
 const BlueInput = withStyles({
@@ -38,15 +38,19 @@ interface EditableLabelProps {
   placeholder?: string;
   cursorPointer: boolean;
   editMode: boolean;
+  mathMode?: boolean;
   onChange: (text: string) => void;
+  mathButtons?: undefined | string[];
 }
+
+addStyles();
 
 // TODO
 // 1. Add multiple lines support
 // 2. MathJax
 // 3. handleInputKeyUp
 const EditableLabel: React.FC<EditableLabelProps> = props => {
-  const { value, editMode, onChange, placeholder } = props;
+  const { value, editMode, onChange, placeholder, mathButtons, mathMode } = props;
 
   const [state, setState] = React.useState({
     hovered: false,
@@ -62,21 +66,68 @@ const EditableLabel: React.FC<EditableLabelProps> = props => {
 
   return (
     <div onMouseOver={onHover} onMouseOut={onHover}>
-      <BlueInput
-        fullWidth
-        disableUnderline={!editMode}
-        // className={classes.margin}
-        onChange={e => {
-          onChange(e.target.value);
-        }}
-        placeholder={placeholder}
-        defaultValue={value}
-        readOnly={!editMode}
-        inputProps={{
-          'aria-label': 'naked',
-          style: { cursor: editMode || props.cursorPointer ? 'pointer' : 'default' },
-        }}
-      />
+      {mathMode ? (
+        editMode ? (
+          <div>
+            <EditableMathField
+              // // @ts-ignore
+              // style={{ width: '100%' }}
+              className={'editable-math-field'}
+              latex={value} // latex value for the input field
+              onChange={mathField => {
+                // console.log(mathField.latex());
+                onChange(mathField.latex());
+              }}
+            />
+          </div>
+        ) : (
+          <div>
+            <StaticMathField
+              // // @ts-ignore
+              // style={{ width: '100%' }}
+              className={'editable-math-field'}
+            >
+              {value}
+            </StaticMathField>
+          </div>
+        )
+      ) : (
+        <BlueInput
+          fullWidth
+          disableUnderline={!editMode}
+          // className={classes.margin}
+          onChange={e => {
+            onChange(e.target.value);
+          }}
+          placeholder={placeholder}
+          // defaultValue={value}
+          value={value}
+          readOnly={!editMode}
+          inputProps={{
+            'aria-label': 'naked',
+            style: { cursor: editMode || props.cursorPointer ? 'pointer' : 'default' },
+          }}
+        />
+      )}
+
+      {editMode && mathButtons && (
+        <div style={{ padding: '1rem 0' }}>
+          {mathButtons.map((buttonName, index) => {
+            return (
+              <StyledMathButton
+                className="mq-editor-button"
+                key={index}
+                onClick={() => {
+                  onChange(value + buttonName);
+                }}
+              >
+                <StaticMathField>{buttonName}</StaticMathField>
+              </StyledMathButton>
+            );
+          })}
+        </div>
+      )}
+
       {/* TODO do we need this? */}
       {/*{state.hovered && <FaPencilAlt />}*/}
     </div>
