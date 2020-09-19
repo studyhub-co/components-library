@@ -16,13 +16,14 @@ interface IQuestionProps {
   question: IQuestion;
   mathButtons?: undefined | string[];
   mathMode?: boolean;
+  editTextMode?: boolean; // text field edit mode only
   onTextChange: (text: string) => void;
   onImageChange: (image: any) => void;
   onHintChange?: (text: string) => void;
 }
 
 const Question: React.FC<IQuestionProps> = props => {
-  const { question, onTextChange, editMode, onHintChange, onImageChange, mathButtons, mathMode } = props;
+  const { question, onTextChange, editMode, onHintChange, onImageChange, mathButtons, mathMode, editTextMode } = props;
 
   const [showHint, setShowHint] = useState(false);
 
@@ -43,7 +44,11 @@ const Question: React.FC<IQuestionProps> = props => {
         />
       </React.Fragment>
       <br />
-      <EditableThumbnail editMode={editMode} image={question.content.image} onImageChange={onImageChange} />
+      <EditableThumbnail
+        editMode={editMode && !editTextMode}
+        image={question.content.image}
+        onImageChange={onImageChange}
+      />
       {editMode && onHintChange && (
         <EditableLabel
           placeholder="Hint text"

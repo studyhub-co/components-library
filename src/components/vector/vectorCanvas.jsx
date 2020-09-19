@@ -311,6 +311,7 @@ export class VectorCanvas extends React.Component {
     //   return;
     // }
     if (this.arrow) {
+      // todo check if this.arrow is null vector
       this.props.updateAnswer({
         vector: {
           angle: this.arrow.getVectorAngle(),

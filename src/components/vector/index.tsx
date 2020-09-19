@@ -35,6 +35,7 @@ import { useComponentData } from './componentData';
 import { useSpaEventsHook } from '../hooks/spaEvents';
 import Footer from '../common/footer';
 import { Vector } from './IData/vector';
+import EditableLabel from '../editable/label';
 
 // import { StyledChoiceButton } from './style';
 
@@ -154,6 +155,11 @@ const Index: React.FC<IVectorProps> = props => {
     return objects;
   };
 
+  // if (componentData) {
+  //   console.log(componentData);
+  //   console.log(editMode);
+  // }
+
   return (
     <ThemeProvider theme={theme}>
       <div style={{ flexGrow: 1, padding: '1rem' }}>
@@ -187,20 +193,20 @@ const Index: React.FC<IVectorProps> = props => {
                     <IconButton color="primary" onClick={operateDataFunctions.onQuestionClearVector} component="div">
                       <FaTimes /> clear
                     </IconButton>
-                    {/*<br />*/}
-                    {/*<FormControlLabel*/}
-                    {/*  control={*/}
-                    {/*    <Checkbox*/}
-                    {/*      checked={componentData.questionTextOnly}*/}
-                    {/*      onChange={(e, checked) => {*/}
-                    {/*        operateDataFunctions.onQuestionTextOnly(checked);*/}
-                    {/*      }}*/}
-                    {/*      name="checkedQTextOnly"*/}
-                    {/*      color="primary"*/}
-                    {/*    />*/}
-                    {/*  }*/}
-                    {/*  label="Question text only"*/}
-                    {/*/>*/}
+                    <br />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={componentData.questionTextOnly}
+                          onChange={(e, checked) => {
+                            operateDataFunctions.onQuestionTextOnly(checked);
+                          }}
+                          name="checkedQTextOnly"
+                          color="primary"
+                        />
+                      }
+                      label="Question text only"
+                    />
                     <br />
                     <FormControlLabel
                       control={
@@ -221,64 +227,74 @@ const Index: React.FC<IVectorProps> = props => {
             </ContainerItem>
             <ContainerItem>
               <Paper>
-                {/*{editMode && (*/}
                 {/* show always */}
-                <Question
-                  editMode={true}
-                  question={componentData.answer}
-                  onTextChange={operateDataFunctions.onAnswerTextChange}
-                  onImageChange={operateDataFunctions.onAnswerImageChange}
-                  mathButtons={editMode ? ['\\hat{x}', '\\hat{y}', '1', '2', '3', '4', '+', '-'] : []}
-                  mathMode={true}
-                />
-                {/*)}*/}
+                {/*{componentData.answerTextOnly ||*/}
+                {componentData.answerTextOnly || (editMode && componentData.answerVectors.length === 0) ? (
+                  <Question
+                    editMode={true}
+                    editTextMode={!editMode}
+                    question={componentData.answer}
+                    onTextChange={operateDataFunctions.onAnswerTextChange}
+                    onImageChange={operateDataFunctions.onAnswerImageChange}
+                    mathButtons={['\\hat{x}', '\\hat{y}', '1', '2', '3', '4', '+', '-']}
+                    mathMode={true}
+                  />
+                ) : null}
+                {/*))}*/}
                 <br />
-                <VectorCanvas
-                  clear={true}
-                  canvasId={'answer'}
-                  // objects={objects} // objects -> objects that we need to draw on Canvas
-                  objects={vectorCanvases(componentData?.answerVectors)}
-                  allowInput={componentData?.answerVectors?.length < 4}
-                  updateAnswer={(ans: any) => {
-                    operateDataFunctions.onAnswerVectorAdd(ans.vector as Vector);
-                  }}
-                  // updateAnswer={ans => this.props.onVectorChanged(ans[1].vector.x_component, ans[1].vector.y_component)}
-                  // question={{ uuid: this.props.question }}
-                />
-                <br />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={componentData.answerVectorIsNull}
-                      onChange={(e, checked) => {
-                        operateDataFunctions.onAnswerIsNullVector(checked);
+                {!componentData.answerTextOnly &&
+                  !componentData.answer.content.text &&
+                  !componentData.answer.content.image && (
+                    <VectorCanvas
+                      clear={true}
+                      canvasId={'answer'}
+                      // objects={objects} // objects -> objects that we need to draw on Canvas
+                      objects={vectorCanvases(componentData?.answerVectors)}
+                      allowInput={componentData?.answerVectors?.length < 4}
+                      updateAnswer={(ans: any) => {
+                        operateDataFunctions.onAnswerVectorAdd(ans.vector as Vector);
                       }}
-                      name="checkedANull"
-                      color="primary"
+                      // updateAnswer={ans => this.props.onVectorChanged(ans[1].vector.x_component, ans[1].vector.y_component)}
+                      // question={{ uuid: this.props.question }}
                     />
-                  }
-                  label="Null vector"
-                />
+                  )}
+                <br />
+                {editMode || componentData.answerNullableVector ? (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={componentData.answerVectorIsNull}
+                        onChange={(e, checked) => {
+                          operateDataFunctions.onAnswerIsNullVector(checked);
+                        }}
+                        name="checkedANull"
+                        color="primary"
+                      />
+                    }
+                    label="Null vector"
+                  />
+                ) : null}
                 <br />
                 {editMode && (
                   <React.Fragment>
                     <IconButton color="primary" onClick={operateDataFunctions.onAnswerClearVector} component="div">
                       <FaTimes /> clear
                     </IconButton>
-                    {/*<br />*/}
-                    {/*<FormControlLabel*/}
-                    {/*  control={*/}
-                    {/*    <Checkbox*/}
-                    {/*      checked={componentData.answerTextOnly}*/}
-                    {/*      onChange={(e, checked) => {*/}
-                    {/*        operateDataFunctions.onAnswerTextOnly(checked);*/}
-                    {/*      }}*/}
-                    {/*      name="checkedATextOnly"*/}
-                    {/*      color="primary"*/}
-                    {/*    />*/}
-                    {/*  }*/}
-                    {/*  label="Answer text only"*/}
-                    {/*/>*/}
+                    <br />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          disabled
+                          checked={componentData.answerTextOnly}
+                          onChange={(e, checked) => {
+                            operateDataFunctions.onAnswerTextOnly(checked);
+                          }}
+                          name="checkedATextOnly"
+                          color="primary"
+                        />
+                      }
+                      label="Answer text only"
+                    />
                     <br />
                     <FormControlLabel
                       control={

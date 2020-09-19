@@ -25,7 +25,6 @@ export function useComponentData(componentData: IVectorData, currentMaterial: an
     if (currentMaterial && currentMaterial.data) {
       // set component data from loaded currentMaterial
       // validate data structure from API with io-ts model
-      console.log(currentMaterial.data);
       if (isRight(VectorDataIo.decode(currentMaterial.data))) {
         initialData = currentMaterial.data;
       } else {
@@ -73,6 +72,11 @@ function getOperateDataFunctions(dispatch: any) {
 
   const onAnswerTextChange = (text: string): void => {
     dispatch({ type: 'ANSWER_TEXT_CHANGE', payload: text });
+    if (text) {
+      onAnswerTextOnly(true);
+    } else {
+      onAnswerTextOnly(false);
+    }
   };
 
   const onAnswerImageChange = (image: string): void => {
@@ -89,10 +93,15 @@ function getOperateDataFunctions(dispatch: any) {
 
   const onQuestionVectorAdd = (vector: IVector): void => {
     dispatch({ type: 'QUESTION_VECTOR_ADD', payload: vector });
+    onAnswerTextOnly(false);
   };
 
   const onAnswerIsNullVector = (checked: boolean): void => {
     dispatch({ type: 'ANSWER_VECTOR_IS_NULL', payload: checked });
+    if (checked) {
+      // set nullable if vector is null
+      dispatch({ type: 'ANSWER_NULLABLE_VECTOR', payload: checked });
+    }
   };
 
   const onAnswerTextOnly = (checked: boolean): void => {
@@ -113,6 +122,7 @@ function getOperateDataFunctions(dispatch: any) {
 
   const onAnswerClearVector = (): void => {
     dispatch({ type: 'ANSWER_SET_VECTORS', payload: [] });
+    onAnswerTextOnly(false);
   };
 
   return {
