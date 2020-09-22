@@ -36,6 +36,7 @@ import { useSpaEventsHook } from '../hooks/spaEvents';
 import Footer from '../common/footer';
 import { Vector } from './IData/vector';
 import EditableLabel from '../editable/label';
+import { useUserMaterialReactionResult } from '../hooks/userMaterialReactionResult';
 
 // import { StyledChoiceButton } from './style';
 
@@ -98,17 +99,19 @@ const Index: React.FC<IVectorProps> = props => {
   };
 
   useSpaEventsHook(
-    checkUserMaterialReaction,
     updateMaterial,
+    checkUserMaterialReaction,
     currentMaterial,
     componentData,
     userMaterialReactionResult,
     moveToNextComponent,
     lessonUuid,
+    setShowFooter,
     setEditMode,
     setUserReactionState,
-    setShowFooter,
   );
+
+  useUserMaterialReactionResult(userMaterialReactionResult, setUserReactionState, userReactionState);
 
   useEffect(() => {
     setEditMode(editModeProp);
@@ -155,11 +158,6 @@ const Index: React.FC<IVectorProps> = props => {
     return objects;
   };
 
-  // if (componentData) {
-  //   console.log(componentData);
-  //   console.log(editMode);
-  // }
-
   return (
     <ThemeProvider theme={theme}>
       <div style={{ flexGrow: 1, padding: '1rem' }}>
@@ -176,18 +174,18 @@ const Index: React.FC<IVectorProps> = props => {
                   mathMode={true}
                 />
                 <br />
-                <VectorCanvas
-                  clear={true}
-                  canvasId={'question'}
-                  objects={vectorCanvases(componentData.questionVectors)}
-                  // objects={objects}
-                  allowInput={true}
-                  updateAnswer={(ans: any) => {
-                    operateDataFunctions.onQuestionVectorAdd(ans.vector as Vector);
-                  }}
-                  // updateAnswer={ans => this.props.onVectorChanged(ans[1].vector.x_component, ans[1].vector.y_component)}
-                  // question={{ uuid: this.props.question }}
-                />
+                {!componentData.questionTextOnly && (
+                  <VectorCanvas
+                    clear={true}
+                    canvasId={'question'}
+                    objects={vectorCanvases(componentData.questionVectors)}
+                    // objects={objects}
+                    allowInput={true}
+                    updateAnswer={(ans: any) => {
+                      operateDataFunctions.onQuestionVectorAdd(ans.vector as Vector);
+                    }}
+                  />
+                )}
                 {editMode && (
                   <React.Fragment>
                     <IconButton color="primary" onClick={operateDataFunctions.onQuestionClearVector} component="div">
@@ -228,7 +226,6 @@ const Index: React.FC<IVectorProps> = props => {
             <ContainerItem>
               <Paper>
                 {/* show always */}
-                {/*{componentData.answerTextOnly ||*/}
                 {componentData.answerTextOnly || (editMode && componentData.answerVectors.length === 0) ? (
                   <Question
                     editMode={true}
@@ -240,7 +237,6 @@ const Index: React.FC<IVectorProps> = props => {
                     mathMode={true}
                   />
                 ) : null}
-                {/*))}*/}
                 <br />
                 {!componentData.answerTextOnly &&
                   !componentData.answer.content.text &&

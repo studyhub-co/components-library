@@ -93,7 +93,6 @@ function getOperateDataFunctions(dispatch: any) {
 
   const onQuestionVectorAdd = (vector: IVector): void => {
     dispatch({ type: 'QUESTION_VECTOR_ADD', payload: vector });
-    onAnswerTextOnly(false);
   };
 
   const onAnswerIsNullVector = (checked: boolean): void => {

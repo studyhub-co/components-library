@@ -28,6 +28,7 @@ import { QAData as IQAData } from './IData/index';
 import { useComponentData } from './componentData';
 
 import { useSpaEventsHook } from '../hooks/spaEvents';
+import { useUserMaterialReactionResult } from '../hooks/userMaterialReactionResult';
 
 import { theme } from '../style';
 import { StyledChoiceButton } from './style';
@@ -95,10 +96,12 @@ const Index: React.FC<IQAProps> = props => {
     userMaterialReactionResult,
     moveToNextComponent,
     lessonUuid,
+    setShowFooter,
     setEditMode,
     setUserReactionState,
-    setShowFooter,
   );
+
+  useUserMaterialReactionResult(userMaterialReactionResult, setUserReactionState, userReactionState);
 
   const setDisabledCheck = (value: boolean) => {
     setDisabledCheckS(value);
@@ -112,23 +115,24 @@ const Index: React.FC<IQAProps> = props => {
     );
   };
 
-  useEffect(() => {
-    if (userMaterialReactionResult) {
-      setUserReactionState('checked');
-    }
-
-    window.parent.postMessage(
-      {
-        type: 'user_reaction_state',
-        data: {
-          state: userReactionState,
-          userLessonScore: userMaterialReactionResult?.score,
-          wasCorrect: userMaterialReactionResult?.was_correct,
-        },
-      },
-      '*',
-    );
-  }, [userReactionState, userMaterialReactionResult]);
+  // TODO move to effect
+  // useEffect(() => {
+  //   if (userMaterialReactionResult) {
+  //     setUserReactionState('checked');
+  //   }
+  //
+  //   window.parent.postMessage(
+  //     {
+  //       type: 'user_reaction_state',
+  //       data: {
+  //         state: userReactionState,
+  //         userLessonScore: userMaterialReactionResult?.score,
+  //         wasCorrect: userMaterialReactionResult?.was_correct,
+  //       },
+  //     },
+  //     '*',
+  //   );
+  // }, [userMaterialReactionResult]);
 
   useEffect(() => {
     if (currentMaterial.isFetching === false && currentMaterial.uuid) {

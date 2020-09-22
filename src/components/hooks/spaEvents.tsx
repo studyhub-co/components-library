@@ -8,8 +8,8 @@ import * as userMaterialReactionCreators from '../../redux/modules/userMaterialR
 // }
 
 export function useSpaEventsHook(
-  checkUserMaterialReaction: (material: Material) => void,
   updateMaterial: (material: Material) => void,
+  checkUserMaterialReaction: (material: Material) => void,
   currentMaterial: materialActionCreators.MaterialRedux,
   componentData: any,
   userMaterialReactionResult: userMaterialReactionCreators.UserReactionResultRedux,
