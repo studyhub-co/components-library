@@ -11,7 +11,7 @@
     "allowJs": true,
     "checkJs": false,
     "module": "esnext",
-    "outDir": "declarations",
+    "outDir": "lib",
     "moduleResolution": "node",
     "lib": [
       "dom",

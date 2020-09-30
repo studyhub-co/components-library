@@ -1,7 +1,7 @@
 {
-  "name": "@physicsisbeautiful/pib-eval-library",
-  "version": "0.3.4",
-  "author": "Physics is beautiful (https://www.physicsisbeautiful.com)",
+  "name": "@studyhub.co/eval",
+  "version": "0.4.0",
+  "author": "Studyhub (https://studyhub.co)",
   "license": "MIT",
   "private": false,
   "files": [
@@ -18,8 +18,9 @@
   "scripts": {
     "start": "node scripts/start.js",
     "install-peers": "install-peers -f",
-    "build": "yarn build:types && yarn build:clean && yarn build:lib",
-    "build:lib": "cross-env NODE_ENV=production babel src --out-dir lib --extensions \".tsx,.ts\" --copy-files --source-maps inline",
+    "build": "yarn build:clean && yarn build:types && yarn build:lib",
+    "build:lib": "cross-env NODE_ENV=production babel src --out-dir lib --extensions \".tsx,.ts\" --copy-files",
+    "build:devlib": "cross-env NODE_ENV=production babel src --out-dir lib --extensions \".tsx,.ts\" --copy-files --source-maps inline",
     "build:types": "tsc --emitDeclarationOnly",
     "build:clean": "rimraf lib/*",
     "analyze": "node scripts/build.js && source-map-explorer 'build/static/js/*.js'",

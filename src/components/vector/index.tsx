@@ -9,8 +9,6 @@ import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-// replace with react icons to reduce bundle size
-// import ClearIcon from '@material-ui/icons/Clear';
 import { FaTimes } from 'react-icons/fa';
 import IconButton from '@material-ui/core/IconButton';
 
@@ -26,7 +24,7 @@ import { VectorData as IVectorData } from './IData/index';
 import { VectorCanvas, CanvasVector } from './vectorCanvas';
 
 import { theme } from '../style';
-// import EditableLabel from '../editable/label';
+
 import Question from '../common/question';
 
 import { Material } from '../../models/';
@@ -35,10 +33,7 @@ import { useComponentData } from './componentData';
 import { useSpaEventsHook } from '../hooks/spaEvents';
 import Footer from '../common/footer';
 import { Vector } from './IData/vector';
-import EditableLabel from '../editable/label';
 import { useUserMaterialReactionResult } from '../hooks/userMaterialReactionResult';
-
-// import { StyledChoiceButton } from './style';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IVectorProps {
@@ -353,7 +348,7 @@ const Index: React.FC<IVectorProps> = props => {
 
 export default connect(
   (state: any) => {
-    return { currentMaterial: state.material };
+    return { currentMaterial: state.material, userMaterialReactionResult: state.userMaterialReactionResult };
   },
   dispatch => bindActionCreators({ ...materialActionCreators, ...userMaterialReactionCreators }, dispatch),
 )(Index);
