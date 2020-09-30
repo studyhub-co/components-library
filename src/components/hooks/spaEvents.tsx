@@ -37,6 +37,7 @@ export function useSpaEventsHook(
           if (!currentMaterial.isFetching && currentMaterial.uuid && componentData) {
             const reactionMaterial: Material = { uuid: currentMaterial.uuid, data: componentData };
             checkUserMaterialReaction(reactionMaterial);
+            setUserReactionState('checked');
           }
         }
         if (data.type === 'save_data') {
@@ -47,8 +48,10 @@ export function useSpaEventsHook(
         }
         if (data.type === 'continue') {
           if (currentMaterial.uuid) {
-            setUserReactionState('start');
+            // reset results for the same problem type component
             moveToNextComponent(userMaterialReactionResult.next_material_uuid);
+            setUserReactionState('start');
+
             // send redirect url tp parent
             window.parent.postMessage(
               {

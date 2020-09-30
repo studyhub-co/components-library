@@ -7,23 +7,30 @@ export function useUserMaterialReactionResult(
   userReactionStateP: string,
 ) {
   useEffect(() => {
-    let userReactionState = userReactionStateP;
-
-    if (userMaterialReactionResult) {
-      setUserReactionState('checked');
-      userReactionState = 'checked';
-    }
+    // let userReactionState = userReactionStateP;
+    // console.log(userMaterialReactionResult);
+    // if (userMaterialReactionResult) {
+    //   userReactionState = 'checked';
+    // } else {
+    //   userReactionState = 'start';
+    // }
+    //
+    // if (userReactionState !== userReactionStateP) {
+    //   setUserReactionState(userReactionState);
+    // }
+    //
+    // console.log(userReactionState);
 
     window.parent.postMessage(
       {
         type: 'user_reaction_state',
         data: {
-          state: userReactionState,
+          state: userReactionStateP,
           userLessonScore: userMaterialReactionResult?.score,
-          wasCorrect: userMaterialReactionResult?.was_correct,
+          wasCorrect: userReactionStateP == 'checked' ? userMaterialReactionResult?.was_correct : null,
         },
       },
       '*',
     );
-  }, [setUserReactionState, userMaterialReactionResult, userReactionStateP]);
+  }, [userReactionStateP, setUserReactionState, userMaterialReactionResult]);
 }
