@@ -12,6 +12,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { FaTimes } from 'react-icons/fa';
 import IconButton from '@material-ui/core/IconButton';
 
+import { theme } from '../style';
+
 import Container from '../layout/Container/index';
 import ContainerItem from '../layout/ContainerItem/index';
 import Paper from '../layout/Paper/index';
@@ -19,39 +21,38 @@ import Paper from '../layout/Paper/index';
 import * as materialActionCreators from '../../redux/modules/material';
 import * as userMaterialReactionCreators from '../../redux/modules/userMaterialReactionResult';
 
+import { Material } from '../../models/';
+
 import { VectorData as IVectorData } from './IData/index';
 
 import { VectorCanvas, CanvasVector } from './vectorCanvas';
 
-import { theme } from '../style';
-
 import Question from '../common/question';
-
-import { Material } from '../../models/';
+import Footer from '../common/footer';
 
 import { useComponentData } from './componentData';
 import { useSpaEventsHook } from '../hooks/spaEvents';
-import Footer from '../common/footer';
-import { Vector } from './IData/vector';
+import { Vector as IVector } from './IData/vector';
 import { useUserMaterialReactionResult } from '../hooks/userMaterialReactionResult';
+import { useFetchMaterial } from '../hooks/fetchMaterial';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IVectorProps {
   // direct props
   materialUuid: string | undefined;
   lessonUuid: string | undefined;
-  // previousMaterialUuid: string | undefined;
-  currentMaterial: materialActionCreators.MaterialRedux;
-  editMode: boolean;
-  componentData: IVectorData;
-  showFooter: boolean | undefined;
+  editMode?: boolean;
+  componentData?: IVectorData;
+  showFooter?: boolean | undefined;
   // redux actions
-  fetchMaterial(uuid: string | undefined): void;
-  userMaterialReactionResult: userMaterialReactionCreators.UserReactionResultRedux;
+  fetchMaterial(uuid: string): void;
   fetchMaterialStudentView(lessonUuid: string | undefined, materialUuid: string | undefined): void;
   updateMaterial(material: Material): void;
   checkUserMaterialReaction(material: Material): void;
   moveToNextComponent(nextMaterialUuid: string | undefined): void;
+  // redux store
+  currentMaterial: materialActionCreators.MaterialRedux;
+  userMaterialReactionResult: userMaterialReactionCreators.UserReactionResultRedux;
 }
 
 const VECTOR_COLORS = ['red', 'blue', 'green', 'yellow'];
@@ -64,7 +65,6 @@ const Index: React.FC<IVectorProps> = props => {
     materialUuid,
     showFooter: showFooterProp,
     lessonUuid,
-    // previousMaterialUuid,
     // redux store
     userMaterialReactionResult,
     currentMaterial,
@@ -81,18 +81,6 @@ const Index: React.FC<IVectorProps> = props => {
   const [showFooter, setShowFooter] = useState(showFooterProp || false);
   const [disabledCheck, setDisabledCheckS] = useState(true);
 
-  const setDisabledCheck = (value: boolean) => {
-    setDisabledCheckS(value);
-    // send disabled check the SPA
-    window.parent.postMessage(
-      {
-        type: 'disabled_check_button',
-        data: value,
-      },
-      '*',
-    );
-  };
-
   useSpaEventsHook(
     updateMaterial,
     checkUserMaterialReaction,
@@ -107,23 +95,24 @@ const Index: React.FC<IVectorProps> = props => {
   );
 
   useUserMaterialReactionResult(userMaterialReactionResult, setUserReactionState, userReactionState);
+  useFetchMaterial(editMode, fetchMaterial, fetchMaterialStudentView, setUserReactionState, lessonUuid, materialUuid);
 
+  // !--- common component code started TODO create hooks
   useEffect(() => {
     setEditMode(editModeProp);
   }, [editModeProp]);
 
-  useEffect(() => {
-    setUserReactionState('start');
-    if (editMode === true) {
-      // load as data edit
-      if (materialUuid) {
-        fetchMaterial(materialUuid);
-      }
-    } else if (lessonUuid) {
-      // load as student view (with hidden fields)
-      fetchMaterialStudentView(lessonUuid, materialUuid);
-    }
-  }, [editMode, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid]);
+  const setDisabledCheck = (value: boolean) => {
+    setDisabledCheckS(value);
+    // send disabled check the SPA
+    window.parent.postMessage(
+      {
+        type: 'disabled_check_button',
+        data: value,
+      },
+      '*',
+    );
+  };
 
   // disable Check / Continue button while user result reaction is fetching
   useEffect(() => {
@@ -133,6 +122,20 @@ const Index: React.FC<IVectorProps> = props => {
       setDisabledCheck(false);
     }
   }, [userMaterialReactionResult]);
+
+  useEffect(() => {
+    if (currentMaterial.isFetching === false && currentMaterial.uuid) {
+      // send message to parent with loaded material
+      window.parent.postMessage(
+        {
+          type: 'current_material',
+          data: currentMaterial,
+        },
+        '*',
+      );
+    }
+  }, [checkUserMaterialReaction, currentMaterial, lessonUuid]);
+  // !--- common component code ended
 
   const vectorCanvases = (vectorsList: Array<any>) => {
     const objects = [];
@@ -177,7 +180,7 @@ const Index: React.FC<IVectorProps> = props => {
                     // objects={objects}
                     allowInput={true}
                     updateAnswer={(ans: any) => {
-                      operateDataFunctions.onQuestionVectorAdd(ans.vector as Vector);
+                      operateDataFunctions.onQuestionVectorAdd(ans.vector as IVector);
                     }}
                   />
                 )}
@@ -243,7 +246,7 @@ const Index: React.FC<IVectorProps> = props => {
                       objects={vectorCanvases(componentData?.answerVectors)}
                       allowInput={componentData?.answerVectors?.length < 4}
                       updateAnswer={(ans: any) => {
-                        operateDataFunctions.onAnswerVectorAdd(ans.vector as Vector);
+                        operateDataFunctions.onAnswerVectorAdd(ans.vector as IVector);
                       }}
                       // updateAnswer={ans => this.props.onVectorChanged(ans[1].vector.x_component, ans[1].vector.y_component)}
                       // question={{ uuid: this.props.question }}

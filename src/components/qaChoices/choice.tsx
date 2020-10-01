@@ -26,7 +26,7 @@ type onTextChange = (text: string) => void;
 interface ChoiceProps {
   choice: IChoice;
   index: number;
-  editMode: boolean;
+  editMode: boolean | undefined;
   onSelect: onSelectType;
   selected: boolean;
   cardMode: boolean;

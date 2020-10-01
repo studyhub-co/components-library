@@ -14,7 +14,7 @@ import { mockVector } from './mockData';
 // 3. manipulate data (pre redux)
 
 // export function useComponentData(reducer: any, componentData: IComponentsData, currentMaterial: any) {
-export function useComponentData(componentData: IVectorData, currentMaterial: any) {
+export function useComponentData(componentData: IVectorData | undefined, currentMaterial: any) {
   const initialState: IReducerObject = { reducerData: null };
   const [data, dispatch] = useReducer(reducer, initialState);
 

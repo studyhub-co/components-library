@@ -11,7 +11,7 @@ import { VectorData as IVectorData } from '../vector/IData/index';
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface CheckContinueProps {
   currentMaterial: materialActionCreators.MaterialRedux;
-  editMode: boolean;
+  editMode: boolean | undefined;
   disabledCheck: boolean;
   updateMaterial(material: Material): void;
   moveToNextComponent(previousMaterialUuid: string): void;

@@ -37,7 +37,7 @@ interface EditableLabelProps {
   value: string;
   placeholder?: string;
   cursorPointer: boolean;
-  editMode: boolean;
+  editMode: boolean | undefined;
   mathMode?: boolean;
   onChange: (text: string) => void;
   mathButtons?: undefined | string[];

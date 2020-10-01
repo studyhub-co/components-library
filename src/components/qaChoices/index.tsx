@@ -7,12 +7,16 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
+import { theme } from '../style';
+import { StyledChoiceButton } from './style';
+
 import Container from '../layout/Container/index';
 import ContainerItem from '../layout/ContainerItem/index';
 import Paper from '../layout/Paper/index';
 
 import * as materialActionCreators from '../../redux/modules/material';
 import * as userMaterialReactionCreators from '../../redux/modules/userMaterialReactionResult';
+
 import { Material } from '../../models/';
 // , UserReactionResult as IUserReactionResult
 
@@ -20,6 +24,7 @@ import { QAData } from '../qaChoices/IData/index';
 
 import Question from '../common/question';
 import Choice from './choice';
+import Footer from '../common/footer';
 
 import { Choice as IChoice } from './IData/choices';
 import { QAData as IQAData } from './IData/index';
@@ -29,46 +34,36 @@ import { useComponentData } from './componentData';
 
 import { useSpaEventsHook } from '../hooks/spaEvents';
 import { useUserMaterialReactionResult } from '../hooks/userMaterialReactionResult';
-
-import { theme } from '../style';
-import { StyledChoiceButton } from './style';
-// import CheckContinueButton from '../common/checkContinueButton';
-import Footer from '../common/footer';
+import { useFetchMaterial } from '../hooks/fetchMaterial';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IQAProps {
   // props
   materialUuid: string | undefined;
   lessonUuid: string | undefined;
-  // previousMaterialUuid: string | undefined;
-  editMode: boolean;
-  showFooter: boolean | undefined;
-  componentData: IQAData;
+  editMode?: boolean;
+  componentData?: IQAData;
+  showFooter?: boolean | undefined;
   // redux actions
   fetchMaterial(uuid: string): void;
-  // fetchMaterialStudentView(lessonUuid: string | undefined, previousMaterialUuid: string | undefined): void;
   fetchMaterialStudentView(lessonUuid: string | undefined, materialUuid: string | undefined): void;
   updateMaterial(material: Material): void;
   checkUserMaterialReaction(material: Material): void;
+  moveToNextComponent(nextMaterialUuid: string | undefined): void;
   // redux store
   currentMaterial: materialActionCreators.MaterialRedux;
   userMaterialReactionResult: userMaterialReactionCreators.UserReactionResultRedux;
-  moveToNextComponent(
-    // lessonUuid: string | undefined,
-    // previousMaterialUuid: string | undefined,
-    nextMaterialUuid: string | undefined,
-  ): void;
 }
 
 const Index: React.FC<IQAProps> = props => {
   const {
     // direct props
     moveToNextComponent,
+    editMode: editModeProp,
     componentData: componentDataProp,
     materialUuid,
     showFooter: showFooterProp,
     lessonUuid,
-    editMode: editModeProp,
     // redux store
     userMaterialReactionResult,
     currentMaterial,
@@ -77,7 +72,6 @@ const Index: React.FC<IQAProps> = props => {
     fetchMaterialStudentView,
     checkUserMaterialReaction,
     updateMaterial,
-    // previousMaterialUuid,
   } = props;
 
   const [editMode, setEditMode] = useState(editModeProp);
@@ -102,6 +96,12 @@ const Index: React.FC<IQAProps> = props => {
   );
 
   useUserMaterialReactionResult(userMaterialReactionResult, setUserReactionState, userReactionState);
+  useFetchMaterial(editMode, fetchMaterial, fetchMaterialStudentView, setUserReactionState, lessonUuid, materialUuid);
+
+  // !--- common component code started TODO create hooks
+  useEffect(() => {
+    setEditMode(editModeProp);
+  }, [editModeProp]);
 
   const setDisabledCheck = (value: boolean) => {
     setDisabledCheckS(value);
@@ -115,24 +115,14 @@ const Index: React.FC<IQAProps> = props => {
     );
   };
 
-  // TODO move to effect
-  // useEffect(() => {
-  //   if (userMaterialReactionResult) {
-  //     setUserReactionState('checked');
-  //   }
-  //
-  //   window.parent.postMessage(
-  //     {
-  //       type: 'user_reaction_state',
-  //       data: {
-  //         state: userReactionState,
-  //         userLessonScore: userMaterialReactionResult?.score,
-  //         wasCorrect: userMaterialReactionResult?.was_correct,
-  //       },
-  //     },
-  //     '*',
-  //   );
-  // }, [userMaterialReactionResult]);
+  // disable Check / Continue button while user result reaction is fetching
+  useEffect(() => {
+    if (userMaterialReactionResult?.isFetching) {
+      setDisabledCheck(true);
+    } else {
+      setDisabledCheck(false);
+    }
+  }, [userMaterialReactionResult]);
 
   useEffect(() => {
     if (currentMaterial.isFetching === false && currentMaterial.uuid) {
@@ -146,23 +136,7 @@ const Index: React.FC<IQAProps> = props => {
       );
     }
   }, [checkUserMaterialReaction, currentMaterial, lessonUuid]);
-
-  useEffect(() => {
-    setEditMode(editModeProp);
-  }, [editModeProp]);
-
-  useEffect(() => {
-    setUserReactionState('start');
-    if (editMode === true) {
-      // load as data edit
-      if (materialUuid) {
-        fetchMaterial(materialUuid);
-      }
-    } else if (lessonUuid) {
-      // load as student view (with hidden fields)
-      fetchMaterialStudentView(lessonUuid, materialUuid);
-    }
-  }, [editMode, fetchMaterial, fetchMaterialStudentView, lessonUuid, materialUuid]);
+  // !--- common component code ended
 
   useEffect(() => {
     if (componentData) {
@@ -211,15 +185,6 @@ const Index: React.FC<IQAProps> = props => {
       });
     }
   }, [componentData, materialUuid, operateDataFunctions, userMaterialReactionResult]);
-
-  // disable Check / Continue button while user result reaction is fetching
-  useEffect(() => {
-    if (userMaterialReactionResult?.isFetching) {
-      setDisabledCheck(true);
-    } else {
-      setDisabledCheck(false);
-    }
-  }, [userMaterialReactionResult]);
 
   return (
     <ThemeProvider theme={theme}>

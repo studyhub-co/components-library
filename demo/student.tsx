@@ -24,9 +24,10 @@ const lessonUuid = '3a484714-dc4a-4f30-bae3-7ba0c6ad7a72';
 
 // we need to set Material component type, because we don't use sandbox code (we use Component directly)
 const materialsUuids = {
+  /* order is important?! */
   'a8970b5b-22b8-4792-ac37-8109244e3a75': QAChoices,
+  'aef3e51c-e0af-4426-be8b-7984ef68bc49': Vector,
   'd60ddf14-f4b6-4188-b5de-54fc3a16311c': QAChoices,
-  'ad589acf-9d01-40fe-a2ef-253cd6cee48a': Vector,
   // '5fb38617-c0d3-4f4e-9c8b-e13e74570ca5': QABase,
 };
 
@@ -95,13 +96,13 @@ const Student: React.FC = ({ currentMaterial, fetchMaterialStudentView }) => {
           editMode={state.contentEditMode}
           materialUuid={state.currentMaterialUuid}
           moveToNextComponent={moveToNextComponent}
-          checkUserMaterialReaction={material => {
-            // material.data userReactionData
-            if (GenericComponent === Vector) {
-              // we have full json data only in edit mode: todo use studio data to implement front end validation
-              // ValidateVector(currentMaterial.data, material.data)
-            }
-          }}
+          // checkUserMaterialReaction={material => {
+          //   // material.data userReactionData
+          //   if (GenericComponent === Vector) {
+          //     // we have full json data only in edit mode: todo use studio data to implement front end validation
+          //     // ValidateVector(currentMaterial.data, material.data)
+          //   }
+          // }}
         />
       )}
     </div>

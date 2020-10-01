@@ -12,7 +12,7 @@ import CheckContinueButton from './checkContinueButton';
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface FooterProps {
   currentMaterial: materialActionCreators.MaterialRedux;
-  editMode: boolean;
+  editMode: boolean | undefined;
   disabledCheck: boolean;
   updateMaterial(material: Material): void;
   moveToNextComponent(previousMaterialUuid: string): void;

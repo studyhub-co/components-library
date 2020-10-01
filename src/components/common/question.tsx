@@ -12,7 +12,7 @@ import EditableThumbnail from '../editable/thumbnail';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IQuestionProps {
-  editMode: boolean;
+  editMode: boolean | undefined;
   question: IQuestion;
   mathButtons?: undefined | string[];
   mathMode?: boolean;

@@ -9,7 +9,7 @@ import Fab from '@material-ui/core/Fab';
 interface EditableThumbnailProps {
   image: any;
   // cursorPointer: boolean;
-  editMode: boolean;
+  editMode: boolean | undefined;
   // showAddImageIcon: boolean;
   onImageChange: (image: any) => void;
 }
