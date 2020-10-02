@@ -8,6 +8,7 @@ import * as materialActionCreators from '../../redux/modules/material';
 import { QAData as IQAData } from '../qaChoices/IData/index';
 import { VectorData as IVectorData } from '../vector/IData/index';
 import CheckContinueButton from './checkContinueButton';
+import { QABaseData } from '../qaBase/IData/index';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface FooterProps {
@@ -17,7 +18,7 @@ interface FooterProps {
   updateMaterial(material: Material): void;
   moveToNextComponent(previousMaterialUuid: string): void;
   checkUserMaterialReaction(material: Material): void;
-  componentData: IQAData | IVectorData | null; // Any component IData
+  componentData: IQAData | IVectorData | QABaseData | null; // Any component IData
   userReactionState: string; // todo enum?
 }
 

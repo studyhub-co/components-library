@@ -4,138 +4,186 @@ import { bindActionCreators } from 'redux';
 
 import { ThemeProvider } from '@material-ui/core/styles';
 
+import { theme } from '../style';
+
 import Container from '../layout/Container/index';
 import ContainerItem from '../layout/ContainerItem/index';
 import Paper from '../layout/Paper/index';
 
 import * as materialActionCreators from '../../redux/modules/material';
+import * as userMaterialReactionCreators from '../../redux/modules/userMaterialReactionResult';
+
+import { Material } from '../../models/';
 
 import { QABaseData as IQABaseData } from './IData/index';
 
 import Question from '../common/question';
 
-// import { Question as IQuestion } from '../common/IData/question';
-
-// hook to work with componentData
 import { useComponentData } from './componentData';
 
-import { theme } from '../style';
+import { useSpaEventsHook } from '../hooks/spaEvents';
+import { useUserMaterialReactionResult } from '../hooks/userMaterialReactionResult';
+import { useFetchMaterial } from '../hooks/fetchMaterial';
+import Footer from '../common/footer';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IQAProps {
-  component: any;
-  currentMaterial: materialActionCreators.MaterialRedux;
-  editMode: boolean;
-  componentData: IQABaseData;
+  materialUuid: string | undefined;
+  lessonUuid: string | undefined;
+  editMode?: boolean;
+  componentData?: IQABaseData;
+  showFooter?: boolean | undefined;
   // redux actions
-  fetchMaterial(uuid: string | undefined): void;
+  fetchMaterial(uuid: string): void;
+  fetchMaterialStudentView(lessonUuid: string | undefined, materialUuid: string | undefined): void;
+  updateMaterial(material: Material): void;
+  checkUserMaterialReaction(material: Material): void;
+  moveToNextComponent(nextMaterialUuid: string | undefined): void;
+  // redux store
+  currentMaterial: materialActionCreators.MaterialRedux;
+  userMaterialReactionResult: userMaterialReactionCreators.UserReactionResultRedux;
 }
 
 const Index: React.FC<IQAProps> = props => {
-  const { currentMaterial, editMode: editModeProp, fetchMaterial, componentData: componentDataProp } = props;
+  const {
+    // direct props
+    moveToNextComponent,
+    editMode: editModeProp,
+    componentData: componentDataProp,
+    materialUuid,
+    showFooter: showFooterProp,
+    lessonUuid,
+    // redux store
+    userMaterialReactionResult,
+    currentMaterial,
+    // actions
+    fetchMaterial,
+    fetchMaterialStudentView,
+    checkUserMaterialReaction,
+    updateMaterial,
+  } = props;
 
-  const [selectedChoiceUuid, setSelectedChoiceUuid] = useState('');
   const [editMode, setEditMode] = useState(editModeProp);
+  const [showFooter, setShowFooter] = useState(showFooterProp || false);
+  const [disabledCheck, setDisabledCheckS] = useState(true);
+  const { data: componentData, operateDataFunctions } = useComponentData(componentDataProp, currentMaterial);
+  // todo userReactionStateHook
+  const [userReactionState, setUserReactionState] = useState('start'); // 'start', 'checked', etc
 
-  const { data: componentData, dispatch } = useComponentData(componentDataProp, currentMaterial);
+  useSpaEventsHook(
+    updateMaterial,
+    checkUserMaterialReaction,
+    currentMaterial,
+    componentData,
+    userMaterialReactionResult,
+    moveToNextComponent,
+    lessonUuid,
+    setShowFooter,
+    setEditMode,
+    setUserReactionState,
+  );
 
-  useEffect(() => {
-    // catch parent event inside iframe
-    window.addEventListener('message', ({ data }) => {
-      if (data.hasOwnProperty('type')) {
-        if (data.type === 'pib_edit_mode') {
-          if (data.data === 'edit') {
-            setEditMode(true);
-          } else {
-            setEditMode(false);
-          }
-        }
-      }
-      return window.removeEventListener('message', () => {});
-    });
-  }, []);
+  useUserMaterialReactionResult(userMaterialReactionResult, setUserReactionState, userReactionState);
+  useFetchMaterial(editMode, fetchMaterial, fetchMaterialStudentView, setUserReactionState, lessonUuid, materialUuid);
 
+  // !--- common component code started TODO create hooks
   useEffect(() => {
     setEditMode(editModeProp);
-    if (editModeProp === false) {
-      // TODO update componentData redux state
-    }
   }, [editModeProp]);
 
-  // loaded in generic component type
-  // useEffect(() => {
-  //   fetchMaterial(undefined);
-  // }, [fetchMaterial]);
-
-  // TODO move dispatch and question related funcs to Question component
-  const onQuestionTextChange = (text: string): void => {
-    if (componentData) {
-      dispatch({ type: 'QUESTION_TEXT_CHANGE', payload: text });
-    }
+  const setDisabledCheck = (value: boolean) => {
+    setDisabledCheckS(value);
+    // send disabled check the SPA
+    window.parent.postMessage(
+      {
+        type: 'disabled_check_button',
+        data: value,
+      },
+      '*',
+    );
   };
 
-  const onQuestionHintChange = (text: string): void => {
-    if (componentData) {
-      dispatch({ type: 'QUESTION_HINT_CHANGE', payload: text });
+  // disable Check / Continue button while user result reaction is fetching
+  useEffect(() => {
+    if (userMaterialReactionResult?.isFetching) {
+      setDisabledCheck(true);
+    } else {
+      setDisabledCheck(false);
     }
-  };
+  }, [userMaterialReactionResult]);
 
-  const onAnswerTextChange = (text: string): void => {
-    if (componentData) {
-      dispatch({ type: 'ANSWER_TEXT_CHANGE', payload: text });
+  useEffect(() => {
+    if (currentMaterial.isFetching === false && currentMaterial.uuid) {
+      // send message to parent with loaded material
+      window.parent.postMessage(
+        {
+          type: 'current_material',
+          data: currentMaterial,
+        },
+        '*',
+      );
     }
-  };
-
-  const onQuestionImageChange = (image: string): void => {
-    if (componentData) {
-      dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
-    }
-  };
-
-  const onAnswerImageChange = (image: string): void => {
-    if (componentData) {
-      dispatch({ type: 'ANSWER_IMAGE_CHANGE', payload: image });
-    }
-  };
-
-  // console.log(componentData);
+  }, [checkUserMaterialReaction, currentMaterial, lessonUuid]);
+  // !--- common component code ended
 
   return (
     <ThemeProvider theme={theme}>
       <div style={{ flexGrow: 1, padding: '1rem' }}>
-        {componentData && ( // need to wait componentData
+        {componentData ? ( // need to wait componentData
           <Container>
             <ContainerItem>
               <Paper>
                 <Question
                   editMode={editMode}
                   question={componentData.question}
-                  onTextChange={onQuestionTextChange}
-                  onHintChange={onQuestionHintChange}
-                  onImageChange={onQuestionImageChange}
+                  onTextChange={operateDataFunctions.onQuestionTextChange}
+                  onHintChange={operateDataFunctions.onQuestionHintChange}
+                  onImageChange={operateDataFunctions.onQuestionImageChange}
                 />
               </Paper>
             </ContainerItem>
             <ContainerItem>
               <Paper>
                 <Question
-                  editMode={editMode}
+                  editMode={true}
+                  mathMode={true}
+                  editTextMode={true}
                   question={componentData.answer}
-                  onTextChange={onAnswerTextChange}
-                  onImageChange={onAnswerImageChange}
+                  onTextChange={operateDataFunctions.onAnswerTextChange}
+                  onImageChange={operateDataFunctions.onAnswerImageChange}
                 />
               </Paper>
             </ContainerItem>
           </Container>
+        ) : (
+          <div>Loading...</div> // TODO replace with spinner
         )}
       </div>
+      {showFooter && (
+        <Footer
+          moveToNextComponent={() => {
+            setUserReactionState('start');
+            moveToNextComponent(userMaterialReactionResult.next_material_uuid);
+          }}
+          editMode={editMode}
+          componentData={componentData}
+          checkUserMaterialReaction={material => {
+            setUserReactionState('checked');
+            checkUserMaterialReaction(material);
+          }}
+          currentMaterial={currentMaterial}
+          disabledCheck={disabledCheck}
+          updateMaterial={updateMaterial}
+          userReactionState={userReactionState}
+        />
+      )}
     </ThemeProvider>
   );
 };
 
 export default connect(
   (state: any) => {
-    return { currentMaterial: state.material };
+    return { currentMaterial: state.material, userMaterialReactionResult: state.userMaterialReactionResult };
   },
-  dispatch => bindActionCreators(materialActionCreators, dispatch),
+  dispatch => bindActionCreators({ ...materialActionCreators, ...userMaterialReactionCreators }, dispatch),
 )(Index);

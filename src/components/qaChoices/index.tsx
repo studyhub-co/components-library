@@ -20,8 +20,6 @@ import * as userMaterialReactionCreators from '../../redux/modules/userMaterialR
 import { Material } from '../../models/';
 // , UserReactionResult as IUserReactionResult
 
-import { QAData } from '../qaChoices/IData/index';
-
 import Question from '../common/question';
 import Choice from './choice';
 import Footer from '../common/footer';
@@ -162,7 +160,7 @@ const Index: React.FC<IQAProps> = props => {
     ) {
       // show correct / wrong answer to the user
       // result statuses of choices list: 'none', 'correct', 'wrong'
-      const correctData = userMaterialReactionResult.correct_data as QAData;
+      const correctData = userMaterialReactionResult.correct_data as IQAData;
 
       componentData.choices.forEach(function(componentDataChoice) {
         // we have no correctData?.choices if was correct = true
@@ -174,7 +172,9 @@ const Index: React.FC<IQAProps> = props => {
         }
         if (correctData?.choices && !userMaterialReactionResult.was_correct) {
           // find correct choice
-          const correctChoice: IChoice = correctData?.choices.find(({ uuid }) => uuid === componentDataChoice.uuid)!;
+          const correctChoice: IChoice = correctData?.choices.find(
+            ({ uuid }: { uuid: string }) => uuid === componentDataChoice.uuid,
+          )!;
 
           // status of reaction of choice - 'none', 'correct', 'wrong'.
           if (correctChoice.selected) {

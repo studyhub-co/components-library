@@ -11,10 +11,20 @@ export const mockQaBase: QABaseData = {
   },
   answer: {
     content: {
-      text: 'Enter answer text',
+      text: 'Enter\\ answer\\ text',
       image: '',
       hint: '',
     },
     type: 'base',
+  },
+  hiddenFields: {
+    answer: {
+      content: {
+        text: '',
+        image: '',
+        hint: '',
+      },
+      type: 'base',
+    },
   },
 };

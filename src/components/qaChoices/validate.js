@@ -3,11 +3,11 @@ const validate = (correctData, userReactionData) => {
   // check that all correct choices was selected
   let correct = true;
 
-  correctData.choices.forEach(function(choicefromCorrectData) {
-    const userReactionChoice = userReactionData.choices.find((choice)=>{
-      return choice.uuid === choicefromCorrectData.uuid;
-    })
-    if (choicefromCorrectData.selected !== userReactionChoice.selected) {
+  correctData.choices.forEach(function(choiceFromCorrectData) {
+    const userReactionChoice = userReactionData.choices.find(choice => {
+      return choice.uuid === choiceFromCorrectData.uuid;
+    });
+    if (choiceFromCorrectData.selected !== userReactionChoice.selected) {
       correct = false;
     }
   });
