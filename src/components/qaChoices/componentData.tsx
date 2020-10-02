@@ -47,22 +47,15 @@ export function useComponentData(componentData: IQAData | undefined, currentMate
       }
     }
   }, [componentData, currentMaterial]);
-  // }, [componentData, currentMaterial, data.reducerData]);
 
   const operateDataFunctions = getOperateDataFunctions(dispatch);
 
-  // return { data: data.reducerData, dispatch };
   return { data: data.reducerData, operateDataFunctions };
 }
 
 function getOperateDataFunctions(dispatch: any) {
-  const selectChoiceUuid = (uuid: string): void => {
-    // setSelectedChoiceUuid(uuid);
-    // TODO select uuid, unselect others
-    // if (componentData) {
-    // TODO add muliselect support
-    dispatch({ type: 'CHOICE_SELECT_CHANGE', payload: uuid });
-    // }
+  const selectChoiceUuid = (uuid: string, value: boolean): void => {
+    dispatch({ type: 'CHOICE_SELECT_CHANGE', payload: { uuid, value } });
   };
 
   const deleteChoice = (uuid: string): void => {
@@ -101,6 +94,10 @@ function getOperateDataFunctions(dispatch: any) {
     dispatch({ type: 'ADD_CHOICE', payload: {} });
   };
 
+  const onMultiSelectModeChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    dispatch({ type: 'MULTI_SELECT_MODE_CHANGE', payload: event.target.checked });
+  };
+
   // const resetComponentData = (): void => {
   //   // remove data (before load new one from server). FixMe or it's good?
   //   dispatch({ type: 'REPLACE_DATA', payload: null });
@@ -116,6 +113,7 @@ function getOperateDataFunctions(dispatch: any) {
     onChoiceTextChange,
     onAddChoice,
     onChoiceReactionResultChange,
+    onMultiSelectModeChange,
     // resetComponentData,
   };
 }

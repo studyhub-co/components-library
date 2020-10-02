@@ -67,12 +67,27 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
     }
     if (action.type === 'CHOICE_SELECT_CHANGE') {
       draft.reducerData.choices.map(choice => {
-        if (action.payload === choice.uuid) {
-          choice.selected = true;
+        if (action.payload.uuid === choice.uuid) {
+          if (!draft.reducerData.multiSelectMode) {
+            choice.selected = true;
+          } else {
+            choice.selected = action.payload.value;
+          }
         } else {
-          choice.selected = false;
+          if (!draft.reducerData.multiSelectMode) {
+            // uncheck other
+            choice.selected = false;
+          }
         }
       });
+    }
+    if (action.type === 'MULTI_SELECT_MODE_CHANGE') {
+      // unselect choices
+      draft.reducerData.choices.forEach(el => {
+        el.selected = false;
+      });
+      // change mode
+      draft.reducerData.multiSelectMode = action.payload;
     }
     if (action.type === 'REPLACE_DATA') {
       draft.reducerData = action.payload;

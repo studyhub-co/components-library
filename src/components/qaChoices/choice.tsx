@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { FaTrashAlt } from 'react-icons/fa';
 
 import Radio, { RadioProps } from '@material-ui/core/Radio';
+import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
 
 import { withStyles, makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -17,7 +18,7 @@ import EditableLabel from '../editable/label';
 import EditableThumbnail from '../editable/thumbnail';
 import { Choice as IChoice } from './IData/choices';
 
-type onSelectType = (uuid: string) => void;
+type onSelectType = (uuid: string, value: boolean) => void;
 type deleteChoice = (uuid: string) => void;
 // type onChange = (choice: IChoice) => void;
 type onImageChange = (file: File) => void;
@@ -30,6 +31,7 @@ interface ChoiceProps {
   onSelect: onSelectType;
   selected: boolean;
   cardMode: boolean;
+  multiSelectMode: boolean;
   deleteChoice: deleteChoice;
   // onChange: onChange;
   onImageChange: onImageChange;
@@ -67,6 +69,16 @@ const BlueRadio = withStyles({
   checked: {},
 })((props: RadioProps) => <Radio color="default" {...props} />);
 
+const BlueCheckbox = withStyles({
+  root: {
+    // color: blue[400],
+    '&$checked': {
+      color: '#1caff6',
+    },
+  },
+  checked: {},
+})((props: CheckboxProps) => <Checkbox color="default" {...props} />);
+
 const Choice: React.FC<ChoiceProps> = props => {
   const {
     choice,
@@ -77,6 +89,7 @@ const Choice: React.FC<ChoiceProps> = props => {
     onImageChange,
     onTextChange,
     cardMode,
+    multiSelectMode,
     userReactionState,
   } = props;
 
@@ -92,8 +105,25 @@ const Choice: React.FC<ChoiceProps> = props => {
     deleteChoice(choice.uuid);
   };
 
-  const handleChange = (): void => {
-    onSelect(choice.uuid);
+  const handleSelect = (): void => {
+    onSelect(choice.uuid, true);
+  };
+
+  const handleCheck = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    onSelect(choice.uuid, event.target.checked);
+  };
+
+  const handleChange = () => {
+    // check or select
+    if (multiSelectMode) {
+      if (choice.selected) {
+        onSelect(choice.uuid, false);
+      } else {
+        onSelect(choice.uuid, true);
+      }
+    } else {
+      onSelect(choice.uuid, true);
+    }
   };
 
   const onHover = (): void => {
@@ -143,12 +173,11 @@ const Choice: React.FC<ChoiceProps> = props => {
         </Typography>
       </CardContent>
       <div className={cardClasses.controls}>
-        <BlueRadio
-          checked={props.selected}
-          onChange={handleChange}
-          // style={{ marginLeft: '5%' }}
-          // inputProps={{ 'aria-label': 'B' }}
-        />
+        {multiSelectMode ? (
+          <BlueCheckbox checked={props.selected} onChange={handleCheck} />
+        ) : (
+          <BlueRadio checked={props.selected} onChange={handleSelect} />
+        )}
         <span>
           <div title="Delete answer" style={{ display: editMode && state.hovered ? 'block' : 'none' }}>
             <FaTrashAlt onClick={onDeleteChoiceClick} />
@@ -182,12 +211,16 @@ const Choice: React.FC<ChoiceProps> = props => {
               <span style={{ display: editMode && state.hovered ? 'none' : 'block' }}>{index}</span>
             </Grid>
             <Grid item xs={3}>
-              <BlueRadio
-                checked={props.selected}
-                onChange={handleChange}
-                style={{ marginLeft: '10%' }}
-                // inputProps={{ 'aria-label': 'B' }}
-              />
+              {multiSelectMode ? (
+                <BlueCheckbox checked={props.selected} onChange={handleCheck} style={{ marginLeft: '10%' }} />
+              ) : (
+                <BlueRadio
+                  checked={props.selected}
+                  onChange={handleSelect}
+                  style={{ marginLeft: '10%' }}
+                  // inputProps={{ 'aria-label': 'B' }}
+                />
+              )}
             </Grid>
           </Grid>
         </Grid>

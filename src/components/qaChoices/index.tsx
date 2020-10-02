@@ -221,6 +221,7 @@ const Index: React.FC<IQAProps> = props => {
                           onTextChange={text => {
                             operateDataFunctions.onChoiceTextChange(choice.uuid, text);
                           }}
+                          multiSelectMode={componentData.multiSelectMode}
                           cardMode={cardMode}
                           key={choice.uuid}
                           index={index + 1}
@@ -234,7 +235,14 @@ const Index: React.FC<IQAProps> = props => {
                 {editMode && (
                   <div>
                     <FormControlLabel
-                      control={<Checkbox checked={false} onChange={() => {}} name="checkedB" color="primary" />}
+                      control={
+                        <Checkbox
+                          checked={componentData.multiSelectMode}
+                          onChange={operateDataFunctions.onMultiSelectModeChange}
+                          name="checkedB"
+                          color="primary"
+                        />
+                      }
                       label="Multi-select mode"
                     />
                     <br />

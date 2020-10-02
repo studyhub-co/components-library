@@ -6,6 +6,7 @@ import { ChoiceIo } from './choices';
 export const QADataIo = t.interface({
   question: QuestionIo,
   choices: t.array(ChoiceIo),
+  multiSelectMode: t.boolean,
 });
 
 export type QAData = t.TypeOf<typeof QADataIo>;

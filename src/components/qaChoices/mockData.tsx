@@ -36,4 +36,5 @@ export const mockQaChoices: QAData = {
       reactionResult: 'none',
     },
   ],
+  multiSelectMode: false,
 };
