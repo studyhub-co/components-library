@@ -2,7 +2,7 @@ import React from 'react';
 
 import { addStyles, StaticMathField, EditableMathField } from 'react-mathquill';
 import Input, { InputProps } from '@material-ui/core/Input';
-import { FaPencilAlt } from 'react-icons/fa';
+// import { FaPencilAlt } from 'react-icons/fa';
 import { withStyles } from '@material-ui/core';
 
 import { StyledMathButton } from './style';
