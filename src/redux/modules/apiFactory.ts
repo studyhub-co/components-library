@@ -42,24 +42,17 @@ export default (
     //   // console.error(e);
     //   console.log(e);
     // }
-    //
-    // throw newError;
+    throw error;
   };
 
   const api: Api = {
     get(path, params, options) {
-      return (
-        axios
-          // const instance = axios.create({
-          //   withCredentials: true,
-          // });
-          // return instance
-          .get(API_ROOT + path, {
-            params,
-          })
-          .then(response => handleResponse(response))
-          .catch(e => handleError(e))
-      );
+      return axios
+        .get(API_ROOT + path, {
+          params,
+        })
+        .then(response => handleResponse(response))
+        .catch(e => handleError(e));
     },
     post(path, body, options) {
       const instance = axios.create({

@@ -38,6 +38,11 @@ export const checkUserMaterialReaction = (material: Material) => {
       .post<Material>(url, { ...material })
       .then((result: any) => {
         dispatch(userMaterialReactionSuccess(result));
+      })
+      .catch((error: any) => {
+        if (error.response?.status === 404) {
+          alert('There is an error with the validation of your response. Please contact the server administration.');
+        }
       });
   };
 };
