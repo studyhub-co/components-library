@@ -6,10 +6,12 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import QAChoices from '../src/components/qaChoices';
 import QABase from '../src/components/qaBase';
 import Vector from '../src/components/vector';
+import UnitConversion from '../src/components/unitConversion';
 
 import { mockQaChoices } from '../src/components/qaChoices/mockData';
 import { mockQaBase } from '../src/components/qaBase/mockData';
 import { mockVector } from '../src/components/vector/mockData';
+import { mockUnitConversion } from '../src/components/unitConversion/mockData';
 
 const Components: React.FC = () => {
   // const textInput = createRef<HTMLInputElement>();
@@ -37,6 +39,8 @@ const Components: React.FC = () => {
       <QAChoices componentData={mockQaChoices} editMode={state.checkedEditMode} />
       <h1>Vector</h1>
       <Vector componentData={mockVector} editMode={state.checkedEditMode} />
+      <h1>Unit Conversion</h1>
+      <UnitConversion componentData={mockUnitConversion} editMode={state.checkedEditMode} />
     </div>
   );
 };
