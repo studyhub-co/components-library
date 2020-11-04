@@ -8,6 +8,7 @@ export const mockVector: VectorData = {
   question: {
     content: {
       text: 'Enter\\ question\\ text',
+      evaluatedMathText: '',
       image: '',
       hint: '',
     },
@@ -16,6 +17,7 @@ export const mockVector: VectorData = {
   answer: {
     content: {
       text: '',
+      evaluatedMathText: '',
       image: '',
       hint: '',
     },
@@ -28,6 +30,7 @@ export const mockVector: VectorData = {
     answer: {
       content: {
         text: '',
+        evaluatedMathText: '',
         image: '',
         hint: '',
       },

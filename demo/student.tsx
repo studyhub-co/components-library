@@ -25,10 +25,9 @@ const lessonUuid = '3a484714-dc4a-4f30-bae3-7ba0c6ad7a72';
 // we need to set Material component type, because we don't use sandbox code (we use Component directly)
 const materialsUuids = {
   /* order is important?! */
-  'a8970b5b-22b8-4792-ac37-8109244e3a75': QAChoices,
-  'aef3e51c-e0af-4426-be8b-7984ef68bc49': Vector,
-  'd60ddf14-f4b6-4188-b5de-54fc3a16311c': QAChoices,
-  // '5fb38617-c0d3-4f4e-9c8b-e13e74570ca5': QABase,
+  // 'a8970b5b-22b8-4792-ac37-8109244e3a75': QAChoices,
+  // 'aef3e51c-e0af-4426-be8b-7984ef68bc49': Vector,
+  '44c8daca-5f13-4a9d-9a70-a1eb5389f65a': QABase,
 };
 
 // const componentOptions = {

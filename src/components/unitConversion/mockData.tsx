@@ -4,6 +4,7 @@ export const mockUnitConversion: UnitConversionData = {
   question: {
     content: {
       text: 'Enter question text',
+      evaluatedMathText: '',
       image: '',
       hint: '',
     },

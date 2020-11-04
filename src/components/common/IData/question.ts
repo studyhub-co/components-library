@@ -3,6 +3,7 @@ import * as t from 'io-ts';
 export const QuestionIo = t.interface({
   content: t.type({
     text: t.string,
+    evaluatedMathText: t.union([t.string, t.undefined]),
     image: t.string,
     hint: t.string,
   }),

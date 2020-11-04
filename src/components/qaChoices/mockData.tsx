@@ -5,6 +5,7 @@ export const mockQaChoices: QAData = {
   question: {
     content: {
       text: 'Enter question text',
+      evaluatedMathText: '',
       image: '',
       hint: '',
     },

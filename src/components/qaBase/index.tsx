@@ -70,6 +70,8 @@ const Index: React.FC<IQAProps> = props => {
   // todo userReactionStateHook
   const [userReactionState, setUserReactionState] = useState('start'); // 'start', 'checked', etc
 
+  // console.log(componentData);
+
   useSpaEventsHook(
     updateMaterial,
     checkUserMaterialReaction,
@@ -135,6 +137,7 @@ const Index: React.FC<IQAProps> = props => {
               <Paper>
                 <Question
                   editMode={editMode}
+                  mathMode={true}
                   question={componentData.question}
                   onTextChange={operateDataFunctions.onQuestionTextChange}
                   onHintChange={operateDataFunctions.onQuestionHintChange}
