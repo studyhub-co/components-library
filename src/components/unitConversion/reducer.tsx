@@ -20,6 +20,13 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
     if (action.type === 'QUESTION_IMAGE_CHANGE') {
       draft.reducerData.question.content.image = action.payload;
     }
+    if (action.type === 'UNIT_CONVERSION_TYPE_CHANGE') {
+      draft.reducerData.conversionType = action.payload;
+    }
+    if (action.type === 'UNIT_CONVERSION_QUESTION_STEP_CHANGE') {
+      draft.reducerData.questionStepNumber = action.payload.val;
+      draft.reducerData.questionStepUnit = action.payload._unit;
+    }
     if (action.type === 'REPLACE_DATA') {
       draft.reducerData = action.payload;
     }

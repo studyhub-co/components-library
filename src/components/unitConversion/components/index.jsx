@@ -5,6 +5,14 @@ import { MathquillBox } from './mathquillBox';
 import { ConversionTable } from './conversionTable';
 import { addStyles, EditableMathField } from 'react-mathquill';
 
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+
+import { UnitConversionTypeLabels, UnitConversionTypes } from './const';
+
+import { StyledButton } from './style';
+
 // this will add jQuery to window
 import './mathquill-loader';
 // this will add MathQuill to window
@@ -189,13 +197,34 @@ export class UnitConversion extends UnitConversionBase {
     if (this.props.unitConversionType === '10') {
       this.setLatexWoFireEvent(mathquillObj, this.calculateAnswer()); // recalculate answer from lefside
     } else {
-      // show num & denum
+      // show num & denom
       this.setState({
         answer: { data: data, box: mathquillObj },
       });
     }
 
     this.updateExternalAnswer();
+  }
+
+  // question value changed
+  onQuestionValueChange(data, row, col, mathquillObj) {
+    const questionValueUnit = this.constructor.parseToValueUnit(this.clearDataText(data));
+
+    if (questionValueUnit) {
+      this.props.onQuestionStepChange(questionValueUnit[0], questionValueUnit[1]);
+    }
+
+    // TODO what we need to recalculate
+    // if (this.props.unitConversionType === '10') {
+    //   this.setLatexWoFireEvent(mathquillObj, this.calculateAnswer()); // recalculate answer from lefside
+    // } else {
+    //   // show num & denum
+    //   this.setState({
+    //     answer: { data: data, box: mathquillObj },
+    //   });
+    // }
+    //
+    // this.updateExternalAnswer();
   }
 
   calculateAnswer() {
@@ -332,18 +361,18 @@ export class UnitConversion extends UnitConversionBase {
     }
 
     const buttonStyle = {
-      padding: 2,
-      display: 'block',
-      margin: 'auto',
-      marginTop: 1,
-      marginBottom: 1,
+      // padding: 2,
+      // display: 'block',
+      // margin: 'auto',
+      // marginTop: 1,
+      // marginBottom: 1,
     };
     const disabledButtonStyle = {
-      padding: 2,
-      display: 'block',
-      margin: 'auto',
-      marginTop: 1,
-      marginBottom: 1,
+      // padding: 2,
+      // display: 'block',
+      // margin: 'auto',
+      // marginTop: 1,
+      // marginBottom: 1,
       cursor: 'not-allowed',
       pointerEvents: 'none',
       color: '#c0c0c0',
@@ -353,12 +382,30 @@ export class UnitConversion extends UnitConversionBase {
 
     return (
       <div style={{ display: 'block' }}>
+        {this.props.editMode && (
+          <div style={{ marginBottom: '1rem' }}>
+            <FormControl>
+              <Select value={this.props.unitConversionType} onChange={this.props.onUnitConversionTypeChange}>
+                {Object.keys(UnitConversionTypes).map(key => {
+                  const index = UnitConversionTypes[key];
+                  return (
+                    <MenuItem key={key} value={index}>
+                      {UnitConversionTypeLabels[index]}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </div>
+        )}
         <div style={{ display: 'table', marginLeft: 'auto', marginRight: 'auto' }}>
           <ConversionTable
             numColumns={this.state.numColumns}
             onMathQuillChange={this.onMathQuillChange}
+            onQuestionValueChange={this.onQuestionValueChange}
             number={this.props.number}
             unit={this.props.unit}
+            editMode={this.props.editMode}
             strikethroughN={this.state.strikethroughN}
             strikethroughD={this.state.strikethroughD}
           />
@@ -366,21 +413,34 @@ export class UnitConversion extends UnitConversionBase {
             <div
               style={{ fontSize: 10, display: 'table-cell', verticalAlign: 'middle', paddingLeft: 0, paddingRight: 0 }}
             >
-              <button
-                className="hover-button"
-                style={this.state.numColumns === 4 ? disabledButtonStyle : buttonStyle}
+              <StyledButton
                 onClick={this.addColumn}
+                style={this.state.numColumns === 4 ? disabledButtonStyle : buttonStyle}
               >
                 +Add Step
-              </button>
-              <button
-                className="hover-button"
-                style={this.state.numColumns === 1 ? disabledButtonStyle : buttonStyle}
+              </StyledButton>
+              <StyledButton
                 onClick={this.removeColumn}
+                style={this.state.numColumns === 1 ? disabledButtonStyle : buttonStyle}
                 disabled={this.state.numColumns === 1}
               >
                 -Remove Step
-              </button>
+              </StyledButton>
+              {/*<button*/}
+              {/*  className="hover-button"*/}
+              {/*  style={this.state.numColumns === 4 ? disabledButtonStyle : buttonStyle}*/}
+              {/*  onClick={this.addColumn}*/}
+              {/*>*/}
+              {/*  +Add Step*/}
+              {/*</button>*/}
+              {/*<button*/}
+              {/*  className="hover-button"*/}
+              {/*  style={this.state.numColumns === 1 ? disabledButtonStyle : buttonStyle}*/}
+              {/*  onClick={this.removeColumn}*/}
+              {/*  disabled={this.state.numColumns === 1}*/}
+              {/*>*/}
+              {/*  -Remove Step*/}
+              {/*</button>*/}
             </div>
           )}
           <div

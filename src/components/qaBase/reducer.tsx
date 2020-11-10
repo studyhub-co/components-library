@@ -23,7 +23,9 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
       draft.reducerData.question.content.text = text;
       try {
         draft.reducerData.question.content.evaluatedMathText = '' + window.evaluatex(text)();
-      } catch (e) {}
+      } catch (e) {
+        draft.reducerData.answer.content.evaluatedMathText = '';
+      }
     }
     if (action.type === 'QUESTION_HINT_CHANGE') {
       const text = action.payload;
@@ -39,7 +41,7 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
         draft.reducerData.answer.content.evaluatedMathText = '' + window.evaluatex(text)();
       } catch (e) {
         draft.reducerData.answer.content.evaluatedMathText = '';
-        console.log(e);
+        // console.log(e);
       }
     }
     if (action.type === 'ANSWER_IMAGE_CHANGE') {

@@ -5,11 +5,7 @@ import { MathquillBox } from './mathquillBox';
 export class ConversionTable extends React.Component {
   constructor(props) {
     super(props);
-    this.onMathQuillChange = this.onMathQuillChange.bind(this);
-  }
-
-  onMathQuillChange(data, row, col, mathquillObj) {
-    this.props.onMathQuillChange(data, row, col, mathquillObj);
+    // this.onMathQuillChange = this.onMathQuillChange.bind(this);
   }
 
   getColumns(row) {
@@ -32,7 +28,7 @@ export class ConversionTable extends React.Component {
       }
       tdColumns.push(
         <td style={styles} key={i}>
-          <MathquillBox row={row} column={i + 1} onMathQuillChange={this.onMathQuillChange} />
+          <MathquillBox row={row} column={i + 1} onMathQuillChange={this.props.onMathQuillChange} />
         </td>,
       );
     }
@@ -67,7 +63,7 @@ export class ConversionTable extends React.Component {
       borderLeft: 'none',
       padding: 2,
       fontFamily: 'symbola',
-      fontSize: 30,
+      // fontSize: 30,
     };
     const bottomRight = {
       border: '1px solid black',
@@ -76,7 +72,7 @@ export class ConversionTable extends React.Component {
       borderLeft: 'none',
       padding: 2,
       fontFamily: 'symbola',
-      fontSize: 30,
+      // fontSize: 30,
     };
 
     return (
@@ -84,15 +80,28 @@ export class ConversionTable extends React.Component {
         <table style={style}>
           <tbody>
             <tr>
-              <td style={Object.assign({}, topLeft, { whiteSpace: 'nowrap' })}>
-                {this.props.number}{' '}
-                <span style={Object.assign({}, unitStyle, strikethroughStyleN)}>{this.props.unit.split('/')[0]}</span>
+              <td style={{ ...topLeft, whiteSpace: 'nowrap' }}>
+                {/* student view */}
+                {this.props.number && this.props.unit ? (
+                  <React.Fragment>
+                    {this.props.number}{' '}
+                    <span style={{ ...unitStyle, ...strikethroughStyleN }}>{this.props.unit.split('/')[0]}</span>
+                  </React.Fragment>
+                ) : null}
+                {/* edit mode view */}
+                {this.props.editMode && (
+                  <div>
+                    <MathquillBox row={1} column={0} onMathQuillChange={this.props.onQuestionValueChange} />
+                  </div>
+                )}
               </td>
               {this.getColumns(1)}
             </tr>
             <tr>
               <td style={bottomRight}>
-                <span style={Object.assign({}, unitStyle, strikethroughStyleD)}>{this.props.unit.split('/')[1]}</span>
+                {this.props.number && this.props.unit ? (
+                  <span style={{ ...unitStyle, ...strikethroughStyleD }}>{this.props.unit.split('/')[1]}</span>
+                ) : null}
               </td>
               {this.getColumns(2)}
             </tr>

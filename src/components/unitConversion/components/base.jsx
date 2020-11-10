@@ -80,6 +80,7 @@ export class UnitConversionBase extends React.Component {
 
     this.onMathQuillChange = this.onMathQuillChange.bind(this);
     this.onResultChange = this.onResultChange.bind(this);
+    this.onQuestionValueChange = this.onQuestionValueChange.bind(this);
     this.resetStrikeAnswers = this.resetStrikeAnswers.bind(this);
     this.reDrawStrikes = this.reDrawStrikes.bind(this);
 
@@ -181,13 +182,15 @@ export class UnitConversionBase extends React.Component {
       }
     }
 
-    const alreadyStrikeDenumIndex = [];
+    const alreadyStrikeDenomIndex = [];
 
     // strikethrough units
     numeratorsC: for (let column = -1; column < answers.length; column++) {
       // walk through numerators
       if (column === -1) {
-        splitNumerator = ['', this.props.unit.split('/')[0]]; // main unit
+        if (this.props.unit) {
+          splitNumerator = ['', this.props.unit.split('/')[0]]; // main unit
+        }
       } else {
         splitNumerator = answers[column][0]['splitData'];
       } // "2 cm"
@@ -208,9 +211,9 @@ export class UnitConversionBase extends React.Component {
             // numeratorBoxes boxes
             if (splitNumerator[1] === splitDenominator[1]) {
               // second one in "1.23 cm"
-              if (alreadyStrikeDenumIndex.indexOf(column2) === -1) {
+              if (alreadyStrikeDenomIndex.indexOf(column2) === -1) {
                 // if denum not striked already
-                alreadyStrikeDenumIndex.push(column2);
+                alreadyStrikeDenomIndex.push(column2);
 
                 let toRemoveI;
                 // strikethrough Numerator

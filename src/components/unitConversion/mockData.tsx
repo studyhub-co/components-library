@@ -11,4 +11,10 @@ export const mockUnitConversion: UnitConversionData = {
     type: 'base',
   },
   hiddenFields: {},
+  conversionSteps: [],
+  questionStepNumber: null,
+  questionStepUnit: null,
+  answerStepNumber: null,
+  answerStepUnit: null,
+  conversionType: 10,
 };

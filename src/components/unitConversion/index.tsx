@@ -164,15 +164,20 @@ const Index: React.FC<IUnitConversionProps> = props => {
                   cancel=".mq-root-block"
                 >
                   <UnitConversion
-                    answerNumber={10}
-                    answerUnit={'cm'}
-                    number={1}
-                    unit={'cm'}
-                    unitConversionType={10}
-                    conversionSteps={1}
+                    answerNumber={componentData.answerStepNumber}
+                    answerUnit={componentData.answerStepUnit}
+                    number={componentData.questionStepNumber}
+                    unit={componentData.questionStepUnit}
+                    unitConversionType={componentData.conversionType}
+                    onUnitConversionTypeChange={(event: any) => {
+                      operateDataFunctions.onUnitConversionTypeChange(event.target.value);
+                    }}
+                    onQuestionStepChange={operateDataFunctions.onQuestionStepChange}
+                    conversionSteps={componentData.conversionSteps}
                     updateAnswer={(answer: any) => {
                       console.log(answer);
                     }}
+                    editMode={editMode}
                     // uuid={this.props.question.uuid}
                     // is_correct_answer={this.props.correct}
                   />

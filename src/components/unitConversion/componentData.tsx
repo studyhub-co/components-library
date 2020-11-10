@@ -60,5 +60,19 @@ function getOperateDataFunctions(dispatch: any) {
     dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
   };
 
-  return { onQuestionTextChange, onQuestionHintChange, onQuestionImageChange };
+  const onUnitConversionTypeChange = (type: string): void => {
+    dispatch({ type: 'UNIT_CONVERSION_TYPE_CHANGE', payload: type });
+  };
+
+  const onQuestionStepChange = (val: number, _unit: string): void => {
+    dispatch({ type: 'UNIT_CONVERSION_QUESTION_STEP_CHANGE', payload: { val, _unit } });
+  };
+
+  return {
+    onQuestionTextChange,
+    onQuestionHintChange,
+    onQuestionImageChange,
+    onUnitConversionTypeChange,
+    onQuestionStepChange,
+  };
 }
