@@ -212,7 +212,7 @@ export class UnitConversionBase extends React.Component {
             if (splitNumerator[1] === splitDenominator[1]) {
               // second one in "1.23 cm"
               if (alreadyStrikeDenomIndex.indexOf(column2) === -1) {
-                // if denum not striked already
+                // if denominator not striked already
                 alreadyStrikeDenomIndex.push(column2);
 
                 let toRemoveI;
@@ -247,6 +247,8 @@ export class UnitConversionBase extends React.Component {
                   );
 
                   answers[column2][1]['data'] = newLatexDN; // data will not fill, because edit event not fire onMathQuillChange
+
+                  // console.log(newLatexDN);
 
                   this.setLatexWoFireEvent(denominatorBox, newLatexDN);
 
@@ -452,11 +454,8 @@ export class UnitConversionBase extends React.Component {
       const foundIndex = input.indexOf(unit, input.length - unit.length);
       if (foundIndex !== -1) {
         // replace all char and spaces in value
-        return [
-          input.substring(0, foundIndex).replace(/[^0-9*^.-]+/g, ''),
-          // .replace(/^[\\\s]+|[\\\s]+$/gm, ''), unnessecery now
-          unit,
-        ];
+        const val = input.substring(0, foundIndex).replace(/[^0-9*^.-]+/g, '');
+        return [parseFloat(val), unit];
       }
     }
     return null;

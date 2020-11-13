@@ -27,6 +27,13 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
       draft.reducerData.questionStepNumber = action.payload.val;
       draft.reducerData.questionStepUnit = action.payload._unit;
     }
+    if (action.type === 'UNIT_CONVERSION_STEPS_CHANGE') {
+      draft.reducerData.conversionSteps = action.payload.steps;
+    }
+    if (action.type === 'UNIT_CONVERSION_ANSWER_STEP_CHANGE') {
+      draft.reducerData.answerStepNumber = action.payload.val;
+      draft.reducerData.answerStepUnit = action.payload._unit;
+    }
     if (action.type === 'REPLACE_DATA') {
       draft.reducerData = action.payload;
     }

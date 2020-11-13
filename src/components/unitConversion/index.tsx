@@ -29,6 +29,8 @@ import { useComponentData } from './componentData';
 
 import { UnitConversion } from './components/index';
 
+import './style.css';
+
 // import jquery from 'jquery';
 //
 // declare global {
@@ -139,6 +141,8 @@ const Index: React.FC<IUnitConversionProps> = props => {
   }, [checkUserMaterialReaction, currentMaterial, lessonUuid]);
   // !--- common component code ended
 
+  // console.log(componentData);
+
   return (
     <ThemeProvider theme={theme}>
       <div style={{ flexGrow: 1, padding: '1rem' }}>
@@ -174,8 +178,13 @@ const Index: React.FC<IUnitConversionProps> = props => {
                     }}
                     onQuestionStepChange={operateDataFunctions.onQuestionStepChange}
                     conversionSteps={componentData.conversionSteps}
+                    // onConversionStepsChange={operateDataFunctions.onConversionStepsChange}
                     updateAnswer={(answer: any) => {
-                      console.log(answer);
+                      // update all steps + answer
+                      if (answer) {
+                        operateDataFunctions.onConversionStepsChange(answer.conversionSteps);
+                        operateDataFunctions.onAnswerStepChange(answer.answerNumber, answer.answerUnit);
+                      }
                     }}
                     editMode={editMode}
                     // uuid={this.props.question.uuid}

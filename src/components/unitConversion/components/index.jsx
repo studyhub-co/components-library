@@ -22,6 +22,7 @@ addStyles();
 
 export class UnitConversion extends UnitConversionBase {
   initialBoxes(props) {
+    // TODO add text like 'mathquill-1row-1column' to add more uniqueness
     const spanBoxesIds = ['11', '21', '15'];
 
     for (let i = 0; i < spanBoxesIds.length; i++) {
@@ -33,43 +34,12 @@ export class UnitConversion extends UnitConversionBase {
 
     const MQ = window.MathQuill.getInterface(2);
 
-    const numBox = MQ(document.getElementById('11'));
-    const denumBox = MQ(document.getElementById('21'));
+    const numBox1Step = MQ(document.getElementById('11'));
+    const denomBox1Step = MQ(document.getElementById('21'));
     const answerBox = MQ(document.getElementById('15'));
 
-    if (props.unitConversionType === '10') {
-      // fill right hand side
-      // fist column reset
-      this.setLatexWoFireEvent(numBox, '');
-      this.setLatexWoFireEvent(denumBox, '');
-
-      document.getElementById('15').style.pointerEvents = 'none';
-      document.getElementById('15').firstElementChild.firstElementChild.setAttribute('tabindex', '-1');
-
-      this.setState(
-        {
-          answer: { data: props.answerNumber + ' ' + props.answerUnit, box: answerBox },
-          numColumns: 1,
-          answersSteps: [
-            [
-              { data: '', box: MQ(document.getElementById('11')) },
-              { data: '', box: MQ(document.getElementById('21')) },
-            ],
-          ], // column set by default
-        },
-        function() {
-          this.setLatexWoFireEvent(answerBox, props.answerNumber + '\\ ' + props.answerUnit);
-          // set focus on 1st box
-          MQ(document.getElementById('11')).focus();
-        },
-      );
-    }
-
-    if (props.unitConversionType === '20') {
-      // fill left hand side
+    const populateConversionSteps = () => {
       const answersSteps = [];
-
-      this.setLatexWoFireEvent(answerBox, '');
 
       this.setState(
         {
@@ -77,29 +47,30 @@ export class UnitConversion extends UnitConversionBase {
         },
         function() {
           for (let x = 0; x < props.conversionSteps.length; x++) {
-            if (props.conversionSteps[x]['numerator'] && props.conversionSteps[x]['denominator']) {
-              answersSteps.push([
-                {
-                  data: props.conversionSteps[x]['numerator'],
-                  splitData: this.constructor.parseToValueUnit(
-                    this.clearDataText(props.conversionSteps[x]['numerator']),
-                  ),
-                  box: MQ(document.getElementById('1' + (x + 1))),
-                },
-                {
-                  data: props.conversionSteps[x]['denominator'],
-                  splitData: this.constructor.parseToValueUnit(
-                    this.clearDataText(props.conversionSteps[x]['denominator']),
-                  ),
-                  box: MQ(document.getElementById('2' + (x + 1))),
-                },
-              ]);
+            // if (props.conversionSteps[x]['numerator'] && props.conversionSteps[x]['denominator']) {
+            answersSteps.push([
+              {
+                data: props.conversionSteps[x]['numerator'],
+                splitData: this.constructor.parseToValueUnit(this.clearDataText(props.conversionSteps[x]['numerator'])),
+                box: MQ(document.getElementById('1' + (x + 1))),
+              },
+              {
+                data: props.conversionSteps[x]['denominator'],
+                splitData: this.constructor.parseToValueUnit(
+                  this.clearDataText(props.conversionSteps[x]['denominator']),
+                ),
+                box: MQ(document.getElementById('2' + (x + 1))),
+              },
+            ]);
 
-              this.setLatexWoFireEvent(answersSteps[x][0]['box'], answersSteps[x][0]['data']);
-              this.setLatexWoFireEvent(answersSteps[x][1]['box'], answersSteps[x][1]['data']);
+            this.setLatexWoFireEvent(answersSteps[x][0]['box'], answersSteps[x][0]['data']);
+            this.setLatexWoFireEvent(answersSteps[x][1]['box'], answersSteps[x][1]['data']);
+            if (!props.editMode) {
+              // if Student view, disable editable
               answersSteps[x][0]['box'].__controller.container[0].style.pointerEvents = 'none';
               answersSteps[x][1]['box'].__controller.container[0].style.pointerEvents = 'none';
             }
+            // }
           }
           this.setState(
             {
@@ -112,26 +83,87 @@ export class UnitConversion extends UnitConversionBase {
           );
         },
       );
-    }
+    };
 
-    if (props.unitConversionType === '30') {
-      // no fill any side
-      // set focus on 1st box
-      MQ(document.getElementById('11')).focus();
+    const populateAnswer = () => {
       this.setState(
         {
-          answersSteps: [
-            [
-              { data: '', box: MQ(document.getElementById('11')) },
-              { data: '', box: MQ(document.getElementById('21')) },
-            ],
-          ],
+          answer: { data: props.answerNumber + ' ' + props.answerUnit, box: answerBox },
         },
         function() {
+          this.setLatexWoFireEvent(answerBox, props.answerNumber + '\\ ' + props.answerUnit);
           // set focus on 1st box
           MQ(document.getElementById('11')).focus();
         },
       );
+    };
+
+    if (props.editMode) {
+      // !============ populate edit mode
+      const numBoxQuestion = MQ(document.getElementById('10'));
+      // populate all fields from JSON data
+      // question box
+      this.setLatexWoFireEvent(numBoxQuestion, `${props.number}\\ ${props.unit}`);
+      // conversion steps
+      populateConversionSteps();
+      // answer
+      populateAnswer();
+    } else {
+      // !============ populate student view
+      if (props.unitConversionType === 10) {
+        // fill right hand side
+        // reset first column
+        this.setLatexWoFireEvent(numBox1Step, '');
+        this.setLatexWoFireEvent(denomBox1Step, '');
+
+        document.getElementById('15').style.pointerEvents = 'none';
+        document.getElementById('15').firstElementChild.firstElementChild.setAttribute('tabindex', '-1');
+
+        this.setState(
+          {
+            answer: { data: props.answerNumber + ' ' + props.answerUnit, box: answerBox },
+            numColumns: 1,
+            answersSteps: [
+              [
+                { data: '', box: MQ(document.getElementById('11')) },
+                { data: '', box: MQ(document.getElementById('21')) },
+              ],
+            ], // column set by default
+          },
+          function() {
+            this.setLatexWoFireEvent(answerBox, props.answerNumber + '\\ ' + props.answerUnit);
+            // set focus on 1st box
+            MQ(document.getElementById('11')).focus();
+          },
+        );
+      }
+
+      if (props.unitConversionType === 20) {
+        // fill left hand side
+        // reset answer
+        this.setLatexWoFireEvent(answerBox, '');
+        populateConversionSteps();
+      }
+
+      if (props.unitConversionType === 30) {
+        // no fill any side
+        // set focus on 1st box
+        MQ(document.getElementById('11')).focus();
+        this.setState(
+          {
+            answersSteps: [
+              [
+                { data: '', box: MQ(document.getElementById('11')) },
+                { data: '', box: MQ(document.getElementById('21')) },
+              ],
+            ],
+          },
+          function() {
+            // set focus on 1st box
+            MQ(document.getElementById('11')).focus();
+          },
+        );
+      }
     }
   }
 
@@ -154,9 +186,54 @@ export class UnitConversion extends UnitConversionBase {
     const answerSteps = this.state.answersSteps;
     let conversionSteps = [];
 
-    if (this.props.unitConversionType === '20') {
-      conversionSteps = this.props.conversionSteps;
+    if (!this.props.editMode) {
+      // user answer mode
+      if (this.props.unitConversionType === 20) {
+        conversionSteps = this.props.conversionSteps;
+      } else {
+        for (let x = 0; x < answerSteps.length; x++) {
+          try {
+            conversionSteps.push({
+              numerator: answerSteps[x][0]['splitData'].join(' '),
+              denominator: answerSteps[x][1]['splitData'].join(' '),
+            });
+          } catch (err) {}
+        }
+      }
+
+      let answerSplit = null;
+
+      if (typeof this.state.answer !== 'undefined' && this.state.answer['box']) {
+        answerSplit = this.constructor.parseToValueUnit(this.clearDataText(this.state.answer['box'].latex()));
+      }
+
+      if (conversionSteps.length != 0) {
+        if (answerSplit) {
+          // this.props.updateAnswer({
+          //   answerNumber: answerSplit[0],
+          //   answerUnit: answerSplit[1],
+          //   conversionSteps: conversionSteps,
+          // });
+          this.props.updateAnswer([
+            //  todo it seems we dso not need this uuid
+            this.props.uuid,
+            {
+              unitConversion: {
+                answerNumber: answerSplit[0],
+                answerUnit: answerSplit[1],
+                conversionSteps: conversionSteps,
+              },
+            },
+          ]);
+        }
+      } else {
+        // if no steps - do not update
+        // FIXME do we need this?
+        this.props.updateAnswer(null);
+      }
     } else {
+      // console.log(answerSteps);
+      // editMode : update all existing answerSteps + answer
       for (let x = 0; x < answerSteps.length; x++) {
         try {
           conversionSteps.push({
@@ -165,36 +242,26 @@ export class UnitConversion extends UnitConversionBase {
           });
         } catch (err) {}
       }
-    }
 
-    let answerSplit = null;
+      let answerSplit = null;
 
-    if (typeof this.state.answer !== 'undefined' && this.state.answer['box']) {
-      answerSplit = this.constructor.parseToValueUnit(this.clearDataText(this.state.answer['box'].latex()));
-    }
-
-    if (conversionSteps.length != 0) {
-      if (answerSplit) {
-        this.props.updateAnswer([
-          this.props.uuid,
-          {
-            unitConversion: {
-              answerNumber: answerSplit[0],
-              answerUnit: answerSplit[1],
-              conversionSteps: conversionSteps,
-            },
-          },
-        ]);
+      if (typeof this.state.answer !== 'undefined' && this.state.answer['box']) {
+        answerSplit = this.constructor.parseToValueUnit(this.clearDataText(this.state.answer['box'].latex()));
       }
-    } else {
-      // if no steps - do not update
-      this.props.updateAnswer(null);
+
+      this.props.updateAnswer({
+        answerNumber: answerSplit ? answerSplit[0] : null,
+        answerUnit: answerSplit ? answerSplit[1] : '',
+        conversionSteps: conversionSteps,
+      });
     }
   }
 
   // result answer change
   onResultChange(data, row, col, mathquillObj) {
-    if (this.props.unitConversionType === '10') {
+    console.log(this.props);
+
+    if (this.props.unitConversionType === 10) {
       this.setLatexWoFireEvent(mathquillObj, this.calculateAnswer()); // recalculate answer from lefside
     } else {
       // show num & denom
@@ -206,7 +273,7 @@ export class UnitConversion extends UnitConversionBase {
     this.updateExternalAnswer();
   }
 
-  // question value changed
+  // question value changed (edit mode)
   onQuestionValueChange(data, row, col, mathquillObj) {
     const questionValueUnit = this.constructor.parseToValueUnit(this.clearDataText(data));
 
@@ -233,7 +300,7 @@ export class UnitConversion extends UnitConversionBase {
 
     let answerValue = this.props.number;
 
-    // exclude strikethrouth
+    // exclude strikethrough
     if (!this.state.strikethroughN) {
       numUnits.push(this.props.unit.split('/')[0]);
     }
@@ -317,7 +384,7 @@ export class UnitConversion extends UnitConversionBase {
 
     const answerSteps = this.state.answersSteps;
 
-    if (this.props.unitConversionType === '10') {
+    if (this.props.unitConversionType === 10) {
       // automatically fill right hand box | left side blank
       const answerBox = MQ(document.getElementById('15'));
       this.setLatexWoFireEvent(answerBox, this.calculateAnswer());
@@ -334,11 +401,11 @@ export class UnitConversion extends UnitConversionBase {
     if (typeof this.props.is_correct_answer !== 'undefined') {
       // user gave answer
       const spanBoxes = [];
-      if (this.props.unitConversionType === '20' || '30') {
+      if (this.props.unitConversionType === 20 || 30) {
         // RIGHT SIDE BLANK
         spanBoxes.push(15);
       }
-      if (this.props.unitConversionType === '10' || '30') {
+      if (this.props.unitConversionType === 10 || 30) {
         // LEFT SIDE BLANK
         for (let x = 0; x < this.state.answersSteps.length; x++) {
           spanBoxes.push('1' + (x + 1));
@@ -380,6 +447,8 @@ export class UnitConversion extends UnitConversionBase {
       backgroundColor: '#ffffff',
     };
 
+    // console.log(this.state);
+
     return (
       <div style={{ display: 'block' }}>
         {this.props.editMode && (
@@ -409,7 +478,8 @@ export class UnitConversion extends UnitConversionBase {
             strikethroughN={this.state.strikethroughN}
             strikethroughD={this.state.strikethroughD}
           />
-          {this.props.unitConversionType === '20' ? null : (
+          {/* strikethrough for question step of student mode */}
+          {this.props.unitConversionType === 20 ? null : (
             <div
               style={{ fontSize: 10, display: 'table-cell', verticalAlign: 'middle', paddingLeft: 0, paddingRight: 0 }}
             >
@@ -453,7 +523,7 @@ export class UnitConversion extends UnitConversionBase {
               onMathQuillChange={this.onResultChange}
               row={1}
               column={5}
-              focus={this.props.unitConversionType === '20'}
+              focus={this.props.unitConversionType === 20}
             />
           </div>
         </div>

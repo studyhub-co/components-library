@@ -82,11 +82,11 @@ export class ConversionTable extends React.Component {
             <tr>
               <td style={{ ...topLeft, whiteSpace: 'nowrap' }}>
                 {/* student view */}
-                {this.props.number && this.props.unit ? (
-                  <React.Fragment>
+                {this.props.number && this.props.unit && !this.props.editMode ? (
+                  <span style={{ fontSize: 30 }}>
                     {this.props.number}{' '}
                     <span style={{ ...unitStyle, ...strikethroughStyleN }}>{this.props.unit.split('/')[0]}</span>
-                  </React.Fragment>
+                  </span>
                 ) : null}
                 {/* edit mode view */}
                 {this.props.editMode && (
@@ -98,8 +98,9 @@ export class ConversionTable extends React.Component {
               {this.getColumns(1)}
             </tr>
             <tr>
-              <td style={bottomRight}>
-                {this.props.number && this.props.unit ? (
+              <td style={{ ...bottomRight, fontSize: 30 }}>
+                {/* underline unit value (e.g. 's' from 'm/s') */}
+                {this.props.number && this.props.unit && !this.props.editMode ? (
                   <span style={{ ...unitStyle, ...strikethroughStyleD }}>{this.props.unit.split('/')[1]}</span>
                 ) : null}
               </td>

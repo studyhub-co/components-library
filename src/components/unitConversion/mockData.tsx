@@ -11,10 +11,10 @@ export const mockUnitConversion: UnitConversionData = {
     type: 'base',
   },
   hiddenFields: {},
-  conversionSteps: [],
+  conversionSteps: [{ denominator: '', numerator: '' }],
   questionStepNumber: null,
-  questionStepUnit: null,
+  questionStepUnit: '',
   answerStepNumber: null,
-  answerStepUnit: null,
+  answerStepUnit: '',
   conversionType: 10,
 };

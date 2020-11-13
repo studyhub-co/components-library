@@ -68,11 +68,21 @@ function getOperateDataFunctions(dispatch: any) {
     dispatch({ type: 'UNIT_CONVERSION_QUESTION_STEP_CHANGE', payload: { val, _unit } });
   };
 
+  const onAnswerStepChange = (val: number, _unit: string): void => {
+    dispatch({ type: 'UNIT_CONVERSION_ANSWER_STEP_CHANGE', payload: { val, _unit } });
+  };
+
+  const onConversionStepsChange = (steps: Array<{ numerator: string; denominator: string }>): void => {
+    dispatch({ type: 'UNIT_CONVERSION_STEPS_CHANGE', payload: { steps } });
+  };
+
   return {
     onQuestionTextChange,
     onQuestionHintChange,
     onQuestionImageChange,
     onUnitConversionTypeChange,
     onQuestionStepChange,
+    onConversionStepsChange,
+    onAnswerStepChange,
   };
 }
