@@ -8,6 +8,8 @@ import Qty from 'js-quantities';
 import './mathquill-loader';
 // this will add MathQuill to window
 import * as MathQuill from '@edtr-io/mathquill/build/mathquill.js';
+// this will add evaluatex to window
+import 'evaluatex/dist/evaluatex.min.js';
 
 addStyles();
 
@@ -333,8 +335,10 @@ export class UnitConversionBase extends React.Component {
 
     if (parsedToValUnit && parsedToValUnit[0]) {
       // const parser = math.parser();
+
       try {
-        const value = parser.eval(parsedToValUnit[0]);
+        const value = window.evaluatex(parsedToValUnit[0])();
+        // const value = parser.eval(parsedToValUnit[0]);
         if (value && parsedToValUnit[1]) {
           tmpData = value + ' ' + parsedToValUnit[1];
         }
@@ -455,7 +459,8 @@ export class UnitConversionBase extends React.Component {
       if (foundIndex !== -1) {
         // replace all char and spaces in value
         const val = input.substring(0, foundIndex).replace(/[^0-9*^.-]+/g, '');
-        return [parseFloat(val), unit];
+        return [val, unit];
+        // return [parseFloat(val), unit];
       }
     }
     return null;

@@ -19,6 +19,7 @@ export function useComponentData(componentData: IQABaseData | undefined, current
     if (currentMaterial && currentMaterial.data) {
       // set component data from loaded currentMaterial
       // validate data structure from API with io-ts model
+      console.log(isRight(UnitConversionDataIo.decode(currentMaterial.data)));
       if (isRight(UnitConversionDataIo.decode(currentMaterial.data))) {
         initialData = currentMaterial.data;
       } else {
@@ -64,11 +65,11 @@ function getOperateDataFunctions(dispatch: any) {
     dispatch({ type: 'UNIT_CONVERSION_TYPE_CHANGE', payload: type });
   };
 
-  const onQuestionStepChange = (val: number, _unit: string): void => {
+  const onQuestionStepChange = (val: string, _unit: string): void => {
     dispatch({ type: 'UNIT_CONVERSION_QUESTION_STEP_CHANGE', payload: { val, _unit } });
   };
 
-  const onAnswerStepChange = (val: number, _unit: string): void => {
+  const onAnswerStepChange = (val: string, _unit: string): void => {
     dispatch({ type: 'UNIT_CONVERSION_ANSWER_STEP_CHANGE', payload: { val, _unit } });
   };
 

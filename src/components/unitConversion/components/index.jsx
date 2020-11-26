@@ -72,6 +72,7 @@ export class UnitConversion extends UnitConversionBase {
             }
             // }
           }
+
           this.setState(
             {
               answersSteps: answersSteps,
@@ -91,7 +92,9 @@ export class UnitConversion extends UnitConversionBase {
           answer: { data: props.answerNumber + ' ' + props.answerUnit, box: answerBox },
         },
         function() {
-          this.setLatexWoFireEvent(answerBox, props.answerNumber + '\\ ' + props.answerUnit);
+          if (props.answerNumber) {
+            this.setLatexWoFireEvent(answerBox, props.answerNumber + '\\ ' + props.answerUnit);
+          }
           // set focus on 1st box
           MQ(document.getElementById('11')).focus();
         },
@@ -103,7 +106,9 @@ export class UnitConversion extends UnitConversionBase {
       const numBoxQuestion = MQ(document.getElementById('10'));
       // populate all fields from JSON data
       // question box
-      this.setLatexWoFireEvent(numBoxQuestion, `${props.number}\\ ${props.unit}`);
+      if (props.number) {
+        this.setLatexWoFireEvent(numBoxQuestion, `${props.number}\\ ${props.unit}`);
+      }
       // conversion steps
       populateConversionSteps();
       // answer
@@ -131,7 +136,9 @@ export class UnitConversion extends UnitConversionBase {
             ], // column set by default
           },
           function() {
-            this.setLatexWoFireEvent(answerBox, props.answerNumber + '\\ ' + props.answerUnit);
+            if (props.answerNumber) {
+              this.setLatexWoFireEvent(answerBox, props.answerNumber + '\\ ' + props.answerUnit);
+            }
             // set focus on 1st box
             MQ(document.getElementById('11')).focus();
           },
@@ -196,6 +203,9 @@ export class UnitConversion extends UnitConversionBase {
             conversionSteps.push({
               numerator: answerSteps[x][0]['splitData'].join(' '),
               denominator: answerSteps[x][1]['splitData'].join(' '),
+              // todo evalutex
+              numeratorSI: answerSteps[x][0]['splitData'].join(' '),
+              denominatorSI: answerSteps[x][1]['splitData'].join(' '),
             });
           } catch (err) {}
         }
@@ -325,6 +335,8 @@ export class UnitConversion extends UnitConversionBase {
           numValue = 1;
         }
 
+        console.log(numValue);
+
         if (numValue || numAnswerData.trim() === '0') {
           answerValue *= numValue;
         }
@@ -450,7 +462,7 @@ export class UnitConversion extends UnitConversionBase {
     // console.log(this.state);
 
     return (
-      <div style={{ display: 'block' }}>
+      <div style={{ display: 'block', overflowX: 'auto' }}>
         {this.props.editMode && (
           <div style={{ marginBottom: '1rem' }}>
             <FormControl>

@@ -9,6 +9,8 @@ const HiddenFields = t.interface({
 const ConversionSteps = t.interface({
   numerator: t.string,
   denominator: t.string,
+  numeratorSI: t.string,
+  denominatorSI: t.string,
 });
 
 export const UnitConversionDataIo = t.interface({
@@ -16,10 +18,12 @@ export const UnitConversionDataIo = t.interface({
   // answer: QuestionIo,
   hiddenFields: HiddenFields,
   conversionSteps: t.array(ConversionSteps),
-  questionStepNumber: t.union([t.number, t.null]),
+  questionStepNumber: t.union([t.string, t.null]),
   questionStepUnit: t.union([t.string, t.null]),
-  answerStepNumber: t.union([t.number, t.null]),
+  questionStepSI: t.union([t.string, t.null]),
+  answerStepNumber: t.union([t.string, t.null]),
   answerStepUnit: t.union([t.string, t.null]),
+  answerStepSI: t.union([t.string, t.null]),
   conversionType: t.number,
 });
 
