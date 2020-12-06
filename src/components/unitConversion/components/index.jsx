@@ -17,6 +17,7 @@ import { StyledButton } from './style';
 import './mathquill-loader';
 // this will add MathQuill to window
 import * as MathQuill from '@edtr-io/mathquill/build/mathquill.js';
+import Qty from 'js-quantities';
 
 addStyles();
 
@@ -200,12 +201,23 @@ export class UnitConversion extends UnitConversionBase {
       } else {
         for (let x = 0; x < answerSteps.length; x++) {
           try {
+            // evaluate math expression
+            const numeratorEvaluatedVal = window.evaluatex(answerSteps[x][0]['splitData'][0])();
+            const numeratorUnit = answerSteps[x][0]['splitData'][1];
+            // convert value to SI unit
+            const numeratorSI = Qty(numeratorEvaluatedVal, numeratorUnit).baseScalar;
+
+            // evaluate math expression
+            const denominatorEvaluatedVal = window.evaluatex(answerSteps[x][1]['splitData'][0])();
+            const denominatorUnit = answerSteps[x][1]['splitData'][1];
+            // convert value to SI unit
+            const denominatorSI = Qty(denominatorEvaluatedVal, denominatorUnit).baseScalar;
+
             conversionSteps.push({
               numerator: answerSteps[x][0]['splitData'].join(' '),
               denominator: answerSteps[x][1]['splitData'].join(' '),
-              // todo evalutex
-              numeratorSI: answerSteps[x][0]['splitData'].join(' '),
-              denominatorSI: answerSteps[x][1]['splitData'].join(' '),
+              numeratorSI: numeratorSI,
+              denominatorSI: denominatorSI,
             });
           } catch (err) {}
         }
@@ -219,22 +231,23 @@ export class UnitConversion extends UnitConversionBase {
 
       if (conversionSteps.length != 0) {
         if (answerSplit) {
-          // this.props.updateAnswer({
-          //   answerNumber: answerSplit[0],
-          //   answerUnit: answerSplit[1],
-          //   conversionSteps: conversionSteps,
-          // });
-          this.props.updateAnswer([
-            //  todo it seems we dso not need this uuid
-            this.props.uuid,
-            {
-              unitConversion: {
-                answerNumber: answerSplit[0],
-                answerUnit: answerSplit[1],
-                conversionSteps: conversionSteps,
-              },
-            },
-          ]);
+          this.props.updateAnswer({
+            answerNumber: answerSplit[0],
+            answerUnit: answerSplit[1],
+            conversionSteps: conversionSteps,
+          });
+          // this.props.updateAnswer([
+          //   //  todo it seems we do not need this uuid
+          //   //  why this is the array?
+          //   this.props.uuid,
+          //   {
+          //     unitConversion: {
+          //       answerNumber: answerSplit[0],
+          //       answerUnit: answerSplit[1],
+          //       conversionSteps: conversionSteps,
+          //     },
+          //   },
+          // ]);
         }
       } else {
         // if no steps - do not update
@@ -242,13 +255,38 @@ export class UnitConversion extends UnitConversionBase {
         this.props.updateAnswer(null);
       }
     } else {
-      // console.log(answerSteps);
       // editMode : update all existing answerSteps + answer
+
+      let numeratorSI = '';
+      let denominatorSI = '';
+
       for (let x = 0; x < answerSteps.length; x++) {
+        try {
+          const numeratorVal = answerSteps[x][0]['splitData'][0];
+          const numeratorUnit = answerSteps[x][0]['splitData'][1];
+          // evaluate math expression
+          const evaluatedVal = window.evaluatex(numeratorVal)();
+
+          // convert value to SI unit
+          numeratorSI = Qty(evaluatedVal, numeratorUnit).baseScalar;
+        } catch (e) {}
+
+        try {
+          const denominatorVal = answerSteps[x][1]['splitData'][0];
+          const denominatorUnit = answerSteps[x][1]['splitData'][1];
+          // evaluate math expression
+          const evaluatedVal = window.evaluatex(denominatorVal)();
+
+          // convert value to SI unit
+          denominatorSI = Qty(evaluatedVal, denominatorUnit).baseScalar;
+        } catch (e) {}
+
         try {
           conversionSteps.push({
             numerator: answerSteps[x][0]['splitData'].join(' '),
             denominator: answerSteps[x][1]['splitData'].join(' '),
+            numeratorSI: numeratorSI,
+            denominatorSI: denominatorSI,
           });
         } catch (err) {}
       }
@@ -269,8 +307,6 @@ export class UnitConversion extends UnitConversionBase {
 
   // result answer change
   onResultChange(data, row, col, mathquillObj) {
-    console.log(this.props);
-
     if (this.props.unitConversionType === 10) {
       this.setLatexWoFireEvent(mathquillObj, this.calculateAnswer()); // recalculate answer from lefside
     } else {
@@ -334,8 +370,6 @@ export class UnitConversion extends UnitConversionBase {
         if (numValue === '') {
           numValue = 1;
         }
-
-        console.log(numValue);
 
         if (numValue || numAnswerData.trim() === '0') {
           answerValue *= numValue;

@@ -19,7 +19,7 @@ export function useComponentData(componentData: IQABaseData | undefined, current
     if (currentMaterial && currentMaterial.data) {
       // set component data from loaded currentMaterial
       // validate data structure from API with io-ts model
-      console.log(isRight(UnitConversionDataIo.decode(currentMaterial.data)));
+      // console.log(isRight(UnitConversionDataIo.decode(currentMaterial.data)));
       if (isRight(UnitConversionDataIo.decode(currentMaterial.data))) {
         initialData = currentMaterial.data;
       } else {

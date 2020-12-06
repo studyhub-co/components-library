@@ -7,10 +7,12 @@ import { Paper } from '@material-ui/core';
 
 import * as materialActionCreators from '../src/redux/modules/material';
 
-// import GenericComponent from './generic';
 import QAChoices from '../src/components/qaChoices';
 import QABase from '../src/components/qaBase';
 import Vector from '../src/components/vector';
+import UnitConversion from '../src/components/unitConversion';
+
+import { validate as unitConversionValidate } from '../src/components/unitConversion/validate.js';
 
 // import ValidateVector from '../src/components/vector/validate';
 
@@ -27,6 +29,7 @@ const materialsUuids = {
   /* order is important?! */
   // 'a8970b5b-22b8-4792-ac37-8109244e3a75': QAChoices,
   // 'aef3e51c-e0af-4426-be8b-7984ef68bc49': Vector,
+  '941b2426-f0bf-45c3-b850-4b0ce03300a1': UnitConversion,
   '44c8daca-5f13-4a9d-9a70-a1eb5389f65a': QABase,
 };
 
@@ -95,13 +98,15 @@ const Student: React.FC = ({ currentMaterial, fetchMaterialStudentView }) => {
           editMode={state.contentEditMode}
           materialUuid={state.currentMaterialUuid}
           moveToNextComponent={moveToNextComponent}
-          // checkUserMaterialReaction={material => {
-          //   // material.data userReactionData
-          //   if (GenericComponent === Vector) {
-          //     // we have full json data only in edit mode: todo use studio data to implement front end validation
-          //     // ValidateVector(currentMaterial.data, material.data)
-          //   }
-          // }}
+          checkFrontendUserMaterialReaction={material => {
+            // material.data userReactionData
+            if (GenericComponent === UnitConversion) {
+              // we have full json data only in edit mode: todo use studio data to implement front end validation
+              // ValidateVector(currentMaterial.data, material.data)
+              const isValid = unitConversionValidate(currentMaterial.data, material.data);
+              alert(isValid);
+            }
+          }}
         />
       )}
     </div>

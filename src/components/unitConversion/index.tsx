@@ -48,6 +48,7 @@ interface IUnitConversionProps {
   editMode?: boolean;
   componentData?: IUnitConversionData;
   showFooter?: boolean | undefined;
+  checkFrontendUserMaterialReaction(material: Material): void;
   // redux actions
   fetchMaterial(uuid: string): void;
   fetchMaterialStudentView(lessonUuid: string | undefined, materialUuid: string | undefined): void;
@@ -68,10 +69,11 @@ const Index: React.FC<IUnitConversionProps> = props => {
     materialUuid,
     showFooter: showFooterProp,
     lessonUuid,
+    checkFrontendUserMaterialReaction,
     // redux store
     userMaterialReactionResult,
     currentMaterial,
-    // actions
+    // redux actions
     fetchMaterial,
     fetchMaterialStudentView,
     checkUserMaterialReaction,
@@ -182,6 +184,7 @@ const Index: React.FC<IUnitConversionProps> = props => {
                     updateAnswer={(answer: any) => {
                       // update all steps + answer
                       if (answer) {
+                        // const answer = answerArray[1]['unitConversion'];
                         operateDataFunctions.onConversionStepsChange(answer.conversionSteps);
                         operateDataFunctions.onAnswerStepChange(answer.answerNumber, answer.answerUnit);
                       }
@@ -207,8 +210,15 @@ const Index: React.FC<IUnitConversionProps> = props => {
           editMode={editMode}
           componentData={componentData}
           checkUserMaterialReaction={material => {
-            setUserReactionState('checked');
-            checkUserMaterialReaction(material);
+            // material combine componentData and material uuid, see checkContinueButton for details
+            if (checkFrontendUserMaterialReaction) {
+              // direct front end validation (mostly for demo purposes)
+              checkFrontendUserMaterialReaction(material);
+            } else {
+              setUserReactionState('checked');
+              // back end validation (see redux action for details)
+              checkUserMaterialReaction(material);
+            }
           }}
           currentMaterial={currentMaterial}
           disabledCheck={disabledCheck}
