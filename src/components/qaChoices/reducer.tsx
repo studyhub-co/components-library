@@ -4,7 +4,7 @@ import { Choice as IChoice } from './IData/choices';
 
 import { uuidV4 } from '../../utils/index';
 
-// import { ReducerObject as IReducerObject, ComponentsData as IComponentsData } from '../hooks/IData';
+// TODO add math support? see src/components/qaBase/reducer.tsx
 
 // we can have reducerData null while ajax request
 export type IReducerObject = { reducerData: QAData | null };

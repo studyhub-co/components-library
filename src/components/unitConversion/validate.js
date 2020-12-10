@@ -1,4 +1,5 @@
 // FIXME you need to copy this file at the root of the sandbox to able to load this code on the server side
+// TODO exclude 'export' line  at the bottom of this file from a copy of code.
 const validate = (correctData, userReactionData) => {
   // check that answers is correct
   const sigFigs = (n, sig) => {

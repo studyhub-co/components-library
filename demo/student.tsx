@@ -10,6 +10,7 @@ import * as materialActionCreators from '../src/redux/modules/material';
 import QAChoices from '../src/components/qaChoices';
 import QABase from '../src/components/qaBase';
 import Vector from '../src/components/vector';
+import MySQL from '../src/components/mysql';
 import UnitConversion from '../src/components/unitConversion';
 
 import { validate as unitConversionValidate } from '../src/components/unitConversion/validate.js';
@@ -29,6 +30,7 @@ const materialsUuids = {
   /* order is important?! */
   // 'a8970b5b-22b8-4792-ac37-8109244e3a75': QAChoices,
   // 'aef3e51c-e0af-4426-be8b-7984ef68bc49': Vector,
+  '1841f136-5fc8-40c1-b0c2-1a64cbeb9122': MySQL,
   '941b2426-f0bf-45c3-b850-4b0ce03300a1': UnitConversion,
   '44c8daca-5f13-4a9d-9a70-a1eb5389f65a': QABase,
 };
@@ -99,10 +101,10 @@ const Student: React.FC = ({ currentMaterial, fetchMaterialStudentView }) => {
           materialUuid={state.currentMaterialUuid}
           moveToNextComponent={moveToNextComponent}
           checkFrontendUserMaterialReaction={material => {
-            // material.data userReactionData
+            // material.data == userReactionData
+            // TODO add another component front validation
             if (GenericComponent === UnitConversion) {
-              // we have full json data only in edit mode: todo use studio data to implement front end validation
-              // ValidateVector(currentMaterial.data, material.data)
+              // front end validation
               const isValid = unitConversionValidate(currentMaterial.data, material.data);
               alert(isValid);
             }

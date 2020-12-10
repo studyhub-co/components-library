@@ -9,6 +9,7 @@ import { QAData as IQAData } from '../qaChoices/IData/index';
 import { VectorData as IVectorData } from '../vector/IData/index';
 import { UnitConversionData as IUnitConversionData } from '../unitConversion/IData/index';
 import { QABaseData as IQABaseData } from '../qaBase/IData/index';
+import { MySQLData as IMySQLData } from '../mysql/IData/index';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface FooterProps {
@@ -18,7 +19,7 @@ interface FooterProps {
   updateMaterial(material: Material): void;
   moveToNextComponent(previousMaterialUuid: string): void;
   checkUserMaterialReaction(material: Material): void;
-  componentData: IQAData | IVectorData | IQABaseData | IUnitConversionData | null; // Any component IData
+  componentData: IQAData | IVectorData | IQABaseData | IUnitConversionData | IMySQLData | null; // Any component IData
   userReactionState: string; // todo enum?
 }
 

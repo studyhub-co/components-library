@@ -7,11 +7,13 @@ import QAChoices from '../src/components/qaChoices';
 import QABase from '../src/components/qaBase';
 import Vector from '../src/components/vector';
 import UnitConversion from '../src/components/unitConversion';
+import MySQL from '../src/components/mysql';
 
 import { mockQaChoices } from '../src/components/qaChoices/mockData';
 import { mockQaBase } from '../src/components/qaBase/mockData';
 import { mockVector } from '../src/components/vector/mockData';
 import { mockUnitConversion } from '../src/components/unitConversion/mockData';
+import { mockMysql } from '../src/components/mysql/mockData';
 
 const Components: React.FC = () => {
   // const textInput = createRef<HTMLInputElement>();
@@ -41,6 +43,8 @@ const Components: React.FC = () => {
       <Vector componentData={mockVector} editMode={state.checkedEditMode} />
       <h1>Unit Conversion</h1>
       <UnitConversion componentData={mockUnitConversion} editMode={state.checkedEditMode} />
+      <h1>MySQL</h1>
+      <MySQL componentData={mockMysql} editMode={state.checkedEditMode} />
     </div>
   );
 };
