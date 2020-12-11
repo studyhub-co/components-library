@@ -19,6 +19,8 @@ import { MySQLData as IMySQLData } from './IData/index';
 
 import Question from '../common/question';
 
+import EditModeComponent from './components/editMode';
+
 import { useComponentData } from './componentData';
 
 import { useSpaEventsHook } from '../hooks/spaEvents';
@@ -146,7 +148,22 @@ const Index: React.FC<IMySQLProps> = props => {
               </Paper>
             </ContainerItem>
             <ContainerItem>
-              <Paper>MysqlAnswer</Paper>
+              <Paper>
+                {editMode ? (
+                  <EditModeComponent
+                    SQLQuery={componentData.answer.SQLQuery}
+                    SQLSchema={componentData.answer.SQLSchema}
+                    expectedOutput={componentData.answer.expectedOutput}
+                    schemaIsValid={componentData.answer.schemaIsValid}
+                    onChangeMySQL={(SQLSchema, SQLQuery) => {
+                      console.log(SQLSchema, SQLQuery);
+                    }}
+                    editMode={editMode}
+                  />
+                ) : (
+                  <div>MysqlAnswer</div>
+                )}
+              </Paper>
             </ContainerItem>
           </Container>
         ) : (
