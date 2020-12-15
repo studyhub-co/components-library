@@ -131,6 +131,8 @@ const Index: React.FC<IMySQLProps> = props => {
   }, [checkUserMaterialReaction, currentMaterial, lessonUuid]);
   // !--- common component code ended
 
+  console.log(componentData);
+
   return (
     <ThemeProvider theme={theme}>
       <div style={{ flexGrow: 1, padding: '1rem' }}>
@@ -154,18 +156,22 @@ const Index: React.FC<IMySQLProps> = props => {
                   <EditModeComponent
                     SQLQuery={componentData.answer.SQLQuery}
                     SQLSchema={componentData.answer.SQLSchema}
-                    expectedOutputJson={componentData.answer.expectedOutputJson}
-                    schemaIsValid={componentData.answer.schemaIsValid}
+                    expectedOutput={componentData.answer.expectedOutput}
+                    schemaIsValid={componentData.SQLSchemaResultJson ? true : false}
                     onChangeMySQL={(SQLSchema, SQLQuery) => {
                       // validate my schema with the backend API
                       // if all ok then save schema in reducer
                       makeServiceRequest({ SQLSchema, SQLQuery }, 'validate_mysql_schema_query')
                         .then((response: any) => {
                           // TODO add spinner, due it could be long query
-                          console.log(response);
                           if (response.SQLSchemaResultJson) {
                             // schema was build successfully
-                            operateDataFunctions.onAnswerMySQLDataChange(SQLSchema, SQLQuery);
+                            operateDataFunctions.onAnswerMySQLDataChange(
+                              SQLSchema,
+                              SQLQuery,
+                              response.SQLSchemaResultJson,
+                              response.expectedOutput ? response.expectedOutput : '',
+                            );
                           } else {
                             alert('Invalid SQL schema');
                           }

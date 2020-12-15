@@ -30,7 +30,7 @@ const materialsUuids = {
   /* order is important?! */
   // 'a8970b5b-22b8-4792-ac37-8109244e3a75': QAChoices,
   // 'aef3e51c-e0af-4426-be8b-7984ef68bc49': Vector,
-  '1841f136-5fc8-40c1-b0c2-1a64cbeb9122': MySQL,
+  'fed7dac1-4412-4a70-9070-bb1e691b16fd': MySQL,
   '941b2426-f0bf-45c3-b850-4b0ce03300a1': UnitConversion,
   '44c8daca-5f13-4a9d-9a70-a1eb5389f65a': QABase,
 };

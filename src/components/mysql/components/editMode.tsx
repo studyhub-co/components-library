@@ -12,48 +12,44 @@ import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-mysql';
 import 'ace-builds/src-noconflict/theme-textmate';
 
-import { QAData as IQAData } from '../../qaChoices/IData/index';
-
 interface MySQLEditModeProps {
   // props
   SQLQuery: string;
   SQLSchema: string;
   schemaIsValid: boolean;
-  expectedOutputJson: string;
+  expectedOutput: string;
   editMode?: boolean;
-  componentData?: IQAData;
   onChangeMySQL(SQLSchema: string, SQLQuery: string): void;
-  // fetchMaterial(uuid: string): void;
-  // fetchMaterialStudentView(lessonUuid: string | undefined, materialUuid: string | undefined): void;
-  // updateMaterial(material: Material): void;
-  // checkUserMaterialReaction(material: Material): void;
-  // moveToNextComponent(nextMaterialUuid: string | undefined): void;
 }
 
 const Index: React.FC<MySQLEditModeProps> = props => {
   const {
     // direct props
-    editMode: editModeProp,
-    componentData: componentDataProp,
+    // editMode: editModeProp,
     SQLQuery: SQLQueryProp,
     SQLSchema: SQLSchemaProp,
-    schemaIsValid: schemaIsValidProp,
-    expectedOutputJson,
+    schemaIsValid,
+    expectedOutput,
     onChangeMySQL,
   } = props;
 
   const [SQLQuery, setSQLQuery] = useState(SQLQueryProp);
   const [SQLSchema, setSQLSchema] = useState(SQLSchemaProp);
-  const [schemaIsValid, setSchemaIsValid] = useState(schemaIsValidProp);
-  const [editMode, setEditMode] = useState(editModeProp);
+  // const [schemaIsValid, setSchemaIsValid] = useState(schemaIsValidProp);
+  // const [editMode, setEditMode] = useState(editModeProp);
 
   const schemaPlaceHolder =
-    'Schema Panel.' +
-    'Use this panel to setup your database problem (CREATE TABLE, INSERT, ' +
-    'and whatever other statements you need to prepare a representative ' +
+    'Schema Panel. \n' +
+    'Use this panel to set up your MySQL tables and data (use CREATE TABLE, INSERT, \n' +
+    'and other MySQL statements that you need to prepare a representative \n' +
     'sample of your real database).';
 
-  const sqlQueryPlaceHolder = 'Query Panel. Use this panel to create SQL query for SELECT from database';
+  const sqlQueryPlaceHolder =
+    'Query Panel. \n' +
+    'Use this panel to create a SELECT MySQL query from the database.\n' +
+    'The output of this query will be compared with the output of a student answer.';
+
+  console.log(expectedOutput);
 
   return (
     <div>
@@ -109,11 +105,11 @@ const Index: React.FC<MySQLEditModeProps> = props => {
       >
         Generate output
       </Button>
-      {expectedOutputJson ? (
+      {expectedOutput ? (
         <div>
           <br />
           <h3>Expected output</h3>
-          <pre>{expectedOutputJson}</pre>
+          <pre>{expectedOutput}</pre>
         </div>
       ) : null}
     </div>

@@ -5,8 +5,9 @@ import { QuestionIo } from '../../common/IData/question';
 const MySQLAnswerIo = t.interface({
   SQLQuery: t.string,
   SQLSchema: t.string,
-  schemaIsValid: t.boolean,
-  expectedOutputJson: t.string,
+  // schemaIsValid: t.boolean,
+  expectedOutputJson: t.string, // TODO not sure we need to save this
+  expectedOutput: t.string,
 });
 
 const HiddenFields = t.interface({

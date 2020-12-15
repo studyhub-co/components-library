@@ -37,6 +37,8 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
     if (action.type === 'MYSQL_DATA_CHANGE') {
       draft.reducerData.answer.SQLSchema = action.payload.SQLSchema;
       draft.reducerData.answer.SQLQuery = action.payload.SQLQuery;
+      draft.reducerData.answer.expectedOutput = action.payload.expectedOutput;
+      draft.reducerData.SQLSchemaResultJson = action.payload.SQLSchemaResultJson;
     }
     // if (action.type === 'ANSWER_TEXT_CHANGE') {
     //   const text = action.payload;

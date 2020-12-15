@@ -68,12 +68,13 @@ function getOperateDataFunctions(dispatch: any) {
   //   dispatch({ type: 'ANSWER_IMAGE_CHANGE', payload: image });
   // };
 
-  const onAnswerMySQLDataChange = (SQLSchema: string, SQLQuery: string): void => {
-    dispatch({ type: 'MYSQL_DATA_CHANGE', payload: { SQLSchema, SQLQuery } });
-  };
-
-  const onAnswerSchemaIsValidChange = (value: boolean): void => {
-    dispatch({ type: 'MYSQL_SCHEMA_IS_VALID_CHANGE', payload: value });
+  const onAnswerMySQLDataChange = (
+    SQLSchema: string,
+    SQLQuery: string,
+    SQLSchemaResultJson: string,
+    expectedOutput: string,
+  ): void => {
+    dispatch({ type: 'MYSQL_DATA_CHANGE', payload: { SQLSchema, SQLQuery, SQLSchemaResultJson, expectedOutput } });
   };
 
   return {
@@ -81,6 +82,5 @@ function getOperateDataFunctions(dispatch: any) {
     onQuestionHintChange,
     onQuestionImageChange,
     onAnswerMySQLDataChange,
-    onAnswerSchemaIsValidChange,
   };
 }
