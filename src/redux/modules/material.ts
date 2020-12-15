@@ -4,14 +4,7 @@ import { Material } from '../../models/';
 import apiFactory, { Api } from './apiFactory';
 import { resetUserMaterialReaction } from './userMaterialReactionResult';
 
-// import { QAData } from '../../components/qa/IData/index';
-
-// class MaterialRedux extends Material {
-//   public isFetching!: boolean;
-// }
-
 // todo make it configurable for lib user
-// const BACKEND_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1/';
 const BACKEND_SERVER_API_URL = process.env['NODE_ENV'] === 'development' ? 'http://127.0.0.1:8000/api/v1/' : '/api/v1/';
 
 export interface MaterialRedux extends Material {
@@ -35,7 +28,6 @@ const fetchingMaterialSuccess = (material: Material) => {
 const api: Api = apiFactory(BACKEND_SERVER_API_URL);
 
 // actions
-// export const fetchMaterial = (uuid: string | undefined) => {
 export const fetchMaterial = (uuid: string) => {
   return (dispatch: any) => {
     dispatch(fetchingMaterial());
@@ -46,23 +38,8 @@ export const fetchMaterial = (uuid: string) => {
   };
 };
 
-// export const fetchMaterialStudentView = (lessonUuid: string, previousMaterialUuid: string | undefined) => {
-//   return (dispatch: any) => {
-//     // console.log('fetchMaterialStudentView');
-//     dispatch(fetchingMaterial());
-//     let url = `courses/lessons/${lessonUuid}/next-material/`;
-//     if (previousMaterialUuid) {
-//       url = `${url}?previous_material=${previousMaterialUuid}`;
-//     }
-//     api.get<Material>(url, {}).then((result: Material) => {
-//       dispatch(fetchingMaterialSuccess(result));
-//     });
-//   };
-// };
-
 export const fetchMaterialStudentView = (lessonUuid: string, materialUuid: string | undefined) => {
   return (dispatch: any) => {
-    // console.log('fetchMaterialStudentView');
     dispatch(fetchingMaterial());
     let url = `courses/lessons/${lessonUuid}/next-material/`;
     if (materialUuid) {

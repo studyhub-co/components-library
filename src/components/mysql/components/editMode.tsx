@@ -19,7 +19,7 @@ interface MySQLEditModeProps {
   SQLQuery: string;
   SQLSchema: string;
   schemaIsValid: boolean;
-  expectedOutput: string;
+  expectedOutputJson: string;
   editMode?: boolean;
   componentData?: IQAData;
   onChangeMySQL(SQLSchema: string, SQLQuery: string): void;
@@ -38,7 +38,7 @@ const Index: React.FC<MySQLEditModeProps> = props => {
     SQLQuery: SQLQueryProp,
     SQLSchema: SQLSchemaProp,
     schemaIsValid: schemaIsValidProp,
-    expectedOutput,
+    expectedOutputJson,
     onChangeMySQL,
   } = props;
 
@@ -66,6 +66,7 @@ const Index: React.FC<MySQLEditModeProps> = props => {
         mode="mysql"
         theme="textmate"
         height={'20rem'}
+        width={'100%'}
         setOptions={{
           enableBasicAutocompletion: false,
           enableLiveAutocompletion: false,
@@ -76,7 +77,7 @@ const Index: React.FC<MySQLEditModeProps> = props => {
       />
       <br />
       <Button color="primary" variant="contained" onClick={() => onChangeMySQL(SQLSchema, SQLQuery)}>
-        Build Schema
+        Build Schema and Insert Data
       </Button>
       <br />
       <br />
@@ -90,6 +91,7 @@ const Index: React.FC<MySQLEditModeProps> = props => {
         mode="mysql"
         theme="textmate"
         height={'20rem'}
+        width={'100%'}
         setOptions={{
           enableBasicAutocompletion: false,
           enableLiveAutocompletion: false,
@@ -105,13 +107,13 @@ const Index: React.FC<MySQLEditModeProps> = props => {
         color="primary"
         onClick={() => onChangeMySQL(SQLSchema, SQLQuery)}
       >
-        Generate output & save answer
+        Generate output
       </Button>
-      {expectedOutput ? (
+      {expectedOutputJson ? (
         <div>
           <br />
           <h3>Expected output</h3>
-          <pre>{expectedOutput}</pre>
+          <pre>{expectedOutputJson}</pre>
         </div>
       ) : null}
     </div>

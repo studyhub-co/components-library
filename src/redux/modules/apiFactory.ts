@@ -39,7 +39,6 @@ export default (
     // try {
     //   showError(newError);
     // } catch (e) {
-    //   // console.error(e);
     //   console.log(e);
     // }
     throw error;

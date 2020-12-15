@@ -60,13 +60,27 @@ function getOperateDataFunctions(dispatch: any) {
     dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
   };
 
-  const onAnswerTextChange = (text: string): void => {
-    dispatch({ type: 'ANSWER_TEXT_CHANGE', payload: text });
+  // const onAnswerTextChange = (text: string): void => {
+  //   dispatch({ type: 'ANSWER_TEXT_CHANGE', payload: text });
+  // };
+  //
+  // const onAnswerImageChange = (image: string): void => {
+  //   dispatch({ type: 'ANSWER_IMAGE_CHANGE', payload: image });
+  // };
+
+  const onAnswerMySQLDataChange = (SQLSchema: string, SQLQuery: string): void => {
+    dispatch({ type: 'MYSQL_DATA_CHANGE', payload: { SQLSchema, SQLQuery } });
   };
 
-  const onAnswerImageChange = (image: string): void => {
-    dispatch({ type: 'ANSWER_IMAGE_CHANGE', payload: image });
+  const onAnswerSchemaIsValidChange = (value: boolean): void => {
+    dispatch({ type: 'MYSQL_SCHEMA_IS_VALID_CHANGE', payload: value });
   };
 
-  return { onQuestionTextChange, onQuestionHintChange, onQuestionImageChange, onAnswerTextChange, onAnswerImageChange };
+  return {
+    onQuestionTextChange,
+    onQuestionHintChange,
+    onQuestionImageChange,
+    onAnswerMySQLDataChange,
+    onAnswerSchemaIsValidChange,
+  };
 }

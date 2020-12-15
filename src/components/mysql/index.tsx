@@ -27,6 +27,7 @@ import { useSpaEventsHook } from '../hooks/spaEvents';
 import { useUserMaterialReactionResult } from '../hooks/userMaterialReactionResult';
 import { useFetchMaterial } from '../hooks/fetchMaterial';
 import Footer from '../common/footer';
+import { makeServiceRequest } from './serviceRequests';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IMySQLProps {
@@ -153,10 +154,36 @@ const Index: React.FC<IMySQLProps> = props => {
                   <EditModeComponent
                     SQLQuery={componentData.answer.SQLQuery}
                     SQLSchema={componentData.answer.SQLSchema}
-                    expectedOutput={componentData.answer.expectedOutput}
+                    expectedOutputJson={componentData.answer.expectedOutputJson}
                     schemaIsValid={componentData.answer.schemaIsValid}
                     onChangeMySQL={(SQLSchema, SQLQuery) => {
-                      console.log(SQLSchema, SQLQuery);
+                      // validate my schema with the backend API
+                      // if all ok then save schema in reducer
+                      makeServiceRequest({ SQLSchema, SQLQuery }, 'validate_mysql_schema_query')
+                        .then((response: any) => {
+                          // TODO add spinner, due it could be long query
+                          console.log(response);
+                          if (response.SQLSchemaResultJson) {
+                            // schema was build successfully
+                            operateDataFunctions.onAnswerMySQLDataChange(SQLSchema, SQLQuery);
+                          } else {
+                            alert('Invalid SQL schema');
+                          }
+                        })
+                        .catch(e => {
+                          // if not ok - send error to the user
+                          if (e.response?.status === 400) {
+                            //  validation error TODO - move to API
+                            let validationErrorMessage = 'Validation error: \n';
+                            for (const [key, value] of Object.entries(e.response.data)) {
+                              validationErrorMessage += `${key} : ${value} \n`;
+                              alert(validationErrorMessage);
+                            }
+                          }
+                          if (e.response?.status === 503) {
+                            alert(e.response.data.detail);
+                          }
+                        });
                     }}
                     editMode={editMode}
                   />

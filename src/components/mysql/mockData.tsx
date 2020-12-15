@@ -10,15 +10,16 @@ export const mockMysql: MySQLData = {
     },
     type: 'base',
   },
+  SQLSchemaResultJson: '',
   answer: {
-    expectedOutput: '',
+    expectedOutputJson: '',
     schemaIsValid: false,
     SQLQuery: '',
     SQLSchema: '',
   },
   hiddenFields: {
     answer: {
-      expectedOutput: '',
+      expectedOutputJson: '',
       schemaIsValid: false,
       SQLQuery: '',
       SQLSchema: '',
