@@ -28,6 +28,7 @@ import { useUserMaterialReactionResult } from '../hooks/userMaterialReactionResu
 import { useFetchMaterial } from '../hooks/fetchMaterial';
 import Footer from '../common/footer';
 import { makeServiceRequest } from './serviceRequests';
+import SchemaTable from './components/studentQuestionSchemaTable';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IMySQLProps {
@@ -131,8 +132,6 @@ const Index: React.FC<IMySQLProps> = props => {
   }, [checkUserMaterialReaction, currentMaterial, lessonUuid]);
   // !--- common component code ended
 
-  console.log(componentData);
-
   return (
     <ThemeProvider theme={theme}>
       <div style={{ flexGrow: 1, padding: '1rem' }}>
@@ -148,6 +147,7 @@ const Index: React.FC<IMySQLProps> = props => {
                   onHintChange={operateDataFunctions.onQuestionHintChange}
                   onImageChange={operateDataFunctions.onQuestionImageChange}
                 />
+                {!editMode && <SchemaTable SQLSchemaJson={componentData.SQLSchemaResultJson} />}
               </Paper>
             </ContainerItem>
             <ContainerItem>
@@ -160,7 +160,7 @@ const Index: React.FC<IMySQLProps> = props => {
                     schemaIsValid={componentData.SQLSchemaResultJson ? true : false}
                     onChangeMySQL={(SQLSchema, SQLQuery) => {
                       // validate my schema with the backend API
-                      // if all ok then save schema in reducer
+                      // if all ok then save schema in component data reducer
                       makeServiceRequest({ SQLSchema, SQLQuery }, 'validate_mysql_schema_query')
                         .then((response: any) => {
                           // TODO add spinner, due it could be long query
@@ -191,7 +191,7 @@ const Index: React.FC<IMySQLProps> = props => {
                           }
                         });
                     }}
-                    editMode={editMode}
+                    // editMode={editMode}
                   />
                 ) : (
                   <div>MysqlAnswer</div>

@@ -1,0 +1,1 @@
+We separate student and editor components because it has a lot of different things.  

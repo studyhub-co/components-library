@@ -18,7 +18,7 @@ interface MySQLEditModeProps {
   SQLSchema: string;
   schemaIsValid: boolean;
   expectedOutput: string;
-  editMode?: boolean;
+  // editMode?: boolean;
   onChangeMySQL(SQLSchema: string, SQLQuery: string): void;
 }
 
@@ -48,8 +48,6 @@ const Index: React.FC<MySQLEditModeProps> = props => {
     'Query Panel. \n' +
     'Use this panel to create a SELECT MySQL query from the database.\n' +
     'The output of this query will be compared with the output of a student answer.';
-
-  console.log(expectedOutput);
 
   return (
     <div>

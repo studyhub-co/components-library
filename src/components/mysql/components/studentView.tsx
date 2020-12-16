@@ -1,3 +1,30 @@
+import React from 'react';
+
+interface MySQLStudentModeProps {
+  // props
+  SQLQuery: string;
+  SQLSchema: string;
+  schemaIsValid: boolean;
+  expectedOutput: string;
+  // editMode?: boolean;
+  onChangeMySQL(SQLSchema: string, SQLQuery: string): void;
+}
+
+const Index: React.FC<MySQLStudentModeProps> = props => {
+  const {
+    // direct props
+    SQLQuery: SQLQueryProp,
+    SQLSchema: SQLSchemaProp,
+    schemaIsValid,
+    expectedOutput,
+    onChangeMySQL,
+  } = props;
+
+  return <div></div>;
+};
+
+export default Index;
+
 // import React from 'react'
 // import PropTypes from 'prop-types'
 //
