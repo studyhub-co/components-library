@@ -77,10 +77,15 @@ function getOperateDataFunctions(dispatch: any) {
     dispatch({ type: 'MYSQL_DATA_CHANGE', payload: { SQLSchema, SQLQuery, SQLSchemaResultJson, expectedOutput } });
   };
 
+  const onStudentMySQLDataChange = (SQLQuery: string, expectedOutput: string, expectedOutputJson: string): void => {
+    dispatch({ type: 'STUDENT_MYSQL_DATA_CHANGE', payload: { SQLQuery, expectedOutput, expectedOutputJson } });
+  };
+
   return {
     onQuestionTextChange,
     onQuestionHintChange,
     onQuestionImageChange,
     onAnswerMySQLDataChange,
+    onStudentMySQLDataChange,
   };
 }

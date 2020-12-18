@@ -1,6 +1,6 @@
-import React, { createRef } from 'react';
+import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import { useStyles } from '../Container/style';
+// import { useStyles } from '../Container/style';
 
 // TODO use styles for PIB Container Item
 const ContainerItem: React.FC = props => {

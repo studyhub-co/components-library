@@ -40,19 +40,11 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
       draft.reducerData.answer.expectedOutput = action.payload.expectedOutput;
       draft.reducerData.SQLSchemaResultJson = action.payload.SQLSchemaResultJson;
     }
-    // if (action.type === 'ANSWER_TEXT_CHANGE') {
-    //   const text = action.payload;
-    //   draft.reducerData.answer.content.text = text;
-    //   try {
-    //     draft.reducerData.answer.content.evaluatedMathText = '' + window.evaluatex(text)();
-    //   } catch (e) {
-    //     draft.reducerData.answer.content.evaluatedMathText = '';
-    //     // console.log(e);
-    //   }
-    // }
-    // if (action.type === 'ANSWER_IMAGE_CHANGE') {
-    //   draft.reducerData.answer.content.image = action.payload;
-    // }
+    if (action.type === 'STUDENT_MYSQL_DATA_CHANGE') {
+      draft.reducerData.answer.expectedOutputJson = action.payload.expectedOutputJson;
+      draft.reducerData.answer.SQLQuery = action.payload.SQLQuery;
+      draft.reducerData.answer.expectedOutput = action.payload.expectedOutput;
+    }
     if (action.type === 'REPLACE_DATA') {
       draft.reducerData = action.payload;
     }

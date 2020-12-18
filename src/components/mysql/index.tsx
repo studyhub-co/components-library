@@ -19,7 +19,9 @@ import { MySQLData as IMySQLData } from './IData/index';
 
 import Question from '../common/question';
 
+import SchemaTable from './components/studentQuestionSchemaTable';
 import EditModeComponent from './components/editMode';
+import StudentViewComponent from './components/studentView';
 
 import { useComponentData } from './componentData';
 
@@ -28,7 +30,6 @@ import { useUserMaterialReactionResult } from '../hooks/userMaterialReactionResu
 import { useFetchMaterial } from '../hooks/fetchMaterial';
 import Footer from '../common/footer';
 import { makeServiceRequest } from './serviceRequests';
-import SchemaTable from './components/studentQuestionSchemaTable';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IMySQLProps {
@@ -96,6 +97,10 @@ const Index: React.FC<IMySQLProps> = props => {
   useEffect(() => {
     setEditMode(editModeProp);
   }, [editModeProp]);
+
+  const onStudentResponseChange = (SQLQuery: string, expectedOutput: string, expectedOutputJson: string) => {
+    operateDataFunctions.onStudentMySQLDataChange(SQLQuery, expectedOutput, expectedOutputJson);
+  };
 
   const setDisabledCheck = (value: boolean) => {
     setDisabledCheckS(value);
@@ -194,7 +199,11 @@ const Index: React.FC<IMySQLProps> = props => {
                     // editMode={editMode}
                   />
                 ) : (
-                  <div>MysqlAnswer</div>
+                  <StudentViewComponent
+                    onStudentResponseChange={onStudentResponseChange}
+                    SQLSchema={componentData.answer.SQLSchema}
+                    executedJsonSQL={componentData.answer.expectedOutputJson}
+                  />
                 )}
               </Paper>
             </ContainerItem>
