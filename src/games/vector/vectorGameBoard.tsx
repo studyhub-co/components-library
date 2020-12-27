@@ -1,18 +1,42 @@
 import React from 'react';
 
 import { GameState } from '../constants';
+import ScoreBoard from '../scoreBoard';
+import QuestionBoard from './questionBoard';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 
 interface VectorGameBoardProps {
   // props
-  state: string;
-  level: number;
+  gameState: string;
+  level: 1 | 2 | 3 | 4;
+  score: number;
+  question: string;
+  answerVector: any;
+  answerText: string;
+  scoreList: any;
+  arrowComplete: (arrow: any) => void;
+  start: () => void;
+  restart: () => void;
+  timesUp: () => void;
+  pause: () => void;
 }
 
 const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
   const {
     // direct props
-    state,
+    gameState,
     level,
+    score,
+    question,
+    arrowComplete,
+    answerVector,
+    answerText,
+    scoreList,
+    start,
+    restart,
+    timesUp,
+    pause,
   } = props;
 
   const levelColorMap = {
@@ -23,69 +47,71 @@ const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
   };
 
   const style = { backgroundColor: levelColorMap[level] };
-  switch (state) {
+
+  switch (gameState) {
     case GameState.NEW:
       return (
-        <div className="container game-sheet" style={style}>
-          <div className="row">
-            <div className="col-md-4" />
-            <div className="col-md-4 text-center">
-              <span>
-                <h1 className="game-title">Vector Game</h1>
-              </span>
-              <p>
-                <span>Beat a score of 1600 to unlock the next lesson. Wrong answers end the game.</span>
-              </p>
-              <button className="hover-button" onClick={this.props.start}>
-                Start
-              </button>
-            </div>
-          </div>
-        </div>
+        <Grid container className="game-sheet" style={style}>
+          <Grid item md={4} />
+          <Grid item md={4}>
+            <span>
+              <h1 className="game-title">Vector Game</h1>
+            </span>
+            <p>
+              <span>Beat a score of 1600 to unlock the next lesson. Wrong answers end the game.</span>
+            </p>
+            <Button className="hover-button" color="primary" variant="contained" onClick={start}>
+              Start
+            </Button>
+            {/*<button className="hover-button" onClick={this.props.start}>*/}
+            {/*  Start*/}
+            {/*</button>*/}
+          </Grid>
+        </Grid>
       );
     case GameState.PAUSED:
       return (
-        <div className="container game-sheet" style={style}>
-          <Prompt when={this.props.state == GameState.QUESTION} message="Changes you made may not be saved." />
+        <Grid className="container game-sheet" style={style}>
+          {/*<Prompt when={this.props.state == GameState.QUESTION} message="Changes you made may not be saved." />*/}
           <ScoreBoard
-            state={this.props.state}
-            score={this.props.score}
-            level={this.props.level}
-            timesUp={this.props.timesUp}
-            pause={this.props.pause}
-            restart={this.props.restart}
+            gameState={gameState}
+            score={score}
+            level={level}
+            timesUp={timesUp}
+            pause={pause}
+            restart={restart}
           />
-          <div className="col-md-4" />
-          <div className="col-md-4 text-center">
+          <Grid item md={4} />
+          <Grid item md={4}>
             <span>
               <h1>Vector Game</h1>
             </span>
             <span>
               <h1>PAUSED</h1>
             </span>
-          </div>
-        </div>
+          </Grid>
+        </Grid>
       );
   }
   return (
     <div className="container game-sheet" style={style}>
-      <Prompt when={this.props.state == GameState.QUESTION} message="Changes you made may not be saved." />
+      {/*<Prompt when={this.props.state == GameState.QUESTION} message="Changes you made may not be saved." />*/}
       <ScoreBoard
-        state={this.props.state}
-        score={this.props.score}
-        level={this.props.level}
-        timesUp={this.props.timesUp}
-        pause={this.props.pause}
-        restart={this.props.restart}
+        gameState={gameState}
+        score={score}
+        level={level as number}
+        timesUp={timesUp}
+        pause={pause}
+        restart={restart}
       />
-      {this.props.state !== GameState.WON ? (
+      {gameState !== GameState.WON ? (
         <QuestionBoard
-          question={this.props.question}
-          arrowComplete={this.props.arrowComplete}
-          clear={[GameState.NEW, GameState.QUESTION].indexOf(this.props.state) >= 0}
-          state={this.props.state}
-          answerVector={this.props.answerVector}
-          answerText={this.props.answerText}
+          question={question}
+          arrowComplete={arrowComplete}
+          clear={[GameState.NEW, GameState.QUESTION].indexOf(gameState) >= 0}
+          gameState={gameState}
+          answerVector={answerVector}
+          answerText={answerText}
         />
       ) : (
         <div className="text-center">
@@ -97,8 +123,8 @@ const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
                 <th style={{ padding: 5 }}>Name</th>
                 <th style={{ padding: 5 }}>Completion Time</th>
               </tr>
-              {this.props.scoreList
-                ? this.props.scoreList.map(function(score, i) {
+              {scoreList
+                ? scoreList.map(function(score: any, i: number) {
                     return (
                       <tr key={i}>
                         <td style={{ padding: 5 }}>{score.row_num}</td>

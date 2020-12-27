@@ -15,6 +15,8 @@ import { mockVector } from '../src/components/vector/mockData';
 import { mockUnitConversion } from '../src/components/unitConversion/mockData';
 import { mockMysql } from '../src/components/mysql/mockData';
 
+import VectorGame from '../src/games/vector/index';
+
 const Components: React.FC = () => {
   // const textInput = createRef<HTMLInputElement>();
   // function addTodo(e: React.KeyboardEvent<HTMLInputElement>): void {
@@ -35,16 +37,19 @@ const Components: React.FC = () => {
         control={<Switch checked={state.checkedEditMode} color="primary" onChange={handleEditModeChange()} value="" />}
         label="Edit Mode"
       />
-      <h1>Q&A Base</h1>
+      <h2>Q&A Base</h2>
       <QABase componentData={mockQaBase} editMode={state.checkedEditMode} />
-      <h1>Q&A Choices</h1>
+      <h2>Q&A Choices</h2>
       <QAChoices componentData={mockQaChoices} editMode={state.checkedEditMode} />
-      <h1>Vector</h1>
+      <h2>Vector</h2>
       <Vector componentData={mockVector} editMode={state.checkedEditMode} />
-      <h1>Unit Conversion</h1>
+      <h2>Unit Conversion</h2>
       <UnitConversion componentData={mockUnitConversion} editMode={state.checkedEditMode} />
-      <h1>MySQL</h1>
+      <h2>MySQL</h2>
       <MySQL componentData={mockMysql} editMode={state.checkedEditMode} />
+      <h2>Games</h2>
+      <h3>Vector Game</h3>
+      <VectorGame materialUuid={''} />
     </div>
   );
 };

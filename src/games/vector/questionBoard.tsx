@@ -7,11 +7,12 @@ import { VectorCanvas } from '../../components/vector/vectorCanvas';
 interface QuestionBoardProps {
   // props
   // SQLSchemaJson: string;
-  arrowComplete: boolean;
+  arrowComplete: (arrow: any) => void;
   clear: boolean;
   answerVector: any;
   answerText: string;
   question: string;
+  gameState: string;
 }
 
 const QuestionBoard: React.FC<QuestionBoardProps> = props => {
@@ -22,6 +23,7 @@ const QuestionBoard: React.FC<QuestionBoardProps> = props => {
     answerVector,
     answerText,
     question,
+    gameState,
   } = props;
 
   const objects = [];
@@ -33,7 +35,7 @@ const QuestionBoard: React.FC<QuestionBoardProps> = props => {
   if (answerText) {
     objects.push(answerText);
   }
-  const disabled = !([GameState.GAME_OVER, GameState.WON].indexOf(this.props.state) > -1);
+  const disabled = !([GameState.GAME_OVER, GameState.WON].indexOf(gameState) > -1);
 
   return (
     <div>

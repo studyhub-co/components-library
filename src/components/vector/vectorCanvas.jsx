@@ -1,6 +1,8 @@
 import React from 'react';
 import { fabric } from 'fabric';
 
+// TODO migrate to TypeScript
+
 const GRID = 50;
 
 export class Vector {

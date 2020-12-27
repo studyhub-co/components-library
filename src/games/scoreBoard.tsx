@@ -1,61 +1,111 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import ReactCountdownClock from 'react-countdown-clock';
 import MediaQuery from 'react-responsive';
 import Grid from '@material-ui/core/Grid';
 
 import { GameState } from './constants';
+import Button from '@material-ui/core/Button';
 
 interface ScoreBoardProps {
   // props
-  state: string;
-  level: number;
-  restart: () => {};
+  gameState: string;
+  // level: 1 | 2 | 3 | 4;
+  level: number; // we want have any number of levels
+  score: number;
+  restart: () => void;
+  timesUp: () => void;
+  pause: () => void;
+  clockSeconds?: number;
 }
 
 const ScoreBoard: React.FC<ScoreBoardProps> = props => {
   const {
     // direct props
-    state,
+    gameState,
     restart,
+    score,
     level,
+    clockSeconds,
+    timesUp,
+    pause,
   } = props;
 
-  let score;
+  let seconds;
+
+  if (!clockSeconds) {
+    seconds = 120;
+  } else {
+    seconds = clockSeconds;
+  }
+
+  let scorePanel;
   let paused;
 
-  switch (state) {
+  const [clockKey, setClockKey] = useState(1);
+  const [didReset, setDidReset] = useState(false);
+
+  useEffect(() => {
+    if (gameState === GameState.NEW && !didReset) {
+      setClockKey(clockKey + 1);
+      setDidReset(true);
+    }
+    if (gameState !== GameState.NEW && didReset) {
+      setDidReset(false);
+    }
+  }, [clockKey, didReset, gameState]); // what we need to catch? TODO
+
+  switch (gameState) {
     case GameState.GAME_OVER:
       paused = true;
-      score = (
-        <div className="col-md-4">
+      scorePanel = (
+        <Grid item md={4}>
           <h1 className="TwCenMT">Game Over!</h1>
-          <button id="tryAgain" className="hover-button" onClick={restart}>
+          <Button color="primary" variant="contained" onClick={restart}>
             Try Again
-          </button>
-          <button className="hover-button">
-            {/* TODO replace with handleContinueClick see src/components/common/checkContinueButton.tsx*/}
-            {/*<Link to={'/'}>Exit</Link>*/}
-          </button>
-        </div>
+          </Button>
+          {/*<button id="tryAgain" className="hover-button" onClick={restart}>*/}
+          {/*  Try Again*/}
+          {/*</button>*/}
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              console.log('exit click');
+              {
+                /* TODO replace with handleContinueClick see src/components/common/checkContinueButton.tsx*/
+              }
+            }}
+          >
+            Exit
+          </Button>
+        </Grid>
       );
       break;
     case GameState.WON:
       paused = true;
-      score = (
+      scorePanel = (
         <Grid item md={4}>
-          <h2 className="TwCenMT">Score: {this.props.score}</h2>
+          <h2 className="TwCenMT">Score: {score}</h2>
           <h1 className="TwCenMT">You Won!</h1>
-          <button className="hover-button">
-            {/* TODO replace with handleContinueClick see src/components/common/checkContinueButton.tsx*/}
-            {/*<Link to={'/'}>Continue</Link>*/}
-          </button>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              console.log('Continue click');
+              {
+                /* TODO replace with handleContinueClick see src/components/common/checkContinueButton.tsx*/
+              }
+            }}
+          >
+            Continue
+          </Button>
         </Grid>
       );
       break;
     case GameState.PAUSED:
       paused = true;
-      score = (
+      scorePanel = (
         <div>
           <MediaQuery minDeviceWidth={736}>
             <Grid item md={3}>
@@ -76,7 +126,7 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
       break;
     default:
       paused = false;
-      score = (
+      scorePanel = (
         <Grid item md={8}>
           {/*<MediaQuery minDeviceWidth={736}>*/}
           {/*!!!!!!!!!! In a grid layout, content must be placed
@@ -100,9 +150,9 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
     left: '50%',
     display: 'block',
     marginLeft: -100,
-    position: 'relative',
+    position: 'relative' as 'relative',
     cursor: 'pointer',
-  };
+  } as React.CSSProperties;
   const smallClockStyle = {
     height: 50,
     width: 50,
@@ -111,44 +161,44 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
     display: 'block',
     marginLeft: -50,
     position: 'relative',
-  };
+  } as React.CSSProperties;
   return (
-    <div className="row text-center">
-      <div className="col-md-2" />
-      <div className="col-md-2 text-center">
+    <Grid container>
+      <Grid item md={2} />
+      <Grid item md={2}>
         <MediaQuery minDeviceWidth={736}>
           <div style={clockStyle}>
             <ReactCountdownClock
-              key={this.state.clockKey}
-              seconds={this.props.clockSeconds}
+              key={clockKey}
+              seconds={seconds}
               color="#1baff6"
               alpha={0.9}
               size={100}
               weight={10}
               paused={paused}
-              onComplete={this.props.timesUp}
-              onClick={this.props.pause}
+              onComplete={timesUp}
+              onClick={pause}
             />
           </div>
         </MediaQuery>
         <MediaQuery maxDeviceWidth={736}>
           <div style={smallClockStyle}>
             <ReactCountdownClock
-              key={this.state.clockKey}
-              seconds={this.props.clockSeconds}
+              key={clockKey}
+              seconds={seconds}
               color="#1baff6"
               alpha={0.9}
               size={50}
               weight={10}
               paused={paused}
-              onComplete={this.props.timesUp}
-              onClick={this.props.pause}
+              onComplete={timesUp}
+              onClick={pause}
             />
           </div>
         </MediaQuery>
-      </div>
-      {score}
-    </div>
+      </Grid>
+      {scorePanel}
+    </Grid>
   );
 };
 

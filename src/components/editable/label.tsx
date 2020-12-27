@@ -47,7 +47,7 @@ addStyles();
 
 // TODO
 // 1. Add multiple lines support
-// 2. MathJax
+// 2. MathJax - udpate, it seems we don't need MathJax, we have static mathquill field for this.
 // 3. handleInputKeyUp
 const EditableLabel: React.FC<EditableLabelProps> = props => {
   const { value, editMode, onChange, placeholder, mathButtons, mathMode } = props;
