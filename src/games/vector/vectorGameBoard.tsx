@@ -1,15 +1,19 @@
 import React from 'react';
 
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+
 import { GameState } from '../constants';
 import ScoreBoard from '../scoreBoard';
 import QuestionBoard from './questionBoard';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+
+import './style.css';
 
 interface VectorGameBoardProps {
   // props
   gameState: string;
   level: 1 | 2 | 3 | 4;
+  clockSeconds: number;
   score: number;
   question: string;
   answerVector: any;
@@ -37,6 +41,7 @@ const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
     restart,
     timesUp,
     pause,
+    clockSeconds,
   } = props;
 
   const levelColorMap = {
@@ -51,11 +56,10 @@ const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
   switch (gameState) {
     case GameState.NEW:
       return (
-        <Grid container className="game-sheet" style={style}>
-          <Grid item md={4} />
-          <Grid item md={4}>
+        <Grid container justify="center" className="game-sheet" style={style}>
+          <Grid item md={4} className={'text-center'}>
             <span>
-              <h1 className="game-title">Vector Game</h1>
+              <h2 className="game-title">Vector Game</h2>
             </span>
             <p>
               <span>Beat a score of 1600 to unlock the next lesson. Wrong answers end the game.</span>
@@ -71,30 +75,30 @@ const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
       );
     case GameState.PAUSED:
       return (
-        <Grid className="container game-sheet" style={style}>
+        <Grid container justify="center" className="game-sheet" style={style}>
           {/*<Prompt when={this.props.state == GameState.QUESTION} message="Changes you made may not be saved." />*/}
           <ScoreBoard
             gameState={gameState}
             score={score}
-            level={level}
+            level={level as number}
             timesUp={timesUp}
             pause={pause}
             restart={restart}
+            clockSeconds={clockSeconds}
           />
-          <Grid item md={4} />
-          <Grid item md={4}>
-            <span>
-              <h1>Vector Game</h1>
-            </span>
-            <span>
-              <h1>PAUSED</h1>
-            </span>
-          </Grid>
+          <div>
+            <div>
+              <h2>Vector Game</h2>
+            </div>
+            <div>
+              <h2>PAUSED</h2>
+            </div>
+          </div>
         </Grid>
       );
   }
   return (
-    <div className="container game-sheet" style={style}>
+    <Grid container justify="center" className="game-sheet" style={style}>
       {/*<Prompt when={this.props.state == GameState.QUESTION} message="Changes you made may not be saved." />*/}
       <ScoreBoard
         gameState={gameState}
@@ -103,6 +107,7 @@ const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
         timesUp={timesUp}
         pause={pause}
         restart={restart}
+        clockSeconds={clockSeconds}
       />
       {gameState !== GameState.WON ? (
         <QuestionBoard
@@ -138,7 +143,7 @@ const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
           </table>
         </div>
       )}
-    </div>
+    </Grid>
   );
 };
 

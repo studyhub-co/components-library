@@ -5,6 +5,7 @@ export const theme = createMuiTheme({
   palette: {
     primary: {
       main: '#1caff6', // PIB blue main color
+      contrastText: '#ffffff',
     },
   },
 });

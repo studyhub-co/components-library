@@ -471,6 +471,8 @@ export class VectorCanvas extends React.Component {
   // }
 
   render() {
+    console.log('rerender');
+
     if (this.props.clear) {
       if (this.arrow) {
         this.arrow.delete();

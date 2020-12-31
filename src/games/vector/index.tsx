@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import { addStyles, StaticMathField } from 'react-mathquill';
 
@@ -16,6 +16,7 @@ import {
   playBackgroundAudio,
   playAudio,
 } from '../../utils/sounds';
+import { cons } from 'fp-ts/Array';
 
 addStyles(); // react-mathquill styles
 
@@ -37,7 +38,12 @@ const VectorGame: React.FC<QuestionBoardProps> = props => {
   } = props;
 
   // counter
-  const [seconds, setSeconds] = useState(0);
+  // const [seconds, setSeconds] = useState(0);
+  let seconds = 0;
+  const setSeconds = (value: number) => {
+    seconds = value as number;
+  };
+
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [isActiveCounter, setIsActiveCounter] = useState(false);
 
@@ -98,13 +104,14 @@ const VectorGame: React.FC<QuestionBoardProps> = props => {
     let interval: any = null;
     if (isActiveCounter) {
       interval = setInterval(() => {
-        setSeconds(seconds => seconds + 1);
+        setSeconds(seconds + 1);
+        // setSeconds(seconds => seconds + 1);
       }, 1000);
     } else if (!isActiveCounter && seconds !== 0) {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [isActiveCounter, seconds]);
+  }, [isActiveCounter, seconds, setSeconds]);
 
   const getRandomInt = (min: number, max: number) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -307,6 +314,7 @@ const VectorGame: React.FC<QuestionBoardProps> = props => {
       // Let's make sure we don't get the same question twice in a row.
     } while (currentX === x && currentY === y);
     // setLastQuestion(question);
+
     return {
       score: newScore,
       level: newLevel,
@@ -322,16 +330,20 @@ const VectorGame: React.FC<QuestionBoardProps> = props => {
   };
 
   const questionToState = (newScore: number, newLevel: 1 | 2 | 3 | 4) => {
-    const state = Object.assign(generateQuestion(newScore, newLevel), {
-      currentX: 0,
-      currentY: 0,
-      score: 0,
-      level: 1,
-      question: '',
-      answerVector: '',
-      answerText: '',
-      gameState: GameState.NEW,
-    });
+    const state = Object.assign(
+      {
+        currentX: 0,
+        currentY: 0,
+        score: 0,
+        level: 1,
+        question: '',
+        answerVector: '',
+        answerText: '',
+        gameState: GameState.NEW,
+      },
+      generateQuestion(newScore, newLevel),
+    );
+
     setCurrentX(state.currentX);
     setCurrentY(state.currentY);
     setScore(state.score);
@@ -359,7 +371,7 @@ const VectorGame: React.FC<QuestionBoardProps> = props => {
     setIsActiveCounter(true);
     playBackgroundAudio('rainbow', 0.2);
     questionToState(0, 1);
-    // setGameState()
+    // setGameState() // set in questionToState
     // this.setState(generateQuestion(null, null));
     // this.elapsed = 0;
     // this.timer = setInterval(this.tick.bind(this), 10);
@@ -379,6 +391,7 @@ const VectorGame: React.FC<QuestionBoardProps> = props => {
       arrowComplete={checkAnswer}
       restart={restart}
       scoreList={scoreList}
+      clockSeconds={120}
     />
   );
 };

@@ -55,6 +55,8 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
     }
   }, [clockKey, didReset, gameState]); // what we need to catch? TODO
 
+  // TODO too much dupolicate code!
+
   switch (gameState) {
     case GameState.GAME_OVER:
       paused = true;
@@ -106,34 +108,34 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
     case GameState.PAUSED:
       paused = true;
       scorePanel = (
-        <div>
-          <MediaQuery minDeviceWidth={736}>
-            <Grid item md={3}>
-              <h2 className="TwCenMT">Score: {score}</h2>
-            </Grid>
-            <Grid item md={3}>
-              <h2 className="TwCenMT">Level: {level}</h2>
-            </Grid>
-          </MediaQuery>
-          <MediaQuery maxDeviceWidth={736}>
-            <Grid item md={3}>
-              <h4 className="TwCenMT text-center">Score: {score}</h4>
-              <h4 className="TwCenMT text-center">Level: {level}</h4>
-            </Grid>
-          </MediaQuery>
-        </div>
+        <Grid item md={6}>
+          <Grid container>
+            <MediaQuery minDeviceWidth={736}>
+              <Grid item md={6}>
+                <h2 className="TwCenMT">Score: {score}</h2>
+              </Grid>
+              <Grid item md={6}>
+                <h2 className="TwCenMT">Level: {level}</h2>
+              </Grid>
+            </MediaQuery>
+            <MediaQuery maxDeviceWidth={736}>
+              <Grid item md={6}>
+                <h4 className="TwCenMT text-center">Score: {score}</h4>
+                <h4 className="TwCenMT text-center">Level: {level}</h4>
+              </Grid>
+            </MediaQuery>
+          </Grid>
+        </Grid>
       );
       break;
     default:
       paused = false;
       scorePanel = (
-        <Grid item md={8}>
+        <Grid item md={6}>
           {/*<MediaQuery minDeviceWidth={736}>*/}
-          {/*!!!!!!!!!! In a grid layout, content must be placed
-            within columns and only columns may be immediate children of rows. !!!!!!!!!!!*/}
-          {/* Fixme: TwCenMT what is this? */}
           <Grid container>
             <Grid item md={6}>
+              {/* fixme TwCenMT font family. */}
               <h2 className="TwCenMT">Score: {score}</h2>
             </Grid>
             <Grid item md={6}>
@@ -163,8 +165,7 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
     position: 'relative',
   } as React.CSSProperties;
   return (
-    <Grid container>
-      <Grid item md={2} />
+    <Grid container justify="center">
       <Grid item md={2}>
         <MediaQuery minDeviceWidth={736}>
           <div style={clockStyle}>
