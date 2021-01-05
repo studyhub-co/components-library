@@ -16,6 +16,7 @@ interface ScoreBoardProps {
   restart: () => void;
   timesUp: () => void;
   pause: () => void;
+  moveToNextComponent(): void;
   clockSeconds?: number;
 }
 
@@ -26,9 +27,10 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
     restart,
     score,
     level,
-    clockSeconds,
     timesUp,
     pause,
+    moveToNextComponent,
+    clockSeconds,
   } = props;
 
   let seconds;
@@ -55,7 +57,7 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
     }
   }, [clockKey, didReset, gameState]); // what we need to catch? TODO
 
-  // TODO too much dupolicate code!
+  // TODO too much duplicate code!
 
   switch (gameState) {
     case GameState.GAME_OVER:
@@ -63,19 +65,17 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
       scorePanel = (
         <Grid item md={4}>
           <h1 className="TwCenMT">Game Over!</h1>
-          <Button color="primary" variant="contained" onClick={restart}>
+          <Button color="primary" variant="contained" onClick={restart} style={{ margin: '1rem' }}>
             Try Again
           </Button>
-          {/*<button id="tryAgain" className="hover-button" onClick={restart}>*/}
-          {/*  Try Again*/}
-          {/*</button>*/}
           <Button
+            style={{ margin: '1rem' }}
             color="primary"
             variant="contained"
             onClick={() => {
-              console.log('exit click');
               {
-                /* TODO replace with handleContinueClick see src/components/common/checkContinueButton.tsx*/
+                /* handleContinueClick see src/components/common/checkContinueButton.tsx for details */
+                moveToNextComponent();
               }
             }}
           >
@@ -94,9 +94,9 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
             color="primary"
             variant="contained"
             onClick={() => {
-              console.log('Continue click');
               {
-                /* TODO replace with handleContinueClick see src/components/common/checkContinueButton.tsx*/
+                /* handleContinueClick see src/components/common/checkContinueButton.tsx for details */
+                moveToNextComponent();
               }
             }}
           >
@@ -168,7 +168,7 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
     <Grid container justify="center">
       <Grid item md={2}>
         <MediaQuery minDeviceWidth={736}>
-          <div style={clockStyle}>
+          <div style={clockStyle} onClick={pause}>
             <ReactCountdownClock
               key={clockKey}
               seconds={seconds}
@@ -178,12 +178,11 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
               weight={10}
               paused={paused}
               onComplete={timesUp}
-              onClick={pause}
             />
           </div>
         </MediaQuery>
         <MediaQuery maxDeviceWidth={736}>
-          <div style={smallClockStyle}>
+          <div style={smallClockStyle} onClick={pause}>
             <ReactCountdownClock
               key={clockKey}
               seconds={seconds}
@@ -193,7 +192,6 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
               weight={10}
               paused={paused}
               onComplete={timesUp}
-              onClick={pause}
             />
           </div>
         </MediaQuery>

@@ -24,6 +24,7 @@ interface VectorGameBoardProps {
   restart: () => void;
   timesUp: () => void;
   pause: () => void;
+  moveToNextComponent(): void;
 }
 
 const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
@@ -42,6 +43,7 @@ const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
     timesUp,
     pause,
     clockSeconds,
+    moveToNextComponent,
   } = props;
 
   const levelColorMap = {
@@ -54,6 +56,7 @@ const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
   const style = { backgroundColor: levelColorMap[level] };
 
   switch (gameState) {
+    // TODO replace with if/else
     case GameState.NEW:
       return (
         <Grid container justify="center" className="game-sheet" style={style}>
@@ -85,6 +88,7 @@ const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
             pause={pause}
             restart={restart}
             clockSeconds={clockSeconds}
+            moveToNextComponent={moveToNextComponent}
           />
           <div>
             <div>
@@ -108,6 +112,7 @@ const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
         pause={pause}
         restart={restart}
         clockSeconds={clockSeconds}
+        moveToNextComponent={moveToNextComponent}
       />
       {gameState !== GameState.WON ? (
         <QuestionBoard

@@ -43,18 +43,19 @@ import './style.css';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IUnitConversionProps {
+  // direct props
   materialUuid: string | undefined;
   lessonUuid: string | undefined;
   editMode?: boolean;
   componentData?: IUnitConversionData;
   showFooter?: boolean | undefined;
   checkFrontendUserMaterialReaction(material: Material): void;
+  moveToNextComponent(nextMaterialUuid: string | undefined): void;
   // redux actions
   fetchMaterial(uuid: string): void;
   fetchMaterialStudentView(lessonUuid: string | undefined, materialUuid: string | undefined): void;
   updateMaterial(material: Material): void;
   checkUserMaterialReaction(material: Material): void;
-  moveToNextComponent(nextMaterialUuid: string | undefined): void;
   // redux store
   currentMaterial: materialActionCreators.MaterialRedux;
   userMaterialReactionResult: userMaterialReactionCreators.UserReactionResultRedux;

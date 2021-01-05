@@ -33,6 +33,13 @@ const Components: React.FC = () => {
 
   return (
     <div>
+      <h3>Vector Game</h3>
+      <VectorGame
+        materialUuid={''}
+        moveToNextComponent={materialUuid => {
+          console.log('moveToNextComponent called');
+        }}
+      />
       <FormControlLabel
         control={<Switch checked={state.checkedEditMode} color="primary" onChange={handleEditModeChange()} value="" />}
         label="Edit Mode"
@@ -48,8 +55,6 @@ const Components: React.FC = () => {
       <h2>MySQL</h2>
       <MySQL componentData={mockMysql} editMode={state.checkedEditMode} />
       <h2>Games</h2>
-      <h3>Vector Game</h3>
-      <VectorGame materialUuid={''} />
     </div>
   );
 };

@@ -46,6 +46,7 @@ const QuestionBoard: React.FC<QuestionBoardProps> = props => {
         allowNull
         canvasId={'vector-game'}
         onComplete={arrowComplete}
+        updateAnswer={() => {}}
         clear={clear}
         objects={objects}
         allowInput={disabled}

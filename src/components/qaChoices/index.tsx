@@ -36,18 +36,18 @@ import { useFetchMaterial } from '../hooks/fetchMaterial';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IQAProps {
-  // props
+  // direct props
   materialUuid: string | undefined;
   lessonUuid: string | undefined;
   editMode?: boolean;
   componentData?: IQAData;
   showFooter?: boolean | undefined;
+  moveToNextComponent(nextMaterialUuid: string | undefined): void;
   // redux actions
   fetchMaterial(uuid: string): void;
   fetchMaterialStudentView(lessonUuid: string | undefined, materialUuid: string | undefined): void;
   updateMaterial(material: Material): void;
   checkUserMaterialReaction(material: Material): void;
-  moveToNextComponent(nextMaterialUuid: string | undefined): void;
   // redux store
   currentMaterial: materialActionCreators.MaterialRedux;
   userMaterialReactionResult: userMaterialReactionCreators.UserReactionResultRedux;
