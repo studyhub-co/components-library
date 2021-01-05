@@ -221,12 +221,20 @@ export class CanvasText {
   }
 }
 
-class NullVector {
+export class NullVector {
   getXComponent() {
     return null;
   }
 
   getYComponent() {
+    return null;
+  }
+
+  getVectorAngle() {
+    return null;
+  }
+
+  getVectorMagnitude() {
     return null;
   }
 
@@ -381,6 +389,7 @@ export class VectorCanvas extends React.Component {
     } else if (this.arrow.getYComponent() === 0 && this.arrow.getXComponent() === 0) {
       this.arrow.delete();
       this.arrow = new NullVector();
+      // we can't check null vector answer here now - game wants check it immediately, component wants after check answer click
       // this.nullBoxCheck();
     } else if (this.props.onComplete) {
       this.props.onComplete(this.arrow);

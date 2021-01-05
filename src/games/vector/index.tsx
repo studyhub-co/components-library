@@ -374,8 +374,6 @@ const VectorGame: React.FC<VectorGameProps> = props => {
     questionToState(0, 1);
     // questionToState(1500, 4);
     // setGameState() // set in questionToState
-    // this.setState(generateQuestion(null, null));
-    // this.timer = setInterval(this.tick.bind(this), 10);
   };
 
   return (

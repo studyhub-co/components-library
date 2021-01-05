@@ -1,8 +1,9 @@
 import React from 'react';
+import Checkbox from '@material-ui/core/Checkbox/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel';
 
 import { GameState } from '../constants';
-
-import { VectorCanvas } from '../../components/vector/vectorCanvas';
+import { VectorCanvas, NullVector } from '../../components/vector/vectorCanvas';
 
 interface QuestionBoardProps {
   // props
@@ -51,6 +52,19 @@ const QuestionBoard: React.FC<QuestionBoardProps> = props => {
         objects={objects}
         allowInput={disabled}
         fade={fade}
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={false}
+            onChange={(e, checked) => {
+              arrowComplete(new NullVector());
+            }}
+            name="checkedANull"
+            color="primary"
+          />
+        }
+        label="Null vector"
       />
     </div>
   );
