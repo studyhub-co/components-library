@@ -16,7 +16,6 @@ import {
   playBackgroundAudio,
   playAudio,
 } from '../../utils/sounds';
-import { cons } from 'fp-ts/Array';
 
 addStyles(); // react-mathquill styles
 
@@ -154,7 +153,7 @@ const VectorGame: React.FC<VectorGameProps> = props => {
             console.log('TODO: setScoreList');
             // window.onbeforeunload = null;
             // setScoreList(response.data);
-            setLevel(4);
+            setLevel(4); // todo we need this?
             // this.setState({
             //   scoreList: response.data,
             //   level: newLevel,
