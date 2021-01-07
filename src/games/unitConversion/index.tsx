@@ -3,10 +3,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { addStyles, StaticMathField } from 'react-mathquill';
 
 import { GameState } from '../constants';
+import UnitConversionGameBoard from './unitConversionGameBoard';
 
 import apiFactory, { Api } from '../../redux/modules/apiFactory';
 
-import { VectorCanvas, CanvasVector, CanvasText } from '../../components/vector/vectorCanvas';
+import { UNITS } from '../../components/unitConversion/components/base';
 
 import {
   stopBackgroundAudio,
@@ -21,6 +22,16 @@ addStyles(); // react-mathquill styles
 const BACKEND_SERVER_API_URL = process.env['NODE_ENV'] === 'development' ? 'http://127.0.0.1:8000/api/v1/' : '/api/v1/';
 
 const api: Api = apiFactory(BACKEND_SERVER_API_URL);
+
+// TODO create function in  ../../components/unitConversion/components/base to get this value
+let INPUT_UNITS = ['s', 'm', 'kg', 'm/s'];
+Object.getOwnPropertyNames(UNITS)
+  .map(key => [key, Object.getOwnPropertyDescriptor(UNITS, key)])
+  .filter(([key, descriptor]) => typeof descriptor.get === 'function')
+  .map(([key]) => key)
+  .forEach(function(key) {
+    INPUT_UNITS = INPUT_UNITS.concat(Object.keys(UNITS[key]));
+  });
 
 // TODO replace :any with correct types
 // TODO create React hook for counter + HOC base game component
@@ -50,18 +61,16 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
   const [gameState, setGameState] = useState(GameState.NEW);
   const [pausedOnState, setPausedOnState] = useState('');
   const [score, setScore] = useState(0);
-  const [level, setLevel] = useState<1 | 2 | 3 | 4>(1);
+  const [level, setLevel] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [question, setQuestion] = useState('');
-  const [lastQuestion, setLastQuestion] = useState(''); // Do we need this?
-  const [currentX, setCurrentX] = useState(0);
-  const [currentY, setCurrentY] = useState(0);
-  const [answerVector, setAnswerVector] = useState('');
-  const [answerText, setAnswerText] = useState('');
+  // const [lastQuestion, setLastQuestion] = useState(''); // Do we need this?
+  const [unit, setUnit] = useState('');
+  const [number, setNumber] = useState('');
   const [scoreList, setScoreList] = useState([]);
 
-  const tickCentiSeconds = useCallback((value: number) => {
+  const tickCentiSeconds = (value: number) => {
     centiSeconds.current = value as number;
-  });
+  };
 
   const pauseToggle = () => {
     if ([GameState.PAUSED, GameState.QUESTION].indexOf(gameState) > -1) {
@@ -107,10 +116,10 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
-  const gameOver = (vector: any, text: any) => {
+  const gameOver = (number: any, unit: any) => {
     setGameState(GameState.GAME_OVER);
-    setAnswerVector(vector);
-    setAnswerText(text);
+    setNumber(number);
+    setUnit(unit);
     stopBackgroundAudio();
     resetCounter();
     // window.onbeforeunload = null
@@ -187,7 +196,7 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
   };
 
   // TODO why we do not have checkAnswer?
-  const generateQuestion = (newScore: number, newLevel: 1 | 2 | 3 | 4) => {
+  const generateQuestion = (newScore: number, newLevel: 1 | 2 | 3 | 4 | 5) => {
     const number = getRandomNumber();
     let unit, unitLong;
 
@@ -209,6 +218,7 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
     } else if (newLevel === 5) {
       let INPUT_UNITS = [];
 
+      // duplicate code?
       Object.getOwnPropertyNames(UNITS)
         .map(key => [key, Object.getOwnPropertyDescriptor(UNITS, key)])
         .filter(([key, descriptor]) => typeof descriptor.get === 'function')
@@ -217,8 +227,8 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
           INPUT_UNITS = INPUT_UNITS.concat(key);
         });
 
-      const unitType = this.getRandomFromArray(INPUT_UNITS);
-      unit = this.getRandomFromArray(Object.keys(UNITS[unitType]));
+      const unitType = getRandomFromArray(INPUT_UNITS);
+      unit = getRandomFromArray(Object.keys(UNITS[unitType]));
       unitLong = UNITS[unitType][unit];
     }
 
@@ -261,7 +271,7 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
     gameOver(null, null);
   };
 
-  const questionToState = (newScore: number, newLevel: 1 | 2 | 3 | 4) => {
+  const questionToState = (newScore: number, newLevel: 1 | 2 | 3 | 4 | 5) => {
     const state = Object.assign(
       {
         currentX: 0,
@@ -269,20 +279,18 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
         score: 0,
         level: 1,
         question: '',
-        answerVector: '',
-        answerText: '',
+        unit: '',
+        number: '',
         gameState: GameState.NEW,
       },
       generateQuestion(newScore, newLevel),
     );
 
-    setCurrentX(state.currentX);
-    setCurrentY(state.currentY);
     setScore(state.score);
-    setLevel(state.level);
+    setLevel(state.level as 1 | 2 | 3 | 4 | 5);
     setQuestion(state.question);
-    setAnswerVector(state.answerVector);
-    setAnswerText(state.answerText);
+    setUnit(state.unit);
+    setNumber(state.number);
     setGameState(state.gameState);
   };
 
@@ -309,19 +317,19 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
 
   return (
     <UnitConversionGameBoard
+      number={number}
+      unit={unit}
+      gameOver={gameOver}
+      nextQuestion={nextQuestion}
       gameState={gameState}
       start={start}
       score={score}
       level={level}
       question={question}
-      answerVector={answerVector}
-      answerText={answerText}
       timesUp={timesUp}
       pause={pauseToggle}
-      arrowComplete={checkAnswer}
       restart={restart}
       scoreList={scoreList}
-      clockSeconds={120}
       moveToNextComponent={() => moveToNextComponent(materialUuid)}
     />
   );

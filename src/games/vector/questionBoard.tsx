@@ -7,7 +7,6 @@ import { VectorCanvas, NullVector } from '../../components/vector/vectorCanvas';
 
 interface QuestionBoardProps {
   // props
-  // SQLSchemaJson: string;
   arrowComplete: (arrow: any) => void;
   clear: boolean;
   answerVector: any;

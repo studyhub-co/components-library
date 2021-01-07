@@ -1,3 +1,252 @@
+import React, { useState, useRef, useEffect } from 'react';
+import Draggable from 'react-draggable';
+import MediaQuery from 'react-responsive';
+
+import UnitConversionCanvas from './unitConversionCanvas';
+
+import '../../components/unitConversion/components/mathquill-loader';
+// this will add MathQuill to window
+import * as MathQuill from '@edtr-io/mathquill/build/mathquill.js';
+
+import 'evaluatex/dist/evaluatex.min.js';
+
+interface UnitConversionQuestionBoardProps {
+  // props
+  gameOver: () => void;
+  nextQuestion: () => void;
+  level: number;
+  clear: boolean;
+  number: string;
+  unit: string;
+  question: string;
+  gameState: string;
+}
+
+const UnitConversionQuestionBoard: React.FC<UnitConversionQuestionBoardProps> = props => {
+  const {
+    // direct props
+    gameState,
+    level,
+    gameOver,
+    question,
+    nextQuestion,
+    number,
+    unit,
+    clear,
+  } = props;
+
+  const [calculatorAnswer, setCalculatorAnswer] = useState('');
+  const [copy2Answer, setCopy2Answer] = useState(null);
+
+  const conversionCanvas = useRef();
+  const calculatorField = useRef(null);
+
+  useEffect(() => {
+    const MQ = MathQuill.getInterface(2);
+
+    calculatorField.current = MQ.MathField(document.getElementById('calculatorField'), {
+      autoCommands: 'pi',
+      autoOperatorNames: 'sin',
+      handlers: {
+        edit: mathField => {
+          const calculatedValue = clearCalculatorInput(mathField.latex());
+          if (calculatedValue) {
+            setCalculatorAnswer(calculatedValue);
+          } else {
+            setCalculatorAnswer('');
+          }
+        },
+      },
+    });
+
+    MQ(document.getElementById('11')).focus();
+  }, []);
+
+  const copy2AnswerFunc = () => {
+    if (calculatorAnswer !== '') {
+      conversionCanvas.updateAnswer(calculatorAnswer);
+    }
+  };
+
+  const clearCalculatorInput = tmpData => {
+    // remove backslash with whitespace
+    tmpData = tmpData.replace(/\\ /g, ' ');
+    tmpData = tmpData.replace(/\\frac{(\S+)}{(\S+)}/, '$1/($2)');
+    // convert scientific notation
+    tmpData = tmpData.replace(/\\cdot/g, '*');
+    tmpData = tmpData.replace(/\^{\s*(\S+)\s*}/, '^($1)'); // fix for math.parser()
+    tmpData = tmpData.replace(/\\left\(/g, '(');
+    tmpData = tmpData.replace(/\\right\)/g, ')');
+
+    // var parser = math.parser()
+
+    try {
+      // var value = parser.eval(tmpData)
+      let value = window.evaluatex(tmpData);
+      if (value) {
+        if (value < 1) {
+          // leave just significant figures for answer
+          const mult = Math.pow(10, 4 - Math.floor(Math.log(value) / Math.LN10) - 1);
+          value = Math.round(value * mult) / mult;
+        } else {
+          value = value.toFixed(2);
+        }
+      }
+
+      return value;
+    } catch (e) {
+      // catch SyntaxError
+    }
+
+    return false;
+  };
+
+  const mathFieldStyle = {
+    minWidth: '25rem',
+    fontSize: 30,
+  };
+
+  const cellCheatStyle = {
+    border: '1px solid #d8d8d8',
+    display: 'table-cell',
+    verticalAlign: 'middle',
+    padding: '1rem',
+  };
+
+  return (
+    <div>
+      <Draggable
+        disabled={window.screen.width > 736}
+        axis="x"
+        bounds={{ left: -window.screen.width + 100, top: 0, right: 0, bottom: 0 }}
+        cancel=".mq-root-block"
+      >
+        <div style={{ display: 'table', marginLeft: 'auto', marginRight: 'auto' }} className="bounding-box text-center">
+          <MediaQuery minDeviceWidth={736}>
+            <h2>{question}</h2>
+          </MediaQuery>
+          <MediaQuery maxDeviceWidth={736}>
+            <h2>{question}</h2>
+          </MediaQuery>
+          <UnitConversionCanvas
+            number={number}
+            unit={unit}
+            nextQuestion={nextQuestion}
+            gameOver={gameOver}
+            gameState={gameState}
+            level={level}
+            ref={conversionCanvas => {
+              conversionCanvas.current = conversionCanvas;
+            }}
+          />
+        </div>
+      </Draggable>
+      <Draggable
+        disabled={window.screen.width > 736}
+        axis="x"
+        bounds={{ left: -window.screen.width + 100, top: 0, right: 0, bottom: 0 }}
+        cancel=".mq-root-block"
+      >
+        <div style={{ display: 'table', marginLeft: 'auto', marginRight: 'auto' }} className="bounding-box">
+          <div className="text-center">
+            <h2>Calculator</h2>
+            <div>
+              <div style={{ display: 'table-cell', verticalAlign: 'middle' }}>
+                <p style={{ marginBottom: 5 }}>
+                  <span id={'calculatorField'} style={mathFieldStyle} />
+                </p>
+              </div>
+              <div
+                style={{
+                  fontSize: 30,
+                  display: 'table-cell',
+                  verticalAlign: 'middle',
+                  paddingLeft: 15,
+                  paddingRight: 15,
+                }}
+              >
+                =
+              </div>
+              <div
+                style={{
+                  fontSize: 30,
+                  display: 'table-cell',
+                  verticalAlign: 'middle',
+                  paddingLeft: 15,
+                  paddingRight: 15,
+                }}
+              >
+                {calculatorAnswer}
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div className="button-group">
+                  <button
+                    id="checkButton"
+                    className={'btn btn-primary' + (calculatorAnswer === '' ? ' disabled' : '')}
+                    onClick={copy2AnswerFunc}
+                  >
+                    Copy to answer
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Draggable>
+      <div style={{ display: 'table', marginLeft: 'auto', marginRight: 'auto' }} className="bounding-box">
+        <div className="text-center">
+          <h2>Unit Conversion Cheat Sheet</h2>
+          <div style={{ display: 'table', marginLeft: 'auto', borderCollapse: 'collapse', marginRight: 'auto' }}>
+            <div style={{ display: 'table-row' }}>
+              <div style={Object.assign({}, cellCheatStyle, { textDecoration: 'underline', fontWeight: 'bold' })}>
+                Measurement
+              </div>
+              <div style={Object.assign({}, cellCheatStyle, { textDecoration: 'underline', fontWeight: 'bold' })}>
+                SI to US Standard
+              </div>
+              <div style={Object.assign({}, cellCheatStyle, { textDecoration: 'underline', fontWeight: 'bold' })}>
+                US Standard to SI
+              </div>
+            </div>
+            <div style={{ display: 'table-row' }}>
+              <div style={cellCheatStyle}>Distance</div>
+              <div style={cellCheatStyle}>
+                1 cm = 0.3937 in <br />
+                1 m = 100 cm = 3.28 ft <br />1 km = 0.621 mi
+              </div>
+              <div style={cellCheatStyle}>
+                1 in = 2.54 cm <br />
+                1 ft = 0.3048 m <br />1 mi = 5280 ft = 1.609 km
+              </div>
+            </div>
+            <div style={{ display: 'table-row' }}>
+              <div style={cellCheatStyle}>Mass</div>
+              <div style={cellCheatStyle}>
+                1 kg = 1000 g = 2.2 lb <br />1 g = 0.035 oz
+              </div>
+              <div style={cellCheatStyle}>
+                1 lb = 16 oz = 0.454 kg <br />1 oz = 28.35 g = 0.02835 kg
+              </div>
+            </div>
+            <div style={{ display: 'table-row' }}>
+              <div style={cellCheatStyle}>Time</div>
+              <div style={cellCheatStyle}>1 s = 1000 ms = 0.0166 min</div>
+              <div style={cellCheatStyle}>
+                1 min = 60 s <br /> <br />
+                Other useful non-SI conversions: <br />
+                1 hr = 60 min <br />
+                1 day = 24 hr <br />1 week = 7 days
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default UnitConversionQuestionBoard;
+
 // class UnitConversionQuestionBoard extends React.Component {
 //   constructor (props) {
 //     super(props)

@@ -7,7 +7,7 @@ import { GameState } from '../constants';
 import ScoreBoard from '../scoreBoard';
 import QuestionBoard from './questionBoard';
 
-import './style.css';
+import '../style.css';
 
 interface VectorGameBoardProps {
   // props

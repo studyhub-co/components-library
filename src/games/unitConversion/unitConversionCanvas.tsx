@@ -1,3 +1,35 @@
+import React from 'react';
+
+interface UnitConversionCanvasProps {
+  // props
+  gameOver: () => void;
+  nextQuestion: () => void;
+  level: number;
+  clear: boolean;
+  number: string;
+  unit: string;
+  question: string;
+  gameState: string;
+}
+
+const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
+  const {
+    // direct props
+    gameState,
+    level,
+    gameOver,
+    question,
+    nextQuestion,
+    number,
+    unit,
+    clear,
+  } = props;
+
+  return <div></div>;
+};
+
+export default UnitConversionCanvas;
+
 // export class UnitConversionCanvas extends UnitConversionBase {
 //   constructor (props) {
 //     super(props)
