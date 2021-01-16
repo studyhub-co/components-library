@@ -16,6 +16,7 @@ import { mockUnitConversion } from '../src/components/unitConversion/mockData';
 import { mockMysql } from '../src/components/mysql/mockData';
 
 import VectorGame from '../src/games/vector/index';
+import UnitConversionGame from '../src/games/unitConversion/index';
 
 const Components: React.FC = () => {
   // const textInput = createRef<HTMLInputElement>();
@@ -35,6 +36,13 @@ const Components: React.FC = () => {
     <div>
       <h3>Vector Game</h3>
       <VectorGame
+        materialUuid={''}
+        moveToNextComponent={materialUuid => {
+          console.log('moveToNextComponent called');
+        }}
+      />
+      <UnitConversionGame>Vector Game</UnitConversionGame>
+      <UnitConversionGame
         materialUuid={''}
         moveToNextComponent={materialUuid => {
           console.log('moveToNextComponent called');

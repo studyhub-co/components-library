@@ -1,5 +1,5 @@
 // based on base.jsx
-
+import { useEffect, useState } from 'react';
 // React docs:
 // If you want to reuse non-UI functionality between components, we suggest extracting it into a separate JavaScript
 // module.
@@ -11,11 +11,14 @@ import Qty from 'js-quantities';
 // this will add jQuery to window
 import './mathquill-loader';
 // this will add MathQuill to window
-import * as MathQuill from '@edtr-io/mathquill/build/mathquill.js';
+// import * as MathQuill from '@edtr-io/mathquill/build/mathquill.js';
+import * as MathQuill from '@edtr-io/mathquill';
 // this will add evaluatex to window
 import 'evaluatex/dist/evaluatex.min.js';
-import { UnitConversionData as IQABaseData } from '../IData';
-import { useState } from 'react';
+
+interface Map {
+  [key: string]: string;
+}
 
 export class UNITS {
   static get DISTANCE() {
@@ -25,7 +28,7 @@ export class UNITS {
       km: 'kilometers',
       ft: 'feet',
       mi: 'miles',
-    };
+    } as Map;
   }
 
   static get TIME() {
@@ -35,7 +38,7 @@ export class UNITS {
       hr: 'hours',
       d: 'days',
       wk: 'weeks',
-    };
+    } as Map;
   }
 
   static get MASS() {
@@ -43,16 +46,17 @@ export class UNITS {
       mg: 'milligrams',
       g: 'grams',
       oz: 'ounces',
-    };
+    } as Map;
   }
 
   static get SPEED() {
-    const distanceO = UNITS.DISTANCE;
-    distanceO['m'] = 'meters';
-    const timeO = UNITS.TIME;
-    timeO['s'] = 'seconds';
+    // const distanceO = UNITS.DISTANCE;
+    const distanceO = { m: 'meters', ...UNITS.DISTANCE } as Map;
+    // distanceO['m'] = 'meters';
+    const timeO = { s: 'seconds', ...UNITS.TIME } as Map;
+    // imeO['s'] = 'seconds';
 
-    const speedO = {};
+    const speedO: any = {};
     Object.keys(distanceO).forEach(function(keyDist) {
       Object.keys(timeO).forEach(function(keyTime) {
         if (!(keyDist === 'm' && keyTime === 's')) {
@@ -69,7 +73,7 @@ export class UNITS {
 let INPUT_UNITS = ['s', 'm', 'kg', 'm/s'];
 Object.getOwnPropertyNames(UNITS)
   .map(key => [key, Object.getOwnPropertyDescriptor(UNITS, key)])
-  .filter(([key, descriptor]) => typeof descriptor.get === 'function')
+  .filter(([key, descriptor]) => descriptor && typeof descriptor.get === 'function')
   .map(([key]) => key)
   .forEach(function(key) {
     INPUT_UNITS = INPUT_UNITS.concat(Object.keys(UNITS[key]));
@@ -101,53 +105,80 @@ Object.getOwnPropertyNames(UNITS)
 // //   }
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
-interface IUnitConversionProps {
+interface IUseUnitConversionProps {
   level: number;
+  unit: string;
 }
 
-export function useUnitConversionBase(props: IuseUnitConversionProps) {
+export function useUnitConversionBase(props: IUseUnitConversionProps) {
   const {
     // direct props
     level,
+    unit,
   } = props;
 
+  // why we need numColumns state if we can calculate it from answersSteps ?
   const [numColumns, setNumColumns] = useState(level === 5 ? 0 : 1);
   const [strikethroughN, setStrikethroughN] = useState(false);
   const [strikethroughD, setStrikethroughD] = useState(false);
+  const [answersSteps, setAnswersSteps] = useState([]);
+  const [uncrossedUnits, setUncrossedUnits] = useState({ nums: [], denoms: [] });
+  const [answer, setAnswer] = useState({ data: {}, box: {} });
+
+  const MQ = window.MathQuill.getInterface(2);
 
   const addColumn = () => {
-    const MQ = window.MathQuill.getInterface(2);
-    const newColumns = this.state.numColumns + 1;
+    const newNumColumns = numColumns + 1;
 
-    this.setState(
-      {
-        numColumns: newColumns,
-      },
-      function() {
-        // need wait mount mathquill span!
-        this.setState({
-          answersSteps: [
-            ...this.state.answersSteps,
-            [
-              { data: '', box: MQ(document.getElementById('1' + newColumns)) },
-              { data: '', box: MQ(document.getElementById('2' + newColumns)) },
-            ],
-          ],
-        });
-      },
-    );
+    setNumColumns(newNumColumns);
+    setAnswersSteps([
+      ...answersSteps,
+      [
+        { data: '', box: MQ(document.getElementById('1' + newNumColumns)) },
+        { data: '', box: MQ(document.getElementById('2' + newNumColumns)) },
+      ],
+    ]);
+
+    // const MQ = window.MathQuill.getInterface(2);
+    // const newNumColumns = numColumns + 1;
+    // this.setState(
+    //   {
+    //     numColumns: newColumns,
+    //   },
+    //   function() {
+    //     // need wait mount mathquill span!
+    //     this.setState({
+    //       answersSteps: [
+    //         ...this.state.answersSteps,
+    //         [
+    //           { data: '', box: MQ(document.getElementById('1' + newNumColumns)) },
+    //           { data: '', box: MQ(document.getElementById('2' + newNumColumns)) },
+    //         ],
+    //       ],
+    //     });
+    //   },
+    // );
   };
 
+  useEffect(() => {
+    // todo redraw only when remove steps? useRef to old value
+    reDrawStrikes();
+  }, [answersSteps, reDrawStrikes]);
+
   const removeColumn = () => {
-    this.setState(
-      {
-        numColumns: this.state.numColumns - 1,
-        answersSteps: this.state.answersSteps.slice(0, -1),
-      },
-      function() {
-        this.reDrawStrikes();
-      },
-    );
+    const newNumColumns = numColumns - 1;
+    setNumColumns(newNumColumns);
+    setAnswersSteps(answersSteps.slice(0, -1));
+
+    // this.setState(
+    //   {
+    //     numColumns: this.state.numColumns - 1,
+    //     answersSteps: this.state.answersSteps.slice(0, -1),
+    //   },
+    //   function() {
+    //     this.reDrawStrikes();
+    //   },
+    // );
   };
 
   const setLatexWoFireEvent = (box, text) => {
@@ -157,7 +188,7 @@ export function useUnitConversionBase(props: IuseUnitConversionProps) {
   };
 
   const reset = () => {
-    const MQ = window.MathQuill.getInterface(2);
+    // const MQ = window.MathQuill.getInterface(2);
 
     const resetBox = function(id, setLatexWoFireEvent) {
       const span = document.getElementById(id);
@@ -167,27 +198,36 @@ export function useUnitConversionBase(props: IuseUnitConversionProps) {
       span.classList.remove('red-border', 'green-border');
     };
 
-    const setLatexWoFireEvent = this.setLatexWoFireEvent;
+    // const setLatexWoFireEvent = this.setLatexWoFireEvent;
     const ids = ['11', '21', '15'];
     ids.forEach(function(item, i, arr) {
       resetBox(item, setLatexWoFireEvent);
     });
 
-    this.setState({
-      numColumns: 1,
-      strikethroughD: false,
-      strikethroughN: false,
-      answersSteps: [
-        [
-          { data: '', box: MQ(document.getElementById('11')) },
-          { data: '', box: MQ(document.getElementById('12')) },
-        ],
-      ], // first column set by default
-    });
+    setNumColumns(1);
+    // first column set by default
+    setAnswersSteps([
+      { data: '', box: MQ(document.getElementById('11')) },
+      { data: '', box: MQ(document.getElementById('12')) },
+    ]);
+    setStrikethroughD(false);
+    setStrikethroughN(false);
+
+    // this.setState({
+    //   numColumns: 1,
+    //   strikethroughD: false,
+    //   strikethroughN: false,
+    //   answersSteps: [
+    //     [
+    //       { data: '', box: MQ(document.getElementById('11')) },
+    //       { data: '', box: MQ(document.getElementById('12')) },
+    //     ],
+    //   ], // first column set by default
+    // });
   };
 
   const reDrawStrikes = () => {
-    const answers = this.resetStrikeAnswers();
+    const answers = resetStrikeAnswers();
     const uncrossedUnits = { nums: [], denoms: [] };
 
     // fill uncrossedUnits
@@ -209,8 +249,8 @@ export function useUnitConversionBase(props: IuseUnitConversionProps) {
     numeratorsC: for (let column = -1; column < answers.length; column++) {
       // walk through numerators
       if (column === -1) {
-        if (this.props.unit) {
-          splitNumerator = ['', this.props.unit.split('/')[0]]; // main unit
+        if (unit) {
+          splitNumerator = ['', unit.split('/')[0]]; // main unit
         }
       } else {
         splitNumerator = answers[column][0]['splitData'];
@@ -220,8 +260,8 @@ export function useUnitConversionBase(props: IuseUnitConversionProps) {
         for (let column2 = -1; column2 < answers.length; column2++) {
           // walk through denominators
           if (column2 === -1) {
-            if (this.props.unit.split('/')[1]) {
-              splitDenominator = ['', this.props.unit.split('/')[1]]; // km/hr
+            if (unit.split('/')[1]) {
+              splitDenominator = ['', unit.split('/')[1]]; // km/hr
             } else {
               splitDenominator = null;
             }
@@ -239,7 +279,8 @@ export function useUnitConversionBase(props: IuseUnitConversionProps) {
                 let toRemoveI;
                 // strikethrough Numerator
                 if (column === -1) {
-                  this.setState({ strikethroughN: true });
+                  // this.setState({ strikethroughN: true });
+                  setStrikethroughN(true);
                 } else {
                   const numeratorBox = answers[column][0]['box'];
                   const newLatexN = answers[column][0]['data'].replace(
@@ -249,7 +290,7 @@ export function useUnitConversionBase(props: IuseUnitConversionProps) {
 
                   answers[column][0]['data'] = newLatexN; // data will not fill, because edit event not fire onMathQuillChange
 
-                  this.setLatexWoFireEvent(numeratorBox, newLatexN);
+                  setLatexWoFireEvent(numeratorBox, newLatexN);
 
                   // remove numerator unit from uncrossed out
                   toRemoveI = uncrossedUnits['nums'].indexOf(splitNumerator[1]);
@@ -258,7 +299,8 @@ export function useUnitConversionBase(props: IuseUnitConversionProps) {
                   }
                 }
                 if (column2 === -1) {
-                  this.setState({ strikethroughD: true });
+                  // this.setState({ strikethroughD: true });
+                  setStrikethroughD(true);
                 } else {
                   // strikethrough denominator
                   const denominatorBox = answers[column2][1]['box'];
@@ -269,7 +311,7 @@ export function useUnitConversionBase(props: IuseUnitConversionProps) {
 
                   answers[column2][1]['data'] = newLatexDN; // data will not fill, because edit event not fire onMathQuillChange
 
-                  this.setLatexWoFireEvent(denominatorBox, newLatexDN);
+                  setLatexWoFireEvent(denominatorBox, newLatexDN);
 
                   // remove denominator unit from uncrossed out
                   toRemoveI = uncrossedUnits['denoms'].indexOf(splitNumerator[1]);
@@ -286,10 +328,13 @@ export function useUnitConversionBase(props: IuseUnitConversionProps) {
       }
     } // end for numerators
 
-    this.setState({
-      answersSteps: answers,
-      uncrossedUnits: uncrossedUnits,
-    });
+    setAnswersSteps(answers);
+    setUncrossedUnits(uncrossedUnits);
+
+    // this.setState({
+    //   answersSteps: answers,
+    //   uncrossedUnits: uncrossedUnits,
+    // });
   };
 
   const onMathQuillChange = (data, row, col, mathquillObj) => {
@@ -298,7 +343,7 @@ export function useUnitConversionBase(props: IuseUnitConversionProps) {
       // if data contain strikethrough with end of line remove it
       // we must replace it only in currently edited mathquill box
       const tmpData = data.replace(/\\class{strikethrough}{(\S+)}$/, function(match, find) {
-        if (find && find.length > 1) {
+        if (find && typeof find === 'string' && find.length > 1) {
           // remove last char ot unit
           return find.slice(0, -1);
         } else {
@@ -312,29 +357,33 @@ export function useUnitConversionBase(props: IuseUnitConversionProps) {
     }
 
     // store value in matrix
-    const answers = this.state.answersSteps;
+    const answers = answersSteps;
 
     answers[col - 1][row - 1] = {
       data: data,
-      splitData: this.constructor.parseToValueUnit(this.clearDataText(data)),
+      // splitData: this.constructor.parseToValueUnit(this.clearDataText(data)),
+      splitData: parseToValueUnit(clearDataText(data)),
       box: mathquillObj,
     };
 
-    this.setState(
-      {
-        answersSteps: answers,
-      },
-      function() {
-        this.reDrawStrikes();
-      },
-    );
+    setAnswersSteps(answers);
+
+    // this.setState(
+    //   {
+    //     answersSteps: answers,
+    //   },
+    //   function() {
+    //     this.reDrawStrikes();
+    //   },
+    // );
   };
 
   // result answer change
   const onResultChange = (data, row, col, mathquillObj) => {
-    this.setState({
-      answer: { data: data, box: mathquillObj },
-    });
+    setAnswer({ data: data, box: mathquillObj });
+    // this.setState({
+    //   answer: { data: data, box: mathquillObj },
+    // });
   };
 
   // clear data before js-q parse
@@ -348,7 +397,8 @@ export function useUnitConversionBase(props: IuseUnitConversionProps) {
     tmpData = tmpData.replace(/\\cdot/g, '*');
     tmpData = tmpData.replace(/\^{\s*(\S+)\s*}/, '^($1)'); // fix for math.parser()
 
-    const parsedToValUnit = this.constructor.parseToValueUnit(tmpData);
+    // const parsedToValUnit = this.constructor.parseToValueUnit(tmpData);
+    const parsedToValUnit = parseToValueUnit(tmpData);
 
     if (parsedToValUnit && parsedToValUnit[0]) {
       // const parser = math.parser();
@@ -384,8 +434,8 @@ export function useUnitConversionBase(props: IuseUnitConversionProps) {
       minLength = secondQty.baseScalar.toString().length;
     }
 
-    const asf = this.sigFigs(firstQty.baseScalar, minLength);
-    const isf = this.sigFigs(secondQty.baseScalar, minLength);
+    const asf = sigFigs(firstQty.baseScalar, minLength);
+    const isf = sigFigs(secondQty.baseScalar, minLength);
 
     function decimalPlaces(num) {
       const match = ('' + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
@@ -414,7 +464,7 @@ export function useUnitConversionBase(props: IuseUnitConversionProps) {
   };
 
   const compareWithSigFigs = (firstQty, secondQty) => {
-    const baseCompareLst = this.getBaseFor2Qty(firstQty, secondQty);
+    const baseCompareLst = getBaseFor2Qty(firstQty, secondQty);
 
     let equal = '' + baseCompareLst[0] === '' + baseCompareLst[1];
 
@@ -431,10 +481,12 @@ export function useUnitConversionBase(props: IuseUnitConversionProps) {
   };
 
   const resetStrikeAnswers = () => {
-    const answers = this.state.answersSteps;
+    const answers = answersSteps;
 
-    this.state.strikethroughN = false;
-    this.state.strikethroughD = false;
+    // TODO fix this
+    // this.state.strikethroughN = false;
+    // this.state.strikethroughD = false;
+
     const resetStrike = function(answer, setLatexWoFireEvent) {
       const tmpData = answer['data'];
       if (!tmpData) return;
@@ -448,7 +500,7 @@ export function useUnitConversionBase(props: IuseUnitConversionProps) {
       }
     };
 
-    const setLatexWoFireEvent = this.setLatexWoFireEvent;
+    const setLatexWoFireEvent = setLatexWoFireEvent;
 
     // reset all strikethrough after update any value
     for (let column = 0; column < answers.length; column++) {
@@ -482,4 +534,22 @@ export function useUnitConversionBase(props: IuseUnitConversionProps) {
     return null;
   };
   // }
+
+  return {
+    addColumn,
+    removeColumn,
+    numColumns,
+    clearDataText,
+    reset,
+    sigFigs,
+    compareWithSigFigs,
+    parseToValueUnit,
+    answer,
+    answersSteps,
+    uncrossedUnits,
+    strikethroughN,
+    strikethroughD,
+    onResultChange,
+    onMathQuillChange,
+  };
 }

@@ -1,7 +1,9 @@
 import React from 'react';
 
+// TODO replace with ts
+
 import { addStyles, EditableMathField } from 'react-mathquill';
-import { parser } from 'mathjs';
+// import { parser } from 'mathjs';
 import Qty from 'js-quantities';
 
 // this will add jQuery to window
@@ -13,7 +15,7 @@ import 'evaluatex/dist/evaluatex.min.js';
 
 addStyles();
 
-class UNITS {
+export class UNITS {
   static get DISTANCE() {
     return {
       mm: 'millimeters',
@@ -250,8 +252,6 @@ export class UnitConversionBase extends React.Component {
 
                   answers[column2][1]['data'] = newLatexDN; // data will not fill, because edit event not fire onMathQuillChange
 
-                  // console.log(newLatexDN);
-
                   this.setLatexWoFireEvent(denominatorBox, newLatexDN);
 
                   // remove denominator unit from uncrossed out
@@ -335,7 +335,6 @@ export class UnitConversionBase extends React.Component {
 
     if (parsedToValUnit && parsedToValUnit[0]) {
       // const parser = math.parser();
-
       try {
         const value = window.evaluatex(parsedToValUnit[0])();
         // const value = parser.eval(parsedToValUnit[0]);
@@ -466,7 +465,7 @@ export class UnitConversionBase extends React.Component {
     return null;
   }
 }
-// TODO replace with ts
+
 // UnitConversionBase.propTypes = {
 //   level: PropTypes.number,
 //   unit: PropTypes.string,

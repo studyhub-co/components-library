@@ -68,6 +68,7 @@
     "@babel/preset-typescript": "^7.8.3",
     "@material-ui/core": "^4.11.0",
     "@svgr/webpack": "4.3.3",
+    "@types/edtr-io__mathquill": "^0.11.1",
     "@types/fabric": "^3.6.2",
     "@types/jest": "^25",
     "@types/jquery": "^3.5.1",

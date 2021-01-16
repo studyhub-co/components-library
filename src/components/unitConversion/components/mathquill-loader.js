@@ -1,5 +1,6 @@
 import jQuery from 'jquery';
 
+// TODO check if it not exist already
 global.window.jQuery = jQuery;
 
 export default null;
