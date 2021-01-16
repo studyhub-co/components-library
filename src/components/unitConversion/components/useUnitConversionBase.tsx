@@ -16,66 +16,162 @@ import * as MathQuill from '@edtr-io/mathquill';
 // this will add evaluatex to window
 import 'evaluatex/dist/evaluatex.min.js';
 
-interface Map {
-  [key: string]: string;
+// interface Map {
+//   [key: string]: string;
+// }
+
+// export class UNITS {
+//   static get DISTANCE() {
+//     return {
+//       mm: 'millimeters',
+//       cm: 'centimeters',
+//       km: 'kilometers',
+//       ft: 'feet',
+//       mi: 'miles',
+//     } as Map;
+//   }
+//
+//   static get TIME() {
+//     return {
+//       ms: 'milliseconds',
+//       min: 'minutes',
+//       hr: 'hours',
+//       d: 'days',
+//       wk: 'weeks',
+//     } as Map;
+//   }
+//
+//   static get MASS() {
+//     return {
+//       mg: 'milligrams',
+//       g: 'grams',
+//       oz: 'ounces',
+//     } as Map;
+//   }
+//
+//   static get SPEED() {
+//     // const distanceO = UNITS.DISTANCE;
+//     const distanceO = { m: 'meters', ...UNITS.DISTANCE } as Map;
+//     // distanceO['m'] = 'meters';
+//     const timeO = { s: 'seconds', ...UNITS.TIME } as Map;
+//     // imeO['s'] = 'seconds';
+//
+//     const speedO: any = {};
+//     Object.keys(distanceO).forEach(function(keyDist) {
+//       Object.keys(timeO).forEach(function(keyTime) {
+//         if (!(keyDist === 'm' && keyTime === 's')) {
+//           // exclude SI unit
+//           speedO[keyDist + '/' + keyTime] = distanceO[keyDist] + '/' + timeO[keyTime];
+//         }
+//       });
+//     });
+//
+//     return speedO;
+//   }
+// }
+
+// export const UNITS = () => {
+//   const DISTANCE = () => { return {
+//     'mm': 'millimeters',
+//     'cm': 'centimeters',
+//     'km': 'kilometers',
+//     'ft': 'feet',
+//     'mi': 'miles',
+//   }  as Map };
+//   const TIME = () => { return {
+//     ms: 'milliseconds',
+//     min: 'minutes',
+//     hr: 'hours',
+//     d: 'days',
+//     wk: 'weeks',
+//   } as Map},
+//   const MASS = ()  {
+//     mg: 'milligrams',
+//     g: 'grams',
+//     oz: 'ounces',
+//   } as Map,
+//   SPEED: {} as Map,
+// };
+//
+// UNITS['SPEED'] = (() => {
+//   // const distanceO = UNITS.DISTANCE;
+//   const distanceO = { m: 'meters', ...UNITS.DISTANCE } as Map;
+//   // distanceO['m'] = 'meters';
+//   const timeO = { s: 'seconds', ...UNITS.TIME } as Map;
+//   // imeO['s'] = 'seconds';
+//
+//   const speedO: any = {};
+//   Object.keys(distanceO).forEach(function(keyDist) {
+//     Object.keys(timeO).forEach(function(keyTime) {
+//       if (!(keyDist === 'm' && keyTime === 's')) {
+//         // exclude SI unit
+//         speedO[keyDist + '/' + keyTime] = distanceO[keyDist] + '/' + timeO[keyTime];
+//       }
+//     });
+//   });
+//
+//   return speedO;
+// })();
+
+// let INPUT_UNITS = ['s', 'm', 'kg', 'm/s'];
+// Object.getOwnPropertyNames(UNITS)
+//   .map(key => [key, Object.getOwnPropertyDescriptor(UNITS, key)])
+//   .filter(([key, descriptor]) => descriptor && descriptor.hasOwnProperty('get') && typeof descriptor.get === 'function')
+//   .map(([key]) => key)
+//   .forEach(function(key) {
+//     INPUT_UNITS = INPUT_UNITS.concat(Object.keys(UNITS[key]));
+//   });
+
+// eslint-disable-next-line @typescript-eslint/interface-name-prefix
+interface IUNITS {
+  [key: string]: { [key: string]: string }; // nested
 }
 
-export class UNITS {
-  static get DISTANCE() {
-    return {
-      mm: 'millimeters',
-      cm: 'centimeters',
-      km: 'kilometers',
-      ft: 'feet',
-      mi: 'miles',
-    } as Map;
-  }
+const UNITS: IUNITS = {
+  DISTANCE: {
+    mm: 'millimeters',
+    cm: 'centimeters',
+    km: 'kilometers',
+    ft: 'feet',
+    mi: 'miles',
+  },
+  TIME: {
+    ms: 'milliseconds',
+    min: 'minutes',
+    hr: 'hours',
+    d: 'days',
+    wk: 'weeks',
+  },
+  MASS: {
+    mg: 'milligrams',
+    g: 'grams',
+    oz: 'ounces',
+  },
+};
 
-  static get TIME() {
-    return {
-      ms: 'milliseconds',
-      min: 'minutes',
-      hr: 'hours',
-      d: 'days',
-      wk: 'weeks',
-    } as Map;
-  }
+UNITS['SPEED'] = (() => {
+  const distanceO: { [key: string]: string } = { m: 'meters', ...UNITS.DISTANCE };
+  const timeO: { [key: string]: string } = { s: 'seconds', ...UNITS.TIME };
 
-  static get MASS() {
-    return {
-      mg: 'milligrams',
-      g: 'grams',
-      oz: 'ounces',
-    } as Map;
-  }
-
-  static get SPEED() {
-    // const distanceO = UNITS.DISTANCE;
-    const distanceO = { m: 'meters', ...UNITS.DISTANCE } as Map;
-    // distanceO['m'] = 'meters';
-    const timeO = { s: 'seconds', ...UNITS.TIME } as Map;
-    // imeO['s'] = 'seconds';
-
-    const speedO: any = {};
-    Object.keys(distanceO).forEach(function(keyDist) {
-      Object.keys(timeO).forEach(function(keyTime) {
-        if (!(keyDist === 'm' && keyTime === 's')) {
-          // exclude SI unit
-          speedO[keyDist + '/' + keyTime] = distanceO[keyDist] + '/' + timeO[keyTime];
-        }
-      });
+  const speedO: { [key: string]: string } = {};
+  Object.keys(distanceO).forEach(function(keyDist) {
+    Object.keys(timeO).forEach(function(keyTime) {
+      if (!(keyDist === 'm' && keyTime === 's')) {
+        // exclude SI unit
+        speedO[keyDist + '/' + keyTime] = distanceO[keyDist] + '/' + timeO[keyTime];
+      }
     });
+  });
 
-    return speedO;
-  }
-}
+  return speedO;
+})();
 
 let INPUT_UNITS = ['s', 'm', 'kg', 'm/s'];
 Object.getOwnPropertyNames(UNITS)
   .map(key => [key, Object.getOwnPropertyDescriptor(UNITS, key)])
-  .filter(([key, descriptor]) => descriptor && typeof descriptor.get === 'function')
-  .map(([key]) => key)
-  .forEach(function(key) {
+  .filter(([key, descriptor]) => descriptor && typeof descriptor !== 'string' && descriptor.enumerable === true)
+  .map(([key]) => key as string)
+  .forEach(function(key: string) {
     INPUT_UNITS = INPUT_UNITS.concat(Object.keys(UNITS[key]));
   });
 
