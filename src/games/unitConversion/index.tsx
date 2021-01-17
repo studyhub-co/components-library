@@ -7,7 +7,7 @@ import UnitConversionGameBoard from './unitConversionGameBoard';
 
 import apiFactory, { Api } from '../../redux/modules/apiFactory';
 
-import { UNITS } from '../../components/unitConversion/components/base';
+import { UNITS, getInputUnits } from '../../components/unitConversion/components/useUnitConversionBase';
 
 import {
   stopBackgroundAudio,
@@ -24,14 +24,16 @@ const BACKEND_SERVER_API_URL = process.env['NODE_ENV'] === 'development' ? 'http
 const api: Api = apiFactory(BACKEND_SERVER_API_URL);
 
 // TODO create function in  ../../components/unitConversion/components/base to get this value
-let INPUT_UNITS = ['s', 'm', 'kg', 'm/s'];
-Object.getOwnPropertyNames(UNITS)
-  .map(key => [key, Object.getOwnPropertyDescriptor(UNITS, key)])
-  .filter(([key, descriptor]) => typeof descriptor.get === 'function')
-  .map(([key]) => key)
-  .forEach(function(key) {
-    INPUT_UNITS = INPUT_UNITS.concat(Object.keys(UNITS[key]));
-  });
+// let INPUT_UNITS = ['s', 'm', 'kg', 'm/s'];
+// Object.getOwnPropertyNames(UNITS)
+//   .map(key => [key, Object.getOwnPropertyDescriptor(UNITS, key)])
+//   .filter(([key, descriptor]) => typeof descriptor.get === 'function')
+//   .map(([key]) => key)
+//   .forEach(function(key) {
+//     INPUT_UNITS = INPUT_UNITS.concat(Object.keys(UNITS[key]));
+//   });
+
+const INPUT_UNITS = getInputUnits();
 
 // TODO replace :any with correct types
 // TODO create React hook for counter + HOC base game component
@@ -41,6 +43,9 @@ interface UnitConversionGameProps {
   materialUuid: string;
   moveToNextComponent(nextMaterialUuid: string | undefined): void;
 }
+
+// number of levels
+type ILevel = 1 | 2 | 3 | 4 | 5;
 
 const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
   const {
@@ -61,7 +66,7 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
   const [gameState, setGameState] = useState(GameState.NEW);
   const [pausedOnState, setPausedOnState] = useState('');
   const [score, setScore] = useState(0);
-  const [level, setLevel] = useState<1 | 2 | 3 | 4 | 5>(1);
+  const [level, setLevel] = useState<ILevel>(1);
   const [question, setQuestion] = useState('');
   // const [lastQuestion, setLastQuestion] = useState(''); // Do we need this?
   const [unit, setUnit] = useState('');
@@ -94,8 +99,8 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
     setIsActiveCounter(false);
   };
 
-  const nextQuestion = adScore => {
-    questionToState(score + adScore, level + 1);
+  const nextQuestion = (adScore: number) => {
+    questionToState(score + adScore, (level + 1) as ILevel);
   };
 
   useEffect(() => {
@@ -185,7 +190,7 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
   //   }
   // };
 
-  const getRandomFromArray = myArray => {
+  const getRandomFromArray = (myArray: any) => {
     return myArray[Math.floor(Math.random() * myArray.length)];
   };
 
@@ -216,17 +221,18 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
       unit = getRandomFromArray(Object.keys(UNITS.SPEED));
       unitLong = UNITS.SPEED[unit];
     } else if (newLevel === 5) {
-      let INPUT_UNITS = [];
+      // let INPUT_UNITS = []; // TODO why we have no ['s', 'm', 'kg', 'm/s'] here?
+      //
+      // // duplicate code?
+      // Object.getOwnPropertyNames(UNITS)
+      //   .map(key => [key, Object.getOwnPropertyDescriptor(UNITS, key)])
+      //   .filter(([key, descriptor]) => typeof descriptor.get === 'function')
+      //   .map(([key]) => key)
+      //   .forEach(function(key) {
+      //     INPUT_UNITS = INPUT_UNITS.concat(key);
+      //   });
 
-      // duplicate code?
-      Object.getOwnPropertyNames(UNITS)
-        .map(key => [key, Object.getOwnPropertyDescriptor(UNITS, key)])
-        .filter(([key, descriptor]) => typeof descriptor.get === 'function')
-        .map(([key]) => key)
-        .forEach(function(key) {
-          INPUT_UNITS = INPUT_UNITS.concat(key);
-        });
-
+      // INPUT_UNITS already defined
       const unitType = getRandomFromArray(INPUT_UNITS);
       unit = getRandomFromArray(Object.keys(UNITS[unitType]));
       unitLong = UNITS[unitType][unit];
@@ -235,7 +241,8 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
     if (newLevel > 5) {
       stopBackgroundAudio();
       // TODO add more secure, i.e. server token when game starts, etc
-      clearInterval(this.timer);
+      // clearInterval(this.timer);
+      resetCounter();
       api
         .post(`/api/v1/curricula/games/${materialUuid}/success`, {
           duration: centiSeconds.current,
@@ -256,7 +263,7 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
     const question = <span>{'Convert ' + number.toString() + ' ' + unitLong + ' to SI units.'}</span>;
     //   // Let's make sure we don't get the same question twice in a row.
     // } while (this.state.unit === unit && this.state.number === number)
-    this.lastQuestion = question;
+    // this.lastQuestion = question; TODO what is this?
     return {
       score: newScore,
       level: newLevel,

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
 interface MathquillBoxProps {
-  onMathQuillChange: (data: any, row: number, col: number, mathquillObj: object) => void;
+  onMathQuillChange: (data: any, row: number, col: number, mathquillObj: any) => void;
   row: number;
   column: number;
   focus?: boolean;
@@ -27,7 +27,7 @@ export const MathquillBox: React.FC<MathquillBoxProps> = props => {
       autoCommands: 'class',
       autoOperatorNames: 'pi', // we want to disable all commands, but MQ throw error if list is empty, so leave pi operator
       handlers: {
-        edit: mathField => {
+        edit: (mathField: any) => {
           // if change by API (not user), then not fire
           if (mathField.data.fromJsCall) {
             return;
@@ -41,11 +41,12 @@ export const MathquillBox: React.FC<MathquillBoxProps> = props => {
   useEffect(() => {
     // mathquill focus is lost after render
     if (answer === null && focus) {
-      answerField.current.focus();
+      const field = answerField.current as any;
+      field.focus();
     }
   });
 
-  const handleChange = (data, row, col, mathquillObj) => {
+  const handleChange = (data: string, row: number, col: number, mathquillObj: any) => {
     onMathQuillChange(data, row, col, mathquillObj);
   };
 

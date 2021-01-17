@@ -5,7 +5,8 @@ import Qty from 'js-quantities';
 // this will add jQuery to window
 import '../../components/unitConversion/components/mathquill-loader';
 // this will add MathQuill to window
-import * as MathQuill from '@edtr-io/mathquill/build/mathquill.js';
+// import * as MathQuill from '@edtr-io/mathquill/build/mathquill.js';
+import * as MathQuill from '@edtr-io/mathquill';
 
 import { playAudio } from '../../utils/sounds';
 
@@ -16,8 +17,8 @@ import { ConversionTable } from './unitConversionTable';
 
 interface UnitConversionCanvasProps {
   // props
-  gameOver: () => void;
-  nextQuestion: (number) => void;
+  gameOver: (number: any, unit: any) => void;
+  nextQuestion: (adScore: number) => void;
   level: number;
   clear: boolean;
   number: string;
@@ -31,7 +32,6 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
     gameState,
     level,
     gameOver,
-    question,
     nextQuestion,
     number,
     unit,
@@ -85,7 +85,8 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
     //   });
     // }
     reset();
-    document.addEventListener('keydown', keydown.bind(this), false);
+    // document.addEventListener('keydown', keydown.bind(this), false);
+    document.addEventListener('keydown', keydown, false);
 
     return () => {
       document.removeEventListener('keydown', keydown, false);
@@ -94,7 +95,8 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
 
   const submitQuestion = () => {
     const answers = answersSteps;
-    const uncrossedUnits = uncrossedUnits;
+    // why we need this, it's only copy link to the object
+    // const uncrossedUnits = uncrossedUnits as any;
     const qNumber = number;
     const qUnit = unit;
 
@@ -195,7 +197,7 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
     }
 
     if (answerQty && answerQty.isCompatible(initialQty) && compareWithSigFigs(initialQty, answerQty)) {
-      answerSpan.classList.add('green-border');
+      answerSpan?.classList?.add('green-border');
     } else {
       let correctAnswer;
 
@@ -209,7 +211,7 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
       let incompleteConversion = true;
       // checking for incomplete units conversions
       if (uncrossedUnits && uncrossedUnits['nums'].length === 1 && uncrossedUnits['denoms'].length <= 1) {
-        let remainUnit = uncrossedUnits['nums'][0];
+        let remainUnit = uncrossedUnits['nums'][0] as string;
         if (uncrossedUnits['denoms'].length === 1) {
           remainUnit += '/' + uncrossedUnits['denoms'];
         } else {
@@ -257,7 +259,7 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
       //       .split(' ')[1],
       // });
       isRightAnswer = false;
-      answerSpan.classList.add('red-border');
+      answerSpan?.classList?.add('red-border');
     }
 
     if (isRightAnswer === true) {
@@ -266,27 +268,27 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
       nextQuestion(500);
     } else {
       playAudio('incorrect', 1);
-      gameOver();
+      gameOver(null, null);
     }
 
     // erase calculator
     if (document.getElementById('calculatorField')) {
-      const MQ = MathQuill.getInterface(2);
+      const MQ = window.MathQuill.getInterface(2);
       MQ(document.getElementById('calculatorField')).latex('');
     }
   };
 
-  const updateAnswer = answer => {
-    const MQ = MathQuill.getInterface(2);
-    MQ.MathField(document.getElementById('15')).latex(answer);
-    MQ.MathField(document.getElementById('15')).focus();
-  };
+  // const updateAnswer = answer => {
+  //   const MQ = window.MathQuill.getInterface(2);
+  //   MQ.MathField(document.getElementById('15')).latex(answer);
+  //   MQ.MathField(document.getElementById('15')).focus();
+  // };
 
-  const keydown = e => {
+  const keydown = (e: KeyboardEvent) => {
     if (e.code === 'Enter') {
       // detect that calculator field and button is not focused
       if (
-        !document.getElementById('calculatorField').classList.contains('mq-focused') &&
+        !document?.getElementById('calculatorField')?.classList?.contains('mq-focused') &&
         document.activeElement !== document.getElementById('checkButton') &&
         document.activeElement !== document.getElementById('addStep') &&
         document.activeElement !== document.getElementById('removeStep')
@@ -316,17 +318,17 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
     backgroundColor: '#ffffff',
   };
 
-  let pointerEvents = 'auto';
+  let pointerEvents = { pointerEvents: 'auto' } as React.CSSProperties;
 
   if (gameState === GameState.GAME_OVER) {
-    pointerEvents = 'none';
+    pointerEvents = { pointerEvents: 'none' } as React.CSSProperties;
     try {
-      document.getElementById('tryAgain').focus();
+      document?.getElementById('tryAgain')?.focus();
     } catch (e) {}
   }
 
   return (
-    <div style={{ pointerEvents: pointerEvents }}>
+    <div style={pointerEvents}>
       <div style={{ display: 'block' }}>
         <div style={{ display: 'table', marginLeft: 'auto', marginRight: 'auto' }}>
           <ConversionTable

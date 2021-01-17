@@ -6,14 +6,16 @@ import UnitConversionCanvas from './unitConversionCanvas';
 
 import '../../components/unitConversion/components/mathquill-loader';
 // this will add MathQuill to window
-import * as MathQuill from '@edtr-io/mathquill/build/mathquill.js';
+// import * as MathQuill from '@edtr-io/mathquill/build/mathquill.js';
+// TODO It's already import on the bottom components, check that it's not reassigned again (move to the top level index?)
+import * as MathQuill from '@edtr-io/mathquill';
 
 import 'evaluatex/dist/evaluatex.min.js';
 
 interface UnitConversionQuestionBoardProps {
   // props
-  gameOver: () => void;
-  nextQuestion: () => void;
+  gameOver: (number: any, unit: any) => void;
+  nextQuestion: (adScore: number) => void;
   level: number;
   clear: boolean;
   number: string;
@@ -42,13 +44,13 @@ const UnitConversionQuestionBoard: React.FC<UnitConversionQuestionBoardProps> = 
   const calculatorField = useRef(null);
 
   useEffect(() => {
-    const MQ = MathQuill.getInterface(2);
+    const MQ = window.MathQuill.getInterface(2);
 
     calculatorField.current = MQ.MathField(document.getElementById('calculatorField'), {
       autoCommands: 'pi',
       autoOperatorNames: 'sin',
       handlers: {
-        edit: mathField => {
+        edit: (mathField: any) => {
           const calculatedValue = clearCalculatorInput(mathField.latex());
           if (calculatedValue) {
             setCalculatorAnswer(calculatedValue);
@@ -64,11 +66,12 @@ const UnitConversionQuestionBoard: React.FC<UnitConversionQuestionBoardProps> = 
 
   const copy2AnswerFunc = () => {
     if (calculatorAnswer !== '') {
-      conversionCanvas.updateAnswer(calculatorAnswer);
+      const conversion = conversionCanvas as any;
+      conversion.updateAnswer(calculatorAnswer);
     }
   };
 
-  const clearCalculatorInput = tmpData => {
+  const clearCalculatorInput = (tmpData: string) => {
     // remove backslash with whitespace
     tmpData = tmpData.replace(/\\ /g, ' ');
     tmpData = tmpData.replace(/\\frac{(\S+)}{(\S+)}/, '$1/($2)');
@@ -77,7 +80,6 @@ const UnitConversionQuestionBoard: React.FC<UnitConversionQuestionBoardProps> = 
     tmpData = tmpData.replace(/\^{\s*(\S+)\s*}/, '^($1)'); // fix for math.parser()
     tmpData = tmpData.replace(/\\left\(/g, '(');
     tmpData = tmpData.replace(/\\right\)/g, ')');
-
     // var parser = math.parser()
 
     try {
@@ -135,9 +137,10 @@ const UnitConversionQuestionBoard: React.FC<UnitConversionQuestionBoardProps> = 
             gameOver={gameOver}
             gameState={gameState}
             level={level}
-            ref={conversionCanvas => {
-              conversionCanvas.current = conversionCanvas;
-            }}
+            ref={conversionCanvas}
+            // ref={conversionCanvas => {
+            //   conversionCanvas.current = conversionCanvas;
+            // }}
           />
         </div>
       </Draggable>

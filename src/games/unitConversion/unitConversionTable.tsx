@@ -3,7 +3,7 @@ import React from 'react';
 import { MathquillBox } from './mathquillBox';
 
 interface ConversionTableProps {
-  onMathQuillChange: (data: any, row: number, col: number, mathquillObj: object) => void;
+  onMathQuillChange: (data: any, row: number, col: number, mathquillObj: any) => void;
   strikethroughN: boolean;
   strikethroughD: boolean;
   numColumns: number;

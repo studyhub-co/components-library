@@ -11,12 +11,11 @@ import '../style.css';
 interface UnitConversionGameBoardProps {
   // props
   number: string;
-  unit: number;
-  gameOver: () => void;
-  nextQuestion: () => void;
+  unit: string;
+  nextQuestion: (adScore: number) => void;
   gameState: string;
   start: () => void;
-  gameOver: () => void;
+  gameOver: (number: any, unit: any) => void;
   score: number;
   level: 1 | 2 | 3 | 4 | 5;
   question: string;
@@ -24,7 +23,7 @@ interface UnitConversionGameBoardProps {
   pause: () => void;
   restart: () => void;
   scoreList: any;
-  moveToNextComponent(nextMaterialUuid: string | undefined): void;
+  moveToNextComponent(): void;
 }
 
 const UnitConversionGameBoard: React.FC<UnitConversionGameBoardProps> = props => {
@@ -56,8 +55,7 @@ const UnitConversionGameBoard: React.FC<UnitConversionGameBoardProps> = props =>
 
   useEffect(() => {
     if (gameState === GameState.NEW) {
-      // fixme not so good
-      document.getElementById('start').focus();
+      document?.getElementById('start')?.focus();
     }
   }, [gameState]);
 
@@ -95,6 +93,7 @@ const UnitConversionGameBoard: React.FC<UnitConversionGameBoardProps> = props =>
             pause={pause}
             restart={restart}
             clockSeconds={clockSeconds}
+            moveToNextComponent={moveToNextComponent}
           />
           <div>
             <div>
@@ -142,7 +141,7 @@ const UnitConversionGameBoard: React.FC<UnitConversionGameBoardProps> = props =>
                 <th style={{ padding: 5 }}>Completion Time</th>
               </tr>
               {scoreList
-                ? scoreList.map(function(score, i) {
+                ? scoreList.map(function(score: any, i: number) {
                     return (
                       <tr key={i}>
                         <td style={{ padding: 5 }}>{score.row_num}</td>
