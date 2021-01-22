@@ -6,6 +6,7 @@ interface ConversionTableProps {
   onMathQuillChange: (data: any, row: number, col: number, mathquillObj: any) => void;
   strikethroughN: boolean;
   strikethroughD: boolean;
+  conversionSessionHash: string;
   numColumns: number;
   number: string;
   unit: string;
@@ -20,9 +21,10 @@ export const ConversionTable: React.FC<ConversionTableProps> = props => {
     numColumns,
     number,
     unit,
+    conversionSessionHash: csh,
   } = props;
 
-  const getColumns = row => {
+  const getColumns = (row: number) => {
     const border = { border: '1px solid black', padding: 2 };
     const noTop = { borderTop: 'none' };
     const noBottom = { borderBottom: 'none' };
@@ -42,7 +44,7 @@ export const ConversionTable: React.FC<ConversionTableProps> = props => {
       }
       tdColumns.push(
         <td style={styles} key={i}>
-          <MathquillBox row={row} column={i + 1} onMathQuillChange={onMathQuillChange} />
+          <MathquillBox conversionSessionHash={csh} row={row} column={i + 1} onMathQuillChange={onMathQuillChange} />
         </td>,
       );
     }
@@ -56,11 +58,11 @@ export const ConversionTable: React.FC<ConversionTableProps> = props => {
     borderStyle: 'hidden',
     display: 'table-cell',
     verticalAlign: 'middle',
-  };
+  } as React.CSSProperties;
   const unitStyle = {
     fontStyle: 'italic',
     fontFamily: 'Times New Roman',
-  };
+  } as React.CSSProperties;
 
   const strikethroughStyleN = {
     textDecoration: strikethroughN ? 'line-through' : 'none',
@@ -77,7 +79,7 @@ export const ConversionTable: React.FC<ConversionTableProps> = props => {
     padding: 2,
     fontFamily: 'symbola',
     fontSize: 30,
-  };
+  } as React.CSSProperties;
   const bottomRight = {
     border: '1px solid black',
     borderBottom: 'none',
@@ -86,7 +88,7 @@ export const ConversionTable: React.FC<ConversionTableProps> = props => {
     padding: 2,
     fontFamily: 'symbola',
     fontSize: 30,
-  };
+  } as React.CSSProperties;
 
   return (
     <div>

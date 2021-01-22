@@ -17,6 +17,7 @@ interface UnitConversionQuestionBoardProps {
   gameOver: (number: any, unit: any) => void;
   nextQuestion: (adScore: number) => void;
   level: number;
+  conversionSessionHash: string;
   clear: boolean;
   number: string;
   unit: string;
@@ -35,12 +36,13 @@ const UnitConversionQuestionBoard: React.FC<UnitConversionQuestionBoardProps> = 
     number,
     unit,
     clear,
+    conversionSessionHash: csh,
   } = props;
 
   const [calculatorAnswer, setCalculatorAnswer] = useState('');
-  const [copy2Answer, setCopy2Answer] = useState(null);
+  const [answer2Send, setAnswer2Send] = useState('');
 
-  const conversionCanvas = useRef();
+  // const conversionCanvas = useRef();
   const calculatorField = useRef(null);
 
   useEffect(() => {
@@ -61,13 +63,14 @@ const UnitConversionQuestionBoard: React.FC<UnitConversionQuestionBoardProps> = 
       },
     });
 
-    MQ(document.getElementById('11')).focus();
+    MQ(document.getElementById(csh + '-11')).focus();
   }, []);
 
   const copy2AnswerFunc = () => {
     if (calculatorAnswer !== '') {
-      const conversion = conversionCanvas as any;
-      conversion.updateAnswer(calculatorAnswer);
+      setAnswer2Send(calculatorAnswer);
+      // const conversion = conversionCanvas.current as any;
+      // conversion.updateAnswer(calculatorAnswer);
     }
   };
 
@@ -137,7 +140,8 @@ const UnitConversionQuestionBoard: React.FC<UnitConversionQuestionBoardProps> = 
             gameOver={gameOver}
             gameState={gameState}
             level={level}
-            ref={conversionCanvas}
+            refreshAnswerValue={answer2Send}
+            conversionSessionHash={csh}
             // ref={conversionCanvas => {
             //   conversionCanvas.current = conversionCanvas;
             // }}

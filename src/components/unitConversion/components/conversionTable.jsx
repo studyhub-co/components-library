@@ -1,5 +1,7 @@
 import React from 'react';
 
+// replace with src/games/unitConversion/unitConversionTable.tsx
+
 import { MathquillBox } from './mathquillBox';
 
 export class ConversionTable extends React.Component {

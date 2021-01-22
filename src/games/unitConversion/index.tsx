@@ -37,6 +37,7 @@ const INPUT_UNITS = getInputUnits();
 
 // TODO replace :any with correct types
 // TODO create React hook for counter + HOC base game component
+// TODO replace cross app variables with useReducer
 
 interface UnitConversionGameProps {
   // props
@@ -72,6 +73,10 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
   const [unit, setUnit] = useState('');
   const [number, setNumber] = useState('');
   const [scoreList, setScoreList] = useState([]);
+
+  // hash that uses in conversion table html ids, to allow reuse this hook on the same web page several times
+  const conversionSessionHash = useRef(Math.floor(Math.random() * (9999999999 - 1111111111) + 1111111111));
+  const csh = conversionSessionHash.current.toString();
 
   const tickCentiSeconds = (value: number) => {
     centiSeconds.current = value as number;
@@ -129,66 +134,6 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
     resetCounter();
     // window.onbeforeunload = null
   };
-
-  // const checkAnswer = (arrow: any) => {
-  //   if (currentX === (arrow.getXComponent() || 0) && currentY === (arrow.getYComponent() || 0)) {
-  //     playAudio('correct', 1);
-  //     const newScore = score + 100;
-  //     const newLevel = Math.floor(newScore / 400) + 1;
-  //     if (newLevel > 4) {
-  //       const newState = GameState.WON;
-  //       stopBackgroundAudio();
-  //       // clearInterval(this.timer);
-  //       resetCounter();
-  //
-  //       // set game state is won
-  //       setGameState(newState);
-  //       setScore(newScore);
-  //       // this.setState({ state: newState, score: newScore });
-  //
-  //       // axios
-  //       api
-  //         .post('courses/games/' + materialUuid + '/success', {
-  //           duration: centiSeconds.current,
-  //           score: newScore,
-  //         })
-  //         .then(function(response) {
-  //           console.log(response);
-  //           console.log('TODO: setScoreList');
-  //           // window.onbeforeunload = null;
-  //           // setScoreList(response.data);
-  //           setLevel(4);
-  //           // this.setState({
-  //           //   scoreList: response.data,
-  //           //   level: newLevel,
-  //           // });
-  //         });
-  //     } else {
-  //       // this.setState(generateQuestion(newScore, newLevel));
-  //       if (newLevel in [1, 2, 3, 4]) {
-  //         questionToState(newScore, newLevel as 1 | 2 | 3 | 4);
-  //       }
-  //     }
-  //   } else {
-  //     playAudio('incorrect', 1);
-  //     const pointer = {
-  //       x: VectorCanvas.calcVectorXStart(currentX),
-  //       y: VectorCanvas.calcVectorYStart(currentY),
-  //     };
-  //     const endPointer = {
-  //       x: pointer['x'] + VectorCanvas.calcCanvasMagnitude(currentX),
-  //       y: pointer['y'] - VectorCanvas.calcCanvasMagnitude(currentY),
-  //     };
-  //     const vector = new CanvasVector(null, pointer, 'green');
-  //     vector.complete(endPointer);
-  //     const textPoint = {
-  //       left: endPointer.x - VectorCanvas.calcCanvasMagnitude(0.65) + currentX,
-  //       top: endPointer.y - currentY - VectorCanvas.calcCanvasMagnitude(1),
-  //     };
-  //     const text = new CanvasText(null, textPoint, 'correct\nsolution');
-  //     gameOver(vector, text);
-  //   }
-  // };
 
   const getRandomFromArray = (myArray: any) => {
     return myArray[Math.floor(Math.random() * myArray.length)];
@@ -270,7 +215,7 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
       question: question,
       number: number,
       unit: unit,
-      state: GameState.QUESTION,
+      gameState: GameState.QUESTION,
     };
   };
 
@@ -281,8 +226,8 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
   const questionToState = (newScore: number, newLevel: 1 | 2 | 3 | 4 | 5) => {
     const state = Object.assign(
       {
-        currentX: 0,
-        currentY: 0,
+        // currentX: 0,
+        // currentY: 0,
         score: 0,
         level: 1,
         question: '',
@@ -336,6 +281,7 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
       timesUp={timesUp}
       pause={pauseToggle}
       restart={restart}
+      conversionSessionHash={csh}
       scoreList={scoreList}
       moveToNextComponent={() => moveToNextComponent(materialUuid)}
     />

@@ -1,5 +1,5 @@
 // based on base.jsx
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 // React docs:
 // If you want to reuse non-UI functionality between components, we suggest extracting it into a separate JavaScript
 // module.
@@ -109,6 +109,14 @@ const INPUT_UNITS = getInputUnits();
 interface IUseUnitConversionProps {
   level: number;
   unit: string;
+  conversionSessionHash: string;
+}
+
+// eslint-disable-next-line @typescript-eslint/interface-name-prefix
+interface IAnswer {
+  data: string;
+  box: any;
+  splitData?: any;
 }
 
 export function useUnitConversionBase(props: IUseUnitConversionProps) {
@@ -116,14 +124,8 @@ export function useUnitConversionBase(props: IUseUnitConversionProps) {
     // direct props
     level,
     unit,
+    conversionSessionHash: csh,
   } = props;
-
-  // eslint-disable-next-line @typescript-eslint/interface-name-prefix
-  interface IAnswer {
-    data: string;
-    box: any;
-    splitData?: any;
-  }
 
   // eslint-disable-next-line @typescript-eslint/interface-name-prefix
   interface ISetLatexWoFireEvent {
@@ -140,6 +142,10 @@ export function useUnitConversionBase(props: IUseUnitConversionProps) {
 
   const MQ = window.MathQuill.getInterface(2);
 
+  // console.log(ch);
+
+  // TODO add useCallback to all non simple funcs
+
   const addColumn = () => {
     const newNumColumns = numColumns + 1;
 
@@ -147,8 +153,8 @@ export function useUnitConversionBase(props: IUseUnitConversionProps) {
     setAnswersSteps([
       ...answersSteps,
       [
-        { data: '', box: MQ(document.getElementById('1' + newNumColumns)) },
-        { data: '', box: MQ(document.getElementById('2' + newNumColumns)) },
+        { data: '', box: MQ(document.getElementById(csh + '1' + newNumColumns)) },
+        { data: '', box: MQ(document.getElementById(csh + '2' + newNumColumns)) },
       ],
     ]);
 
@@ -207,7 +213,7 @@ export function useUnitConversionBase(props: IUseUnitConversionProps) {
     };
 
     // const setLatexWoFireEvent = this.setLatexWoFireEvent;
-    const ids = ['11', '21', '15'];
+    const ids = [csh + '-11', csh + '-21', csh + '-15'];
     ids.forEach(function(item, i, arr) {
       resetBox(item, setLatexWoFireEvent);
     });
@@ -216,8 +222,8 @@ export function useUnitConversionBase(props: IUseUnitConversionProps) {
     // first column set by default
     setAnswersSteps([
       [
-        { data: '', box: MQ(document.getElementById('11')) },
-        { data: '', box: MQ(document.getElementById('12')) },
+        { data: '', box: MQ(document.getElementById(csh + '-11')) },
+        { data: '', box: MQ(document.getElementById(csh + '-12')) },
       ],
     ]);
     setStrikethroughD(false);
@@ -349,61 +355,13 @@ export function useUnitConversionBase(props: IUseUnitConversionProps) {
 
   useEffect(() => {
     // todo redraw only when remove steps? useRef to old value
-    reDrawStrikes();
-  }, [answersSteps, reDrawStrikes]);
-
-  const onMathQuillChange = (data: string, row: number, col: number, mathquillObj: any) => {
-    // check cursor position: if it not at the end - does not remove
-    if (mathquillObj.__controller.cursor[1] === 0) {
-      // if data contain strikethrough with end of line remove it
-      // we must replace it only in currently edited mathquill box
-      const tmpData = data.replace(/\\class{strikethrough}{(\S+)}$/, function(match, find) {
-        if (find && typeof find === 'string' && find.length > 1) {
-          // remove last char ot unit
-          return find.slice(0, -1);
-        } else {
-          return '';
-        } // remove unit if it is one char
-      });
-      if (tmpData !== data) {
-        data = tmpData;
-        setLatexWoFireEvent(mathquillObj, data);
-      }
-    }
-
-    // store value in matrix
-    const answers = answersSteps;
-
-    answers[col - 1][row - 1] = {
-      data: data,
-      // splitData: this.constructor.parseToValueUnit(this.clearDataText(data)),
-      splitData: parseToValueUnit(clearDataText(data)),
-      box: mathquillObj,
-    };
-
-    setAnswersSteps(answers);
-
-    // this.setState(
-    //   {
-    //     answersSteps: answers,
-    //   },
-    //   function() {
-    //     this.reDrawStrikes();
-    //   },
-    // );
-  };
-
-  // result answer change
-  const onResultChange = (data: string, row: number, col: number, mathquillObj: any) => {
-    setAnswer({ data: data, box: mathquillObj });
-    // this.setState({
-    //   answer: { data: data, box: mathquillObj },
-    // });
-  };
+    // reDrawStrikes();
+    console.log(numColumns);
+  }, [numColumns, reDrawStrikes]);
 
   // clear data before js-q parse
   // remove  strikethrough
-  const clearDataText = (tmpData: string) => {
+  const clearDataText = useCallback((tmpData: string) => {
     tmpData = tmpData.replace(/\\class{strikethrough}{(\S+)}/, '$1');
     // remove backslash with whitespace
     tmpData = tmpData.replace(/\\ /g, ' ');
@@ -427,6 +385,64 @@ export function useUnitConversionBase(props: IUseUnitConversionProps) {
     }
 
     return tmpData;
+  }, []);
+
+  console.log(answersSteps);
+
+  const onMathQuillChange = useCallback(
+    (data: string, row: number, col: number, mathquillObj: any) => {
+      // check cursor position: if it not at the end - does not remove
+      if (mathquillObj.__controller.cursor[1] === 0) {
+        // if data contain strikethrough with end of line remove it
+        // we must replace it only in currently edited mathquill box
+        const tmpData = data.replace(/\\class{strikethrough}{(\S+)}$/, function(match, find) {
+          if (find && typeof find === 'string' && find.length > 1) {
+            // remove last char ot unit
+            return find.slice(0, -1);
+          } else {
+            return '';
+          } // remove unit if it is one char
+        });
+        if (tmpData !== data) {
+          data = tmpData;
+          setLatexWoFireEvent(mathquillObj, data);
+        }
+      }
+
+      console.log(answersSteps);
+
+      // store value in matrix
+      const answers = [...answersSteps];
+
+      answers[col - 1][row - 1] = {
+        data: data,
+        // splitData: this.constructor.parseToValueUnit(this.clearDataText(data)),
+        splitData: parseToValueUnit(clearDataText(data)),
+        box: mathquillObj,
+      };
+
+      setAnswersSteps(answers);
+
+      // this.setState(
+      //   {
+      //     answersSteps: answers,
+      //   },
+      //   function() {
+      //     this.reDrawStrikes();
+      //   },
+      // );
+    },
+    [answersSteps, clearDataText],
+  );
+
+  // console.log(onMathQuillChange.toString());
+
+  // result answer change
+  const onResultChange = (data: string, row: number, col: number, mathquillObj: any) => {
+    setAnswer({ data: data, box: mathquillObj });
+    // this.setState({
+    //   answer: { data: data, box: mathquillObj },
+    // });
   };
 
   const getQtyFromSplitData = (splitData: string) => {

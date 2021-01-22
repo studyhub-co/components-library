@@ -41,7 +41,7 @@ const Components: React.FC = () => {
           console.log('moveToNextComponent called');
         }}
       />
-      <UnitConversionGame>Vector Game</UnitConversionGame>
+      <h3>Unit Conversion Game</h3>
       <UnitConversionGame
         materialUuid={''}
         moveToNextComponent={materialUuid => {

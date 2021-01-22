@@ -538,7 +538,7 @@ export class UnitConversion extends UnitConversionBase {
               <StyledButton
                 onClick={this.removeColumn}
                 style={this.state.numColumns === 1 ? disabledButtonStyle : buttonStyle}
-                disabled={this.state.numColumns === 1}
+                // disabled={this.state.numColumns === 1}
               >
                 -Remove Step
               </StyledButton>

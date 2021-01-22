@@ -4,6 +4,7 @@ interface MathquillBoxProps {
   onMathQuillChange: (data: any, row: number, col: number, mathquillObj: any) => void;
   row: number;
   column: number;
+  conversionSessionHash: string;
   focus?: boolean;
   answer?: object;
 }
@@ -16,6 +17,7 @@ export const MathquillBox: React.FC<MathquillBoxProps> = props => {
     answer,
     row,
     onMathQuillChange,
+    conversionSessionHash: csh,
   } = props;
 
   const answerField = useRef();
@@ -23,7 +25,7 @@ export const MathquillBox: React.FC<MathquillBoxProps> = props => {
   useEffect(() => {
     const MQ = window.MathQuill.getInterface(2);
 
-    answerField.current = MQ.MathField(document.getElementById('' + row + column), {
+    answerField.current = MQ.MathField(document.getElementById(csh + '-' + row + column), {
       autoCommands: 'class',
       autoOperatorNames: 'pi', // we want to disable all commands, but MQ throw error if list is empty, so leave pi operator
       handlers: {
@@ -58,7 +60,7 @@ export const MathquillBox: React.FC<MathquillBoxProps> = props => {
   return (
     <div>
       <p style={{ marginBottom: 5 }}>
-        <span id={'' + row + column} style={mathFieldStyle} />
+        <span id={csh + '-' + row + column} style={mathFieldStyle} />
       </p>
     </div>
   );

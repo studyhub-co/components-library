@@ -7,6 +7,7 @@ import { GameState } from '../constants';
 import UnitConversionQuestionBoard from './unitConversionQuestionBoard';
 
 import '../style.css';
+import Button from '@material-ui/core/Button';
 
 interface UnitConversionGameBoardProps {
   // props
@@ -16,6 +17,7 @@ interface UnitConversionGameBoardProps {
   gameState: string;
   start: () => void;
   gameOver: (number: any, unit: any) => void;
+  conversionSessionHash: string;
   score: number;
   level: 1 | 2 | 3 | 4 | 5;
   question: string;
@@ -43,6 +45,7 @@ const UnitConversionGameBoard: React.FC<UnitConversionGameBoardProps> = props =>
     timesUp,
     pause,
     moveToNextComponent,
+    conversionSessionHash: csh,
   } = props;
 
   const levelColorMap = {
@@ -63,21 +66,21 @@ const UnitConversionGameBoard: React.FC<UnitConversionGameBoardProps> = props =>
   const style = { backgroundColor: levelColorMap[level] };
 
   switch (
-    gameState // TODO this is ugly
+    gameState // TODO this is ugly - we need to move 'switch' into Grid container at least to exclude unnecessary rerendering
   ) {
     case GameState.NEW:
       return (
         <Grid container justify="center" className="game-sheet" style={style}>
           <Grid item md={4} className={'text-center'}>
             <span>
-              <h1 className="game-title">Unit Conversion Game</h1>
+              <h2 className="game-title">Unit Conversion Game</h2>
             </span>
             <p>
               <span>Beat a score of 2500 to unlock the next lesson. Wrong answers end the game.</span>
             </p>
-            <button id="start" className="hover-button" onClick={start}>
+            <Button className="hover-button" color="primary" variant="contained" onClick={start}>
               Start
-            </button>
+            </Button>
           </Grid>
         </Grid>
       );
@@ -97,7 +100,7 @@ const UnitConversionGameBoard: React.FC<UnitConversionGameBoardProps> = props =>
           />
           <div>
             <div>
-              <h1>Unit Conversion Game</h1>
+              <h2>Unit Conversion Game</h2>
             </div>
             <div>
               <h1>PAUSED</h1>
@@ -120,16 +123,19 @@ const UnitConversionGameBoard: React.FC<UnitConversionGameBoardProps> = props =>
         moveToNextComponent={moveToNextComponent}
       />
       {gameState !== GameState.WON ? (
-        <UnitConversionQuestionBoard
-          number={number}
-          unit={unit}
-          question={question}
-          clear={[GameState.NEW, GameState.QUESTION].indexOf(gameState) >= 0}
-          gameState={gameState}
-          gameOver={gameOver}
-          level={level}
-          nextQuestion={nextQuestion}
-        />
+        <div>
+          <UnitConversionQuestionBoard
+            number={number}
+            unit={unit}
+            question={question}
+            clear={[GameState.NEW, GameState.QUESTION].indexOf(gameState) >= 0}
+            gameState={gameState}
+            gameOver={gameOver}
+            level={level}
+            conversionSessionHash={csh}
+            nextQuestion={nextQuestion}
+          />
+        </div>
       ) : (
         <div className="text-center">
           <h4>High Score List</h4>

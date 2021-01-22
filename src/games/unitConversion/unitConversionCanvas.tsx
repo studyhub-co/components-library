@@ -12,6 +12,7 @@ import { playAudio } from '../../utils/sounds';
 
 import { GameState } from '../constants';
 import { useUnitConversionBase } from '../../components/unitConversion/components/useUnitConversionBase';
+import { StyledButton } from '../../components/unitConversion/components/style';
 import { MathquillBox } from './mathquillBox';
 import { ConversionTable } from './unitConversionTable';
 
@@ -20,10 +21,12 @@ interface UnitConversionCanvasProps {
   gameOver: (number: any, unit: any) => void;
   nextQuestion: (adScore: number) => void;
   level: number;
-  clear: boolean;
+  conversionSessionHash: string;
+  // clear: boolean;
   number: string;
   unit: string;
   gameState: string;
+  refreshAnswerValue?: string;
 }
 
 const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
@@ -35,6 +38,8 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
     nextQuestion,
     number,
     unit,
+    refreshAnswerValue,
+    conversionSessionHash: csh,
   } = props;
 
   // const [answersSteps, setAnswersSteps] = useState([]);
@@ -65,7 +70,34 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
   } = useUnitConversionBase({
     level: level,
     unit: unit,
+    conversionSessionHash: csh,
   });
+
+  // useEffect(() => {
+  //   // const MQ = MathQuill.getInterface(2);
+  //   // if (this.props.level === 5) {
+  //   //   this.setState({
+  //   //     answersSteps: [],
+  //   //   });
+  //   // } else {
+  //   //   this.setState({
+  //   //     answersSteps: [
+  //   //       [
+  //   //         // first column set by default
+  //   //         { data: '', box: MQ(document.getElementById('11')) },
+  //   //         { data: '', box: MQ(document.getElementById('21')) },
+  //   //       ],
+  //   //     ],
+  //   //   });
+  //   // }
+  //   reset();
+  //   // document.addEventListener('keydown', keydown.bind(this), false);
+  //   document.addEventListener('keydown', keydown, false);
+  //
+  //   return () => {
+  //     document.removeEventListener('keydown', keydown, false);
+  //   };
+  // }, [reset]);
 
   useEffect(() => {
     // const MQ = MathQuill.getInterface(2);
@@ -91,7 +123,7 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
     return () => {
       document.removeEventListener('keydown', keydown, false);
     };
-  }, [reset]);
+  }, []);
 
   const submitQuestion = () => {
     const answers = answersSteps;
@@ -187,7 +219,7 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
 
     // check answer
     const initialQty = new Qty(Number(qNumber), qUnit);
-    const answerSpan = document.getElementById('15');
+    const answerSpan = document.getElementById(csh + '-15');
 
     let answerQty;
     if (answer && answer['data'] && clearDataText(answer['data']) !== '') {
@@ -278,7 +310,15 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
     }
   };
 
-  // const updateAnswer = answer => {
+  useEffect(() => {
+    if (refreshAnswerValue !== '') {
+      const MQ = window.MathQuill.getInterface(2);
+      MQ.MathField(document.getElementById(csh + '-15')).latex(refreshAnswerValue);
+      MQ.MathField(document.getElementById(csh + '-15')).focus();
+    }
+  }, [refreshAnswerValue]);
+
+  // const updateAnswer = (answer: string) => {
   //   const MQ = window.MathQuill.getInterface(2);
   //   MQ.MathField(document.getElementById('15')).latex(answer);
   //   MQ.MathField(document.getElementById('15')).focus();
@@ -336,6 +376,7 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
             onMathQuillChange={onMathQuillChange}
             number={number}
             unit={unit}
+            conversionSessionHash={csh}
             strikethroughN={strikethroughN}
             strikethroughD={strikethroughD}
           />
@@ -358,23 +399,23 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
             <div
               style={{ fontSize: 10, display: 'table-cell', verticalAlign: 'middle', paddingLeft: 0, paddingRight: 0 }}
             >
-              <button
+              <StyledButton
                 id="addStep"
                 className="hover-button"
                 style={numColumns === 4 ? disabledButtonStyle : buttonStyle}
                 onClick={addColumn}
               >
                 +Add Step
-              </button>
-              <button
+              </StyledButton>
+              <StyledButton
                 id="removeStep"
                 className="hover-button"
                 style={numColumns === 1 ? disabledButtonStyle : buttonStyle}
                 onClick={removeColumn}
-                disabled={numColumns === 1}
+                // disabled={numColumns === 1}
               >
                 -Remove Step
-              </button>
+              </StyledButton>
             </div>
           )}
           <div
@@ -383,7 +424,7 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
             =
           </div>
           <div style={{ display: 'table-cell', verticalAlign: 'middle' }}>
-            <MathquillBox onMathQuillChange={onResultChange} row={1} column={5} />
+            <MathquillBox conversionSessionHash={csh} onMathQuillChange={onResultChange} row={1} column={5} />
             {incorrectAnswer ? (
               <div style={{ border: '.1rem solid black' }}>
                 <div style={{ color: 'red' }}>Incorrect answer</div>
