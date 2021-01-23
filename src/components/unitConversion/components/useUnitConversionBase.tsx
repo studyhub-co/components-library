@@ -66,8 +66,8 @@ UNITS['SPEED'] = (() => {
   return speedO;
 })();
 
-export const getInputUnits = () => {
-  let INPUT_UNITS = ['s', 'm', 'kg', 'm/s'];
+export const getInputUnits = (withoutSI?: boolean) => {
+  let INPUT_UNITS = withoutSI ? [] : ['s', 'm', 'kg', 'm/s'];
   Object.getOwnPropertyNames(UNITS)
     .map(key => [key, Object.getOwnPropertyDescriptor(UNITS, key)])
     .filter(([key, descriptor]) => descriptor && typeof descriptor !== 'string' && descriptor.enumerable === true)
@@ -132,17 +132,20 @@ export function useUnitConversionBase(props: IUseUnitConversionProps) {
     (box: any, text: string): void;
   }
 
+  const MQ = window.MathQuill.getInterface(2);
+
   // why we need numColumns state if we can calculate it from answersSteps ?
   const [numColumns, setNumColumns] = useState(level === 5 ? 0 : 1);
   const [strikethroughN, setStrikethroughN] = useState(false);
   const [strikethroughD, setStrikethroughD] = useState(false);
-  const [answersSteps, setAnswersSteps] = useState<Array<[IAnswer, IAnswer]>>([]);
+  const [answersSteps, setAnswersSteps] = useState<Array<[IAnswer, IAnswer]>>([
+    [
+      { data: '', box: MQ(document.getElementById(csh + '11')) },
+      { data: '', box: MQ(document.getElementById(csh + '22')) },
+    ],
+  ]);
   const [uncrossedUnits, setUncrossedUnits] = useState({ nums: [], denoms: [] });
   const [answer, setAnswer] = useState<IAnswer>({ data: '', box: {} });
-
-  const MQ = window.MathQuill.getInterface(2);
-
-  // console.log(ch);
 
   // TODO add useCallback to all non simple funcs
 
@@ -242,8 +245,8 @@ export function useUnitConversionBase(props: IUseUnitConversionProps) {
     // });
   };
 
-  const reDrawStrikes = () => {
-    const answers = resetStrikeAnswers();
+  const reDrawStrikes = (answersSteps: Array<[IAnswer, IAnswer]>) => {
+    const answers = resetStrikeAnswers(answersSteps);
     const uncrossedUnits: any = { nums: [], denoms: [] };
 
     // fill uncrossedUnits
@@ -344,20 +347,16 @@ export function useUnitConversionBase(props: IUseUnitConversionProps) {
       }
     } // end for numerators
 
-    setAnswersSteps(answers);
+    // setAnswersSteps(answers);
     setUncrossedUnits(uncrossedUnits);
+
+    return answers;
 
     // this.setState({
     //   answersSteps: answers,
     //   uncrossedUnits: uncrossedUnits,
     // });
   };
-
-  useEffect(() => {
-    // todo redraw only when remove steps? useRef to old value
-    // reDrawStrikes();
-    console.log(numColumns);
-  }, [numColumns, reDrawStrikes]);
 
   // clear data before js-q parse
   // remove  strikethrough
@@ -387,8 +386,6 @@ export function useUnitConversionBase(props: IUseUnitConversionProps) {
     return tmpData;
   }, []);
 
-  console.log(answersSteps);
-
   const onMathQuillChange = useCallback(
     (data: string, row: number, col: number, mathquillObj: any) => {
       // check cursor position: if it not at the end - does not remove
@@ -408,9 +405,6 @@ export function useUnitConversionBase(props: IUseUnitConversionProps) {
           setLatexWoFireEvent(mathquillObj, data);
         }
       }
-
-      console.log(answersSteps);
-
       // store value in matrix
       const answers = [...answersSteps];
 
@@ -421,7 +415,7 @@ export function useUnitConversionBase(props: IUseUnitConversionProps) {
         box: mathquillObj,
       };
 
-      setAnswersSteps(answers);
+      setAnswersSteps(reDrawStrikes(answers));
 
       // this.setState(
       //   {
@@ -510,8 +504,8 @@ export function useUnitConversionBase(props: IUseUnitConversionProps) {
     return equal;
   };
 
-  const resetStrikeAnswers = () => {
-    const answers = answersSteps;
+  const resetStrikeAnswers = (answersSteps: Array<[IAnswer, IAnswer]>) => {
+    const answers = [...answersSteps];
 
     // this.state.strikethroughN = false;
     // this.state.strikethroughD = false;

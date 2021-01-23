@@ -11,6 +11,8 @@ import '../../components/unitConversion/components/mathquill-loader';
 import * as MathQuill from '@edtr-io/mathquill';
 
 import 'evaluatex/dist/evaluatex.min.js';
+import Button from '@material-ui/core/Button';
+import { checkSaveButtonStyle, checkSaveButtonStyleDisabled } from '../../components/common/style';
 
 interface UnitConversionQuestionBoardProps {
   // props
@@ -48,12 +50,13 @@ const UnitConversionQuestionBoard: React.FC<UnitConversionQuestionBoardProps> = 
   useEffect(() => {
     const MQ = window.MathQuill.getInterface(2);
 
-    calculatorField.current = MQ.MathField(document.getElementById('calculatorField'), {
+    calculatorField.current = MQ.MathField(document.getElementById(csh + '-calculatorField'), {
       autoCommands: 'pi',
       autoOperatorNames: 'sin',
       handlers: {
         edit: (mathField: any) => {
           const calculatedValue = clearCalculatorInput(mathField.latex());
+
           if (calculatedValue) {
             setCalculatorAnswer(calculatedValue);
           } else {
@@ -63,8 +66,8 @@ const UnitConversionQuestionBoard: React.FC<UnitConversionQuestionBoardProps> = 
       },
     });
 
-    MQ(document.getElementById(csh + '-11')).focus();
-  }, []);
+    MQ(document.getElementById(csh + '-11'))?.focus();
+  }, [csh]);
 
   const copy2AnswerFunc = () => {
     if (calculatorAnswer !== '') {
@@ -87,7 +90,7 @@ const UnitConversionQuestionBoard: React.FC<UnitConversionQuestionBoardProps> = 
 
     try {
       // var value = parser.eval(tmpData)
-      let value = window.evaluatex(tmpData);
+      let value = window.evaluatex(tmpData)();
       if (value) {
         if (value < 1) {
           // leave just significant figures for answer
@@ -100,6 +103,7 @@ const UnitConversionQuestionBoard: React.FC<UnitConversionQuestionBoardProps> = 
 
       return value;
     } catch (e) {
+      // console.log(e);
       // catch SyntaxError
     }
 
@@ -160,7 +164,7 @@ const UnitConversionQuestionBoard: React.FC<UnitConversionQuestionBoardProps> = 
             <div>
               <div style={{ display: 'table-cell', verticalAlign: 'middle' }}>
                 <p style={{ marginBottom: 5 }}>
-                  <span id={'calculatorField'} style={mathFieldStyle} />
+                  <span id={csh + '-calculatorField'} style={mathFieldStyle} />
                 </p>
               </div>
               <div
@@ -187,13 +191,16 @@ const UnitConversionQuestionBoard: React.FC<UnitConversionQuestionBoardProps> = 
               </div>
               <div style={{ textAlign: 'right' }}>
                 <div className="button-group">
-                  <button
-                    id="checkButton"
-                    className={'btn btn-primary' + (calculatorAnswer === '' ? ' disabled' : '')}
-                    onClick={copy2AnswerFunc}
-                  >
+                  <Button style={checkSaveButtonStyle} variant="contained" color="primary" onClick={copy2AnswerFunc}>
                     Copy to answer
-                  </button>
+                  </Button>
+                  {/*<button*/}
+                  {/*  id="checkButton"*/}
+                  {/*  className={'btn btn-primary' + (calculatorAnswer === '' ? ' disabled' : '')}*/}
+                  {/*  onClick={copy2AnswerFunc}*/}
+                  {/*>*/}
+                  {/*  Copy to answer*/}
+                  {/*</button>*/}
                 </div>
               </div>
             </div>

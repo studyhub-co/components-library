@@ -20,3 +20,11 @@
     border-radius: 1rem;
     padding: 4rem;
 }
+
+.red-border {
+    border: .3rem solid red !important;
+}
+
+.green-border {
+    border: .3rem solid green !important;
+}

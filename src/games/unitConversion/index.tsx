@@ -78,6 +78,7 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
   const conversionSessionHash = useRef(Math.floor(Math.random() * (9999999999 - 1111111111) + 1111111111));
   const csh = conversionSessionHash.current.toString();
 
+  // do not use useCallback here
   const tickCentiSeconds = (value: number) => {
     centiSeconds.current = value as number;
   };
@@ -128,8 +129,8 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
 
   const gameOver = (number: any, unit: any) => {
     setGameState(GameState.GAME_OVER);
-    setNumber(number);
-    setUnit(unit);
+    // setNumber(number);
+    // setUnit(unit);
     stopBackgroundAudio();
     resetCounter();
     // window.onbeforeunload = null
@@ -148,7 +149,8 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
   // TODO why we do not have checkAnswer?
   const generateQuestion = (newScore: number, newLevel: 1 | 2 | 3 | 4 | 5) => {
     const number = getRandomNumber();
-    let unit, unitLong;
+    let unit = '',
+      unitLong = '';
 
     newScore = newScore || score;
     newLevel = newLevel || level;
@@ -166,21 +168,17 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
       unit = getRandomFromArray(Object.keys(UNITS.SPEED));
       unitLong = UNITS.SPEED[unit];
     } else if (newLevel === 5) {
-      // let INPUT_UNITS = []; // TODO why we have no ['s', 'm', 'kg', 'm/s'] here?
-      //
-      // // duplicate code?
-      // Object.getOwnPropertyNames(UNITS)
-      //   .map(key => [key, Object.getOwnPropertyDescriptor(UNITS, key)])
-      //   .filter(([key, descriptor]) => typeof descriptor.get === 'function')
-      //   .map(([key]) => key)
-      //   .forEach(function(key) {
-      //     INPUT_UNITS = INPUT_UNITS.concat(key);
-      //   });
-
-      // INPUT_UNITS already defined
-      const unitType = getRandomFromArray(INPUT_UNITS);
-      unit = getRandomFromArray(Object.keys(UNITS[unitType]));
-      unitLong = UNITS[unitType][unit];
+      const INPUT_UNITS_WO_SI = getInputUnits(true);
+      unit = getRandomFromArray(INPUT_UNITS_WO_SI) as string;
+      unitLong = '';
+      for (const unitTypeKey in UNITS) {
+        const unitType = UNITS[unitTypeKey];
+        for (const unitKey in unitType) {
+          if (unit === unitKey) {
+            unitLong = unitType[unitKey];
+          }
+        }
+      }
     }
 
     if (newLevel > 5) {
@@ -189,7 +187,7 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
       // clearInterval(this.timer);
       resetCounter();
       api
-        .post(`/api/v1/curricula/games/${materialUuid}/success`, {
+        .post(`courses/games/${materialUuid}/success`, {
           duration: centiSeconds.current,
           score: newScore,
         })
@@ -248,8 +246,10 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
 
   const restart = () => {
     resetCounter();
-    setIsActiveCounter(true);
-    questionToState(0, 1);
+    setGameState(GameState.NEW);
+    setLevel(1);
+    // setIsActiveCounter(true);
+    // questionToState(0, 1);
     // this.setState(state);
   };
 
@@ -262,8 +262,8 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
     resetCounter();
     setIsActiveCounter(true);
     playBackgroundAudio('rainbow', 0.2);
-    questionToState(0, 1);
-    // questionToState(1500, 4);
+    // questionToState(0, 1);
+    questionToState(2000, 5);
     // setGameState() // set in questionToState
   };
 

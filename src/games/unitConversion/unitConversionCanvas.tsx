@@ -15,6 +15,8 @@ import { useUnitConversionBase } from '../../components/unitConversion/component
 import { StyledButton } from '../../components/unitConversion/components/style';
 import { MathquillBox } from './mathquillBox';
 import { ConversionTable } from './unitConversionTable';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 
 interface UnitConversionCanvasProps {
   // props
@@ -123,7 +125,7 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
     return () => {
       document.removeEventListener('keydown', keydown, false);
     };
-  }, []);
+  }, []); // do not use 'reset' here!
 
   const submitQuestion = () => {
     const answers = answersSteps;
@@ -304,9 +306,9 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
     }
 
     // erase calculator
-    if (document.getElementById('calculatorField')) {
+    if (document.getElementById(csh + '-calculatorField')) {
       const MQ = window.MathQuill.getInterface(2);
-      MQ(document.getElementById('calculatorField')).latex('');
+      MQ(document.getElementById(csh + '-calculatorField')).latex('');
     }
   };
 
@@ -316,7 +318,7 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
       MQ.MathField(document.getElementById(csh + '-15')).latex(refreshAnswerValue);
       MQ.MathField(document.getElementById(csh + '-15')).focus();
     }
-  }, [refreshAnswerValue]);
+  }, [csh, refreshAnswerValue]);
 
   // const updateAnswer = (answer: string) => {
   //   const MQ = window.MathQuill.getInterface(2);
@@ -328,7 +330,7 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
     if (e.code === 'Enter') {
       // detect that calculator field and button is not focused
       if (
-        !document?.getElementById('calculatorField')?.classList?.contains('mq-focused') &&
+        !document?.getElementById(csh + '-calculatorField')?.classList?.contains('mq-focused') &&
         document.activeElement !== document.getElementById('checkButton') &&
         document.activeElement !== document.getElementById('addStep') &&
         document.activeElement !== document.getElementById('removeStep')
@@ -395,7 +397,7 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
               <div style={{ color: 'red' }}>Incorrect unit type</div>
             </div>
           ) : null}
-          {level > 4 ? null : (
+          {level !== 5 && (
             <div
               style={{ fontSize: 10, display: 'table-cell', verticalAlign: 'middle', paddingLeft: 0, paddingRight: 0 }}
             >
@@ -435,9 +437,12 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
         </div>
       </div>
       <div style={gameState === GameState.GAME_OVER ? { display: 'none' } : { display: 'block' }}>
-        <button className="hover-button" style={{ marginTop: 15 }} onClick={() => submitQuestion()}>
+        <Button className="hover-button" color="primary" variant="contained" onClick={submitQuestion}>
           Submit
-        </button>
+        </Button>
+        {/*<button className="hover-button" style={{ marginTop: 15 }} onClick={() => submitQuestion()}>*/}
+        {/*  Submit*/}
+        {/*</button>*/}
       </div>
     </div>
   );

@@ -22,9 +22,9 @@ export const MathquillBox: React.FC<MathquillBoxProps> = props => {
 
   const answerField = useRef();
 
-  useEffect(() => {
-    const MQ = window.MathQuill.getInterface(2);
+  const MQ = window.MathQuill.getInterface(2);
 
+  useEffect(() => {
     answerField.current = MQ.MathField(document.getElementById(csh + '-' + row + column), {
       autoCommands: 'class',
       autoOperatorNames: 'pi', // we want to disable all commands, but MQ throw error if list is empty, so leave pi operator
@@ -34,11 +34,11 @@ export const MathquillBox: React.FC<MathquillBoxProps> = props => {
           if (mathField.data.fromJsCall) {
             return;
           }
-          handleChange(mathField.latex(), row, column, mathField);
+          onMathQuillChange(mathField.latex(), row, column, mathField);
         },
       },
     });
-  }, [column, row]);
+  }, [column, row, onMathQuillChange, csh, MQ]); // onMathQuillChange will use answerSteps state, so we need to regenerate field
 
   useEffect(() => {
     // mathquill focus is lost after render
@@ -47,10 +47,6 @@ export const MathquillBox: React.FC<MathquillBoxProps> = props => {
       field.focus();
     }
   });
-
-  const handleChange = (data: string, row: number, col: number, mathquillObj: any) => {
-    onMathQuillChange(data, row, col, mathquillObj);
-  };
 
   const mathFieldStyle = {
     minWidth: 100,
