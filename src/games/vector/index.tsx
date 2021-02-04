@@ -39,11 +39,12 @@ const VectorGame: React.FC<VectorGameProps> = props => {
   } = props;
 
   // counter
-  // const [seconds, setSeconds] = useState(0);
   const centiSeconds = useRef(0);
   // const setSeconds = useCallback((value: number) => {
   //   seconds = value as number;
   // }, []);
+
+  const reactionStart = useRef(new Date());
 
   const [isActiveCounter, setIsActiveCounter] = useState(false); // it seem we don't use this
 
@@ -135,7 +136,6 @@ const VectorGame: React.FC<VectorGameProps> = props => {
         const newState = GameState.WON;
         stopBackgroundAudio();
         // clearInterval(this.timer);
-        resetCounter();
 
         // set game state is won
         setGameState(newState);
@@ -144,21 +144,26 @@ const VectorGame: React.FC<VectorGameProps> = props => {
 
         // axios
         api
-          .post('courses/games/' + materialUuid + '/success', {
+          .post('courses/materials/' + materialUuid + '/reaction/?materialScoreboard=true', {
+            /* eslint-disable @typescript-eslint/camelcase */
+            reaction_start_on: reactionStart.current.toISOString(),
+            /* eslint-disable @typescript-eslint/camelcase */
+            reacted_on: new Date().toISOString(),
             duration: centiSeconds.current,
             score: newScore,
+            data: {}, // TODO do we need to save data of a game process?
           })
-          .then(function(response) {
-            console.log(response);
-            console.log('TODO: setScoreList');
+          .then(function(response: any) {
+            // console.log(response);
             // window.onbeforeunload = null;
-            // setScoreList(response.data);
-            setLevel(4); // todo we need this?
+            setScoreList(response.material_scoreboard);
+            // setLevel(4); // todo we need this?
             // this.setState({
             //   scoreList: response.data,
             //   level: newLevel,
             // });
           });
+        resetCounter();
       } else {
         // this.setState(generateQuestion(newScore, newLevel));
         if (newLevel in [1, 2, 3, 4]) {
@@ -371,9 +376,11 @@ const VectorGame: React.FC<VectorGameProps> = props => {
     setIsActiveCounter(true);
     playBackgroundAudio('rainbow', 0.2);
     questionToState(0, 1);
-    // questionToState(1500, 4);
+    // questionToState(1500, 4); // start last level
     // setGameState() // set in questionToState
   };
+
+  console.log(scoreList);
 
   return (
     <VectorGameBoard

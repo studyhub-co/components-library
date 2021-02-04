@@ -107,7 +107,7 @@ const INPUT_UNITS = getInputUnits();
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IUseUnitConversionProps {
-  level: number;
+  level?: number;
   unit: string;
   conversionSessionHash: string;
 }

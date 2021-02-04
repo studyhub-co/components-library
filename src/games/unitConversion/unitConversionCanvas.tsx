@@ -125,7 +125,7 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
     return () => {
       document.removeEventListener('keydown', keydown, false);
     };
-  }, []); // do not use 'reset' here!
+  }, []); // do not use 'reset' and 'keydown' here!
 
   const submitQuestion = () => {
     const answers = answersSteps;
@@ -397,29 +397,27 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
               <div style={{ color: 'red' }}>Incorrect unit type</div>
             </div>
           ) : null}
-          {level !== 5 && (
-            <div
-              style={{ fontSize: 10, display: 'table-cell', verticalAlign: 'middle', paddingLeft: 0, paddingRight: 0 }}
+          <div
+            style={{ fontSize: 10, display: 'table-cell', verticalAlign: 'middle', paddingLeft: 0, paddingRight: 0 }}
+          >
+            <StyledButton
+              id="addStep"
+              className="hover-button"
+              style={numColumns === 4 ? disabledButtonStyle : buttonStyle}
+              onClick={addColumn}
             >
-              <StyledButton
-                id="addStep"
-                className="hover-button"
-                style={numColumns === 4 ? disabledButtonStyle : buttonStyle}
-                onClick={addColumn}
-              >
-                +Add Step
-              </StyledButton>
-              <StyledButton
-                id="removeStep"
-                className="hover-button"
-                style={numColumns === 1 ? disabledButtonStyle : buttonStyle}
-                onClick={removeColumn}
-                // disabled={numColumns === 1}
-              >
-                -Remove Step
-              </StyledButton>
-            </div>
-          )}
+              +Add Step
+            </StyledButton>
+            <StyledButton
+              id="removeStep"
+              className="hover-button"
+              style={numColumns === 1 ? disabledButtonStyle : buttonStyle}
+              onClick={removeColumn}
+              // disabled={numColumns === 1}
+            >
+              -Remove Step
+            </StyledButton>
+          </div>
           <div
             style={{ fontSize: 30, display: 'table-cell', verticalAlign: 'middle', paddingLeft: 15, paddingRight: 15 }}
           >
