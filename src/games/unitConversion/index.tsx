@@ -46,7 +46,7 @@ interface UnitConversionGameProps {
 }
 
 // number of levels
-type ILevel = 1 | 2 | 3 | 4 | 5;
+export type ILevel = 1 | 2 | 3 | 4 | 5 | 6;
 
 const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
   const {
@@ -73,6 +73,8 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
   const [unit, setUnit] = useState('');
   const [number, setNumber] = useState('');
   const [scoreList, setScoreList] = useState([]);
+
+  const reactionStart = useRef(new Date());
 
   // hash that uses in conversion table html ids, to allow reuse this hook on the same web page several times
   const conversionSessionHash = useRef(Math.floor(Math.random() * (9999999999 - 1111111111) + 1111111111));
@@ -147,7 +149,7 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
   };
 
   // TODO why we do not have checkAnswer?
-  const generateQuestion = (newScore: number, newLevel: 1 | 2 | 3 | 4 | 5) => {
+  const generateQuestion = (newScore: number, newLevel: 1 | 2 | 3 | 4 | 5 | 6) => {
     const number = getRandomNumber();
     let unit = '',
       unitLong = '';
@@ -182,25 +184,27 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
     }
 
     if (newLevel > 5) {
+      // fixme not so good when we have 6 level as scoreboard
       stopBackgroundAudio();
       // TODO add more secure, i.e. server token when game starts, etc
       // clearInterval(this.timer);
-      resetCounter();
+
       api
-        .post(`courses/games/${materialUuid}/success`, {
+        .post('courses/materials/' + materialUuid + '/reaction/?materialScoreboard=true', {
+          /* eslint-disable @typescript-eslint/camelcase */
+          reaction_start_on: reactionStart.current.toISOString(),
+          /* eslint-disable @typescript-eslint/camelcase */
+          reacted_on: new Date().toISOString(),
           duration: centiSeconds.current,
           score: newScore,
+          data: {}, // TODO do we need to save data of a game process?
         })
-        .then(function(response) {
-          console.log(response);
-          console.log('TODO: setScoreList');
-          //   this.setState({
-          //     scoreList: response.data,
-          //   });
-          // }.bind(this),
+        .then(function(response: any) {
+          setScoreList(response.material_scoreboard);
         });
+      resetCounter();
       // window.onbeforeunload = null;
-      return { score: newScore, state: GameState.WON };
+      return { score: newScore, gameState: GameState.WON };
     }
 
     const question = <span>{'Convert ' + number.toString() + ' ' + unitLong + ' to SI units.'}</span>;
@@ -221,11 +225,9 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
     gameOver(null, null);
   };
 
-  const questionToState = (newScore: number, newLevel: 1 | 2 | 3 | 4 | 5) => {
+  const questionToState = (newScore: number, newLevel: 1 | 2 | 3 | 4 | 5 | 6) => {
     const state = Object.assign(
       {
-        // currentX: 0,
-        // currentY: 0,
         score: 0,
         level: 1,
         question: '',
@@ -237,7 +239,7 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
     );
 
     setScore(state.score);
-    setLevel(state.level as 1 | 2 | 3 | 4 | 5);
+    setLevel(state.level as 1 | 2 | 3 | 4 | 5 | 6);
     setQuestion(state.question);
     setUnit(state.unit);
     setNumber(state.number);
@@ -263,7 +265,7 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
     setIsActiveCounter(true);
     playBackgroundAudio('rainbow', 0.2);
     // questionToState(0, 1);
-    questionToState(2000, 5);
+    questionToState(2000, 5); // start from last level
     // setGameState() // set in questionToState
   };
 

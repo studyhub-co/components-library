@@ -154,7 +154,7 @@ const VectorGame: React.FC<VectorGameProps> = props => {
             data: {}, // TODO do we need to save data of a game process?
           })
           .then(function(response: any) {
-            // console.log(response);
+            // fixme do we need this?
             // window.onbeforeunload = null;
             setScoreList(response.material_scoreboard);
             // setLevel(4); // todo we need this?
@@ -379,8 +379,6 @@ const VectorGame: React.FC<VectorGameProps> = props => {
     // questionToState(1500, 4); // start last level
     // setGameState() // set in questionToState
   };
-
-  console.log(scoreList);
 
   return (
     <VectorGameBoard

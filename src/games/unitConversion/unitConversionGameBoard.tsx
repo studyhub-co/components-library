@@ -9,6 +9,8 @@ import UnitConversionQuestionBoard from './unitConversionQuestionBoard';
 import '../style.css';
 import Button from '@material-ui/core/Button';
 
+import { ILevel } from './index';
+
 interface UnitConversionGameBoardProps {
   // props
   number: string;
@@ -19,7 +21,7 @@ interface UnitConversionGameBoardProps {
   gameOver: (number: any, unit: any) => void;
   conversionSessionHash: string;
   score: number;
-  level: 1 | 2 | 3 | 4 | 5;
+  level: ILevel;
   question: string;
   timesUp: () => void;
   pause: () => void;
@@ -54,6 +56,7 @@ const UnitConversionGameBoard: React.FC<UnitConversionGameBoardProps> = props =>
     3: '#caffe5',
     4: '#ffffaa',
     5: '#ffd8b2',
+    6: '#ffffff', // scoreboard
   };
 
   useEffect(() => {

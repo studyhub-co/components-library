@@ -242,7 +242,7 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
         correctAnswer = initialQty.toBase().scalar.toFixed(2);
       }
 
-      let incompleteConversion = true;
+      let incompleteConversionLocal = true;
       // checking for incomplete units conversions
       if (uncrossedUnits && uncrossedUnits['nums'].length === 1 && uncrossedUnits['denoms'].length <= 1) {
         let remainUnit = uncrossedUnits['nums'][0] as string;
@@ -259,12 +259,12 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
           const answerText = parseToValueUnit(clearDataText(answer['data']));
 
           if (answerText && typeof answerText[1] !== 'undefined' && answerText[1] === remainUnit) {
-            incompleteConversion = false;
+            incompleteConversionLocal = false;
           }
         }
       }
 
-      if (incompleteConversion) {
+      if (incompleteConversionLocal) {
         isRightAnswer = false;
         setIncompleteConversion(true);
         // this.setState({
