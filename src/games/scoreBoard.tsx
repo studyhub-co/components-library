@@ -18,6 +18,7 @@ interface ScoreBoardProps {
   pause: () => void;
   moveToNextComponent(): void;
   clockSeconds?: number;
+  clockKey: number;
 }
 
 const ScoreBoard: React.FC<ScoreBoardProps> = props => {
@@ -31,6 +32,7 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
     pause,
     moveToNextComponent,
     clockSeconds,
+    clockKey, // refresh key to recreate countdown clock
   } = props;
 
   let seconds;
@@ -44,18 +46,18 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
   let scorePanel;
   let paused;
 
-  const [clockKey, setClockKey] = useState(1);
-  const [didReset, setDidReset] = useState(false);
+  // const [clockKey, setClockKey] = useState(clockKey);
+  // const [didReset, setDidReset] = useState(false);
 
-  useEffect(() => {
-    if (gameState === GameState.NEW && !didReset) {
-      setClockKey(clockKey + 1);
-      setDidReset(true);
-    }
-    if (gameState !== GameState.NEW && didReset) {
-      setDidReset(false);
-    }
-  }, [clockKey, didReset, gameState]); // what we need to catch? TODO
+  // useEffect(() => {
+  //   if (gameState === GameState.NEW && !didReset) {
+  //     setClockKey(clockKey + 1);
+  //     setDidReset(true);
+  //   }
+  //   if (gameState !== GameState.NEW && didReset) {
+  //     setDidReset(false);
+  //   }
+  // }, [clockKey, didReset, gameState]); // what we need to catch? TODO
 
   // TODO too much duplicate code!
 
@@ -73,10 +75,9 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
             color="primary"
             variant="contained"
             onClick={() => {
-              {
-                /* handleContinueClick see src/components/common/checkContinueButton.tsx for details */
-                moveToNextComponent();
-              }
+              // TODO! we do not have next material uud here!
+              /* handleContinueClick see src/components/common/checkContinueButton.tsx for details */
+              moveToNextComponent();
             }}
           >
             Exit
@@ -94,10 +95,8 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
             color="primary"
             variant="contained"
             onClick={() => {
-              {
-                /* handleContinueClick see src/components/common/checkContinueButton.tsx for details */
-                moveToNextComponent();
-              }
+              /* handleContinueClick see src/components/common/checkContinueButton.tsx for details */
+              moveToNextComponent();
             }}
           >
             Continue

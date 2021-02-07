@@ -53,16 +53,22 @@ const VectorGame: React.FC<VectorGameProps> = props => {
   const [score, setScore] = useState(0);
   const [level, setLevel] = useState<1 | 2 | 3 | 4>(1);
   const [question, setQuestion] = useState('');
-  const [lastQuestion, setLastQuestion] = useState(''); // Do we need this?
+  // const [lastQuestion, setLastQuestion] = useState(''); // Do we need this?
+  const [nextMaterialUuid, setNextMaterialUuid] = useState('');
   const [currentX, setCurrentX] = useState(0);
   const [currentY, setCurrentY] = useState(0);
   const [answerVector, setAnswerVector] = useState('');
   const [answerText, setAnswerText] = useState('');
   const [scoreList, setScoreList] = useState([]);
+  const [clockKey, setClockKey] = useState(1);
 
   const tickCentiSeconds = (value: number) => {
     centiSeconds.current = value as number;
   };
+
+  useEffect(() => {
+
+  }, [materialUuid])
 
   const pauseToggle = () => {
     if ([GameState.PAUSED, GameState.QUESTION].indexOf(gameState) > -1) {
@@ -97,6 +103,7 @@ const VectorGame: React.FC<VectorGameProps> = props => {
 
   const resetCounter = () => {
     tickCentiSeconds(0);
+    setClockKey(clockKey + 1); // redraw count down clock with default clock seconds value
     setIsActiveCounter(false);
   };
 
@@ -132,6 +139,7 @@ const VectorGame: React.FC<VectorGameProps> = props => {
       playAudio('correct', 1);
       const newScore = score + 100;
       const newLevel = Math.floor(newScore / 400) + 1;
+
       if (newLevel > 4) {
         const newState = GameState.WON;
         stopBackgroundAudio();
@@ -157,6 +165,7 @@ const VectorGame: React.FC<VectorGameProps> = props => {
             // fixme do we need this?
             // window.onbeforeunload = null;
             setScoreList(response.material_scoreboard);
+            setNextMaterialUuid(response.next_material_uuid);
             // setLevel(4); // todo we need this?
             // this.setState({
             //   scoreList: response.data,
@@ -165,9 +174,10 @@ const VectorGame: React.FC<VectorGameProps> = props => {
           });
         resetCounter();
       } else {
-        // this.setState(generateQuestion(newScore, newLevel));
-        if (newLevel in [1, 2, 3, 4]) {
+        if ([1, 2, 3, 4].includes(newLevel)) {
           questionToState(newScore, newLevel as 1 | 2 | 3 | 4);
+        } else {
+          console.log('level not found');
         }
       }
     } else {
@@ -195,7 +205,7 @@ const VectorGame: React.FC<VectorGameProps> = props => {
     let question;
     let x = 0,
       y = 0;
-    newScore = newScore || score;
+    // newScore = newScore || score; // we can't reset score here fixme: remove?
     newLevel = newLevel || level;
     do {
       x = y = 0;
@@ -362,6 +372,7 @@ const VectorGame: React.FC<VectorGameProps> = props => {
   const restart = () => {
     resetCounter();
     setIsActiveCounter(true);
+    playBackgroundAudio('rainbow', 0.2);
     questionToState(0, 1);
     // this.setState(state);
   };
@@ -394,8 +405,13 @@ const VectorGame: React.FC<VectorGameProps> = props => {
       arrowComplete={checkAnswer}
       restart={restart}
       scoreList={scoreList}
+      clockKey={clockKey}
       clockSeconds={120}
-      moveToNextComponent={() => moveToNextComponent(materialUuid)}
+      moveToNextComponent={() => {
+        // console.log(`moveToNextComponent called. nextMaterialUuid: ${nextMaterialUuid}`);
+        // setUserReactionState('start'); todo check what will going on if we will have two same games in lesson's process row
+        moveToNextComponent(nextMaterialUuid);
+      }}
     />
   );
 };

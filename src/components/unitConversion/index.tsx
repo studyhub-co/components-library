@@ -27,6 +27,7 @@ import { useFetchMaterial } from '../hooks/fetchMaterial';
 
 import { useComponentData } from './componentData';
 
+// TODO migrate to TS version!
 import { UnitConversion } from './components/index';
 
 import './style.css';

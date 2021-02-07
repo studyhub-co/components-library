@@ -28,6 +28,7 @@ interface UnitConversionGameBoardProps {
   restart: () => void;
   scoreList: any;
   moveToNextComponent(): void;
+  clockKey: number;
 }
 
 const UnitConversionGameBoard: React.FC<UnitConversionGameBoardProps> = props => {
@@ -45,6 +46,7 @@ const UnitConversionGameBoard: React.FC<UnitConversionGameBoardProps> = props =>
     start,
     restart,
     timesUp,
+    clockKey,
     pause,
     moveToNextComponent,
     conversionSessionHash: csh,
@@ -94,6 +96,7 @@ const UnitConversionGameBoard: React.FC<UnitConversionGameBoardProps> = props =>
           <ScoreBoard
             gameState={gameState}
             score={score}
+            clockKey={clockKey}
             level={level}
             timesUp={timesUp}
             pause={pause}
@@ -122,6 +125,7 @@ const UnitConversionGameBoard: React.FC<UnitConversionGameBoardProps> = props =>
         timesUp={timesUp}
         pause={pause}
         restart={restart}
+        clockKey={clockKey}
         clockSeconds={clockSeconds}
         moveToNextComponent={moveToNextComponent}
       />

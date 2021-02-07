@@ -25,6 +25,7 @@ interface VectorGameBoardProps {
   timesUp: () => void;
   pause: () => void;
   moveToNextComponent(): void;
+  clockKey: number;
 }
 
 const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
@@ -44,6 +45,7 @@ const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
     pause,
     clockSeconds,
     moveToNextComponent,
+    clockKey,
   } = props;
 
   const levelColorMap = {
@@ -82,6 +84,7 @@ const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
           {/*<Prompt when={this.props.state == GameState.QUESTION} message="Changes you made may not be saved." />*/}
           <ScoreBoard
             gameState={gameState}
+            clockKey={clockKey}
             score={score}
             level={level as number}
             timesUp={timesUp}
@@ -107,6 +110,7 @@ const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
       <ScoreBoard
         gameState={gameState}
         score={score}
+        clockKey={clockKey}
         level={level as number}
         timesUp={timesUp}
         pause={pause}

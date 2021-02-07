@@ -37,15 +37,15 @@ const Components: React.FC = () => {
       <h3>Vector Game</h3>
       <VectorGame
         materialUuid={'9130054b-42b3-4f16-8864-033872831d97'}
-        moveToNextComponent={materialUuid => {
-          console.log('moveToNextComponent called');
+        moveToNextComponent={nextMaterialUuid => {
+          console.log(`moveToNextComponent called. nextMaterialUuid: ${nextMaterialUuid}`);
         }}
       />
       <h3>Unit Conversion Game</h3>
       <UnitConversionGame
         materialUuid={'9130054b-42b3-4f16-8864-033872831d97'}
-        moveToNextComponent={materialUuid => {
-          console.log('moveToNextComponent called');
+        moveToNextComponent={nextMaterialUuid => {
+          console.log(`moveToNextComponent called. nextMaterialUuid: ${nextMaterialUuid}`);
         }}
       />
       <FormControlLabel
