@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Draggable from 'react-draggable';
@@ -81,6 +81,8 @@ const Index: React.FC<IUnitConversionProps> = props => {
     checkUserMaterialReaction,
     updateMaterial,
   } = props;
+
+  const reactionStart = useRef(new Date());
 
   const [editMode, setEditMode] = useState(editModeProp);
   const [showFooter, setShowFooter] = useState(showFooterProp || false);
@@ -218,6 +220,8 @@ const Index: React.FC<IUnitConversionProps> = props => {
               checkFrontendUserMaterialReaction(material);
             } else {
               setUserReactionState('checked');
+              /* eslint-disable @typescript-eslint/camelcase */
+              material.reaction_start_on = reactionStart.current.toISOString();
               // back end validation (see redux action for details)
               checkUserMaterialReaction(material);
             }

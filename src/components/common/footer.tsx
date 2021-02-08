@@ -18,7 +18,9 @@ interface FooterProps {
   disabledCheck: boolean;
   updateMaterial(material: Material): void;
   moveToNextComponent(previousMaterialUuid: string): void;
-  checkUserMaterialReaction(material: Material): void;
+  // checkUserMaterialReaction(material: Material): void;
+  // todo convert to UserReaction type
+  checkUserMaterialReaction(material: any): void;
   componentData: IQAData | IVectorData | IQABaseData | IUnitConversionData | IMySQLData | null; // Any component IData
   userReactionState: string; // todo enum?
 }

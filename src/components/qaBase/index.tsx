@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -63,14 +63,14 @@ const Index: React.FC<IQAProps> = props => {
     updateMaterial,
   } = props;
 
+  const reactionStart = useRef(new Date());
+
   const [editMode, setEditMode] = useState(editModeProp);
   const [showFooter, setShowFooter] = useState(showFooterProp || false);
   const [disabledCheck, setDisabledCheckS] = useState(true);
   const { data: componentData, operateDataFunctions } = useComponentData(componentDataProp, currentMaterial);
   // todo userReactionStateHook
   const [userReactionState, setUserReactionState] = useState('start'); // 'start', 'checked', etc
-
-  // console.log(componentData);
 
   useSpaEventsHook(
     updateMaterial,
@@ -172,6 +172,8 @@ const Index: React.FC<IQAProps> = props => {
           componentData={componentData}
           checkUserMaterialReaction={material => {
             setUserReactionState('checked');
+            /* eslint-disable @typescript-eslint/camelcase */
+            material.reaction_start_on = reactionStart.current.toISOString();
             checkUserMaterialReaction(material);
           }}
           currentMaterial={currentMaterial}
