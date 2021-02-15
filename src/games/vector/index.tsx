@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import { addStyles, StaticMathField } from 'react-mathquill';
 
 import { GameState } from '../constants';
@@ -17,6 +20,9 @@ import {
   playAudio,
 } from '../../utils/sounds';
 
+import * as materialActionCreators from '../../redux/modules/material';
+import * as userMaterialReactionCreators from '../../redux/modules/userMaterialReactionResult';
+
 addStyles(); // react-mathquill styles
 
 const BACKEND_SERVER_API_URL = process.env['NODE_ENV'] === 'development' ? 'http://127.0.0.1:8000/api/v1/' : '/api/v1/';
@@ -29,6 +35,11 @@ interface VectorGameProps {
   // props
   materialUuid: string;
   moveToNextComponent(nextMaterialUuid: string | undefined): void;
+  lessonUuid: string | undefined;
+  // redux store
+  currentMaterial: materialActionCreators.MaterialRedux;
+  // redux actions
+  fetchMaterialStudentView(lessonUuid: string | undefined, materialUuid: string | undefined): void;
 }
 
 const VectorGame: React.FC<VectorGameProps> = props => {
@@ -36,6 +47,11 @@ const VectorGame: React.FC<VectorGameProps> = props => {
     // direct props
     materialUuid,
     moveToNextComponent,
+    lessonUuid,
+    // redux store
+    currentMaterial,
+    // actions
+    fetchMaterialStudentView,
   } = props;
 
   // counter
@@ -67,8 +83,24 @@ const VectorGame: React.FC<VectorGameProps> = props => {
   };
 
   useEffect(() => {
+    // replace with useFetchMaterial if wi will have edit mode in the future: src/components/hooks/fetchMaterial.tsx
+    // get new material
+    fetchMaterialStudentView(lessonUuid, materialUuid);
+  }, [materialUuid]);
 
-  }, [materialUuid])
+  // send current material to parent window
+  useEffect(() => {
+    if (currentMaterial.isFetching === false && currentMaterial.uuid) {
+      // send message to parent with loaded material
+      window.parent.postMessage(
+        {
+          type: 'current_material',
+          data: currentMaterial,
+        },
+        '*',
+      );
+    }
+  }, [currentMaterial, lessonUuid]);
 
   const pauseToggle = () => {
     if ([GameState.PAUSED, GameState.QUESTION].indexOf(gameState) > -1) {
@@ -416,4 +448,12 @@ const VectorGame: React.FC<VectorGameProps> = props => {
   );
 };
 
-export default VectorGame;
+// export default VectorGame;
+
+// connect redux
+export default connect(
+  (state: any) => {
+    return { currentMaterial: state.material, userMaterialReactionResult: state.userMaterialReactionResult };
+  },
+  dispatch => bindActionCreators({ ...materialActionCreators, ...userMaterialReactionCreators }, dispatch),
+)(VectorGame);

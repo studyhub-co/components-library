@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import { addStyles, StaticMathField } from 'react-mathquill';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import { addStyles } from 'react-mathquill';
 
 import { GameState } from '../constants';
 import UnitConversionGameBoard from './unitConversionGameBoard';
@@ -14,8 +17,10 @@ import {
   pauseBackgroundAudio,
   unpauseBackgroundAudio,
   playBackgroundAudio,
-  playAudio,
 } from '../../utils/sounds';
+
+import * as materialActionCreators from '../../redux/modules/material';
+import * as userMaterialReactionCreators from '../../redux/modules/userMaterialReactionResult';
 
 addStyles(); // react-mathquill styles
 
@@ -33,7 +38,7 @@ const api: Api = apiFactory(BACKEND_SERVER_API_URL);
 //     INPUT_UNITS = INPUT_UNITS.concat(Object.keys(UNITS[key]));
 //   });
 
-const INPUT_UNITS = getInputUnits();
+// const INPUT_UNITS = getInputUnits();
 
 // TODO replace :any with correct types
 // TODO create React hook for counter + HOC base game component
@@ -43,6 +48,11 @@ interface UnitConversionGameProps {
   // props
   materialUuid: string;
   moveToNextComponent(nextMaterialUuid: string | undefined): void;
+  lessonUuid: string | undefined;
+  // redux store
+  currentMaterial: materialActionCreators.MaterialRedux;
+  // redux actions
+  fetchMaterialStudentView(lessonUuid: string | undefined, materialUuid: string | undefined): void;
 }
 
 // number of levels
@@ -53,6 +63,11 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
     // direct props
     materialUuid,
     moveToNextComponent,
+    lessonUuid,
+    // redux store
+    currentMaterial,
+    // actions
+    fetchMaterialStudentView,
   } = props;
 
   // counter
@@ -87,6 +102,26 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
   const tickCentiSeconds = (value: number) => {
     centiSeconds.current = value as number;
   };
+
+  useEffect(() => {
+    // replace with useFetchMaterial if wi will have edit mode in the future: src/components/hooks/fetchMaterial.tsx
+    // get new material
+    fetchMaterialStudentView(lessonUuid, materialUuid);
+  }, [materialUuid]);
+
+  // send current material to parent window
+  useEffect(() => {
+    if (currentMaterial.isFetching === false && currentMaterial.uuid) {
+      // send message to parent with loaded material
+      window.parent.postMessage(
+        {
+          type: 'current_material',
+          data: currentMaterial,
+        },
+        '*',
+      );
+    }
+  }, [currentMaterial, lessonUuid]);
 
   const pauseToggle = () => {
     if ([GameState.PAUSED, GameState.QUESTION].indexOf(gameState) > -1) {
@@ -298,4 +333,12 @@ const UnitConversionGame: React.FC<UnitConversionGameProps> = props => {
   );
 };
 
-export default UnitConversionGame;
+// export default UnitConversionGame;
+
+// connect redux
+export default connect(
+  (state: any) => {
+    return { currentMaterial: state.material, userMaterialReactionResult: state.userMaterialReactionResult };
+  },
+  dispatch => bindActionCreators({ ...materialActionCreators, ...userMaterialReactionCreators }, dispatch),
+)(UnitConversionGame);
