@@ -9,6 +9,10 @@ export interface Material {
   data: QAData | VectorData | QABaseData | UnitConversionData | MySQLData | null; // TODO list of components interfaces
 }
 
+export interface UserReaction extends Material {
+  reaction_start_on: Date;
+}
+
 export interface UserReactionResult {
   completed_on: null | string;
   correct_data?: QAData | VectorData | QABaseData | UnitConversionData | MySQLData;

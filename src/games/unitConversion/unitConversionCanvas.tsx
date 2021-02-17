@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 
 import Qty from 'js-quantities';
 
-// this will add jQuery to window
-import '../../components/unitConversion/components/mathquill-loader';
-// this will add MathQuill to window
-// import * as MathQuill from '@edtr-io/mathquill/build/mathquill.js';
-import * as MathQuill from '@edtr-io/mathquill';
+// // this will add jQuery to window
+// import '../../components/unitConversion/components/mathquill-loader';
+// // this will add MathQuill to window
+// // import * as MathQuill from '@edtr-io/mathquill/build/mathquill.js';
+// import * as MathQuill from '@edtr-io/mathquill';
 
 import { playAudio } from '../../utils/sounds';
 

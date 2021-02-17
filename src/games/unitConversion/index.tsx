@@ -5,6 +5,12 @@ import { bindActionCreators } from 'redux';
 
 import { addStyles } from 'react-mathquill';
 
+// this will add jQuery to window
+import '../../components/unitConversion/components/mathquill-loader';
+// this will add MathQuill to window
+// import * as MathQuill from '@edtr-io/mathquill/build/mathquill.js';
+import * as MathQuill from '@edtr-io/mathquill';
+
 import { GameState } from '../constants';
 import UnitConversionGameBoard from './unitConversionGameBoard';
 

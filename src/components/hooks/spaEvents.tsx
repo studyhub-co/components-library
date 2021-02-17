@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Material } from '../../models/';
+import { MutableRefObject, useEffect } from 'react';
+import { Material, UserReaction } from '../../models/';
 import * as materialActionCreators from '../../redux/modules/material';
 import * as userMaterialReactionCreators from '../../redux/modules/userMaterialReactionResult';
 
@@ -9,7 +9,7 @@ import * as userMaterialReactionCreators from '../../redux/modules/userMaterialR
 
 export function useSpaEventsHook(
   updateMaterial: (material: Material) => void,
-  checkUserMaterialReaction: (material: Material) => void,
+  checkUserMaterialReaction: (material: UserReaction) => void,
   currentMaterial: materialActionCreators.MaterialRedux,
   componentData: any,
   userMaterialReactionResult: userMaterialReactionCreators.UserReactionResultRedux,
@@ -18,6 +18,7 @@ export function useSpaEventsHook(
   setShowFooter: (value: boolean) => void,
   setEditMode: any,
   setUserReactionState: any,
+  reactionStart: MutableRefObject<Date>,
 ) {
   useEffect(() => {
     // catch parent event inside iframe
@@ -35,7 +36,12 @@ export function useSpaEventsHook(
         }
         if (data.type === 'check_user_reaction') {
           if (!currentMaterial.isFetching && currentMaterial.uuid && componentData) {
-            const reactionMaterial: Material = { uuid: currentMaterial.uuid, data: componentData };
+            const reactionMaterial: UserReaction = {
+              uuid: currentMaterial.uuid,
+              data: componentData,
+              /* eslint-disable @typescript-eslint/camelcase */
+              reaction_start_on: reactionStart.current,
+            };
             checkUserMaterialReaction(reactionMaterial);
             setUserReactionState('checked');
           }
@@ -81,6 +87,8 @@ export function useSpaEventsHook(
     setUserReactionState,
     userMaterialReactionResult,
     moveToNextComponent,
+    reactionStart,
+    updateMaterial,
   ]);
 }
 

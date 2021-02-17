@@ -93,6 +93,7 @@ const Index: React.FC<IQAProps> = props => {
     setShowFooter,
     setEditMode,
     setUserReactionState,
+    reactionStart,
   );
 
   useUserMaterialReactionResult(userMaterialReactionResult, setUserReactionState, userReactionState);
@@ -269,9 +270,12 @@ const Index: React.FC<IQAProps> = props => {
           editMode={editMode}
           componentData={componentData}
           checkUserMaterialReaction={material => {
+            // This function is used only for current library Footer
+            // For check reaction from studyhub.io see src/components/hooks/spaEvents.tsx
             setUserReactionState('checked');
             /* eslint-disable @typescript-eslint/camelcase */
             material.reaction_start_on = reactionStart.current.toISOString();
+            console.log(material.reaction_start_on);
             checkUserMaterialReaction(material);
           }}
           currentMaterial={currentMaterial}

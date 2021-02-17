@@ -102,6 +102,7 @@ const Index: React.FC<IUnitConversionProps> = props => {
     setShowFooter,
     setEditMode,
     setUserReactionState,
+    reactionStart,
   );
 
   useUserMaterialReactionResult(userMaterialReactionResult, setUserReactionState, userReactionState);
@@ -216,9 +217,11 @@ const Index: React.FC<IUnitConversionProps> = props => {
           checkUserMaterialReaction={material => {
             // material combine componentData and material uuid, see checkContinueButton for details
             if (checkFrontendUserMaterialReaction) {
-              // direct front end validation (mostly for demo purposes)
+              // direct front end validation (mostly for demo purposes): don't send checkUserReaction request to the backend
               checkFrontendUserMaterialReaction(material);
             } else {
+              // This function is used only for current library Footer
+              // For check reaction from studyhub.io see src/components/hooks/spaEvents.tsx
               setUserReactionState('checked');
               /* eslint-disable @typescript-eslint/camelcase */
               material.reaction_start_on = reactionStart.current.toISOString();
