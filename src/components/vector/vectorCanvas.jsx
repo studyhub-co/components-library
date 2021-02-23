@@ -157,6 +157,23 @@ export class CanvasVector {
     return angle;
   }
 
+  calcPolarArrowAngle(x1, y1, x2, y2) {
+    const x = x2 - x1;
+    const y = y2 - y1;
+
+    // Perform atan2 calculation as is inexpensive in comparison to atan
+    // to find tangent of angle.
+    return (Math.atan2(y, x) * 180) / Math.PI;
+  }
+
+  getPolarVectorAngle() {
+    let angle = this.calcPolarArrowAngle(this.line.x1, this.line.y1, this.line.x2, this.line.y2);
+    if (angle >= 360) {
+      angle -= 360;
+    }
+    return angle;
+  }
+
   getXComponent() {
     return Math.round((this.line.x2 - this.line.x1) / GRID);
   }
@@ -324,7 +341,8 @@ export class VectorCanvas extends React.Component {
       // todo check if this.arrow is null vector
       this.props.updateAnswer({
         vector: {
-          angle: this.arrow.getVectorAngle(),
+          // angle: this.arrow.getVectorAngle(),
+          angle: this.arrow.getPolarVectorAngle(),
           xComponent: this.arrow.getXComponent(),
           yComponent: this.arrow.getYComponent(),
           magnitude: this.arrow.getVectorMagnitude(),

@@ -102,7 +102,7 @@ const validate = (correctData, userReactionData) => {
       } else if (correctData.answerToCheck === 20) {
         // 'Magnitude only',
         return correctVector.magnitude === userVector.magnitude;
-      } else if (correctData.answerToCheck === 20) {
+      } else if (correctData.answerToCheck === 30) {
         // Angle only',
         return correctVector.angle === userVector.angle;
       }
