@@ -8,6 +8,8 @@ import { IReducerObject, reducer } from './reducer';
 
 import { mockQaBase } from './mockData';
 
+import { uploadImage } from '../../utils/serviceRequests';
+
 export function useComponentData(componentData: IQABaseData | undefined, currentMaterial: any) {
   const initialState: IReducerObject = { reducerData: null };
   const [data, dispatch] = useReducer(reducer, initialState);
@@ -56,16 +58,22 @@ function getOperateDataFunctions(dispatch: any) {
     dispatch({ type: 'QUESTION_HINT_CHANGE', payload: image });
   };
 
-  const onQuestionImageChange = (image: string): void => {
-    dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
+  const onQuestionImageChange = (image: any, materialUuid: string): void => {
+    // dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: { image, materialUuid } });
+    uploadImage(image, materialUuid).then((response: any) => {
+      dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: response });
+    });
   };
 
   const onAnswerTextChange = (text: string): void => {
     dispatch({ type: 'ANSWER_TEXT_CHANGE', payload: text });
   };
 
-  const onAnswerImageChange = (image: string): void => {
-    dispatch({ type: 'ANSWER_IMAGE_CHANGE', payload: image });
+  const onAnswerImageChange = (image: string, materialUuid: string): void => {
+    // dispatch({ type: 'ANSWER_IMAGE_CHANGE', payload: image });
+    uploadImage(image, materialUuid).then((response: any) => {
+      dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: response });
+    });
   };
 
   return { onQuestionTextChange, onQuestionHintChange, onQuestionImageChange, onAnswerTextChange, onAnswerImageChange };

@@ -144,7 +144,7 @@ const Index: React.FC<IQAProps> = props => {
       // if we have at least one image in choice enable cardMode
       const newCardMode = componentData.choices.some(choice => choice.content.image);
       if (cardMode !== newCardMode) {
-        setCardMode(cardMode);
+        setCardMode(newCardMode);
       }
       // if we have selected choices
       const hasSelected = componentData.choices.some(choice => choice.selected);
@@ -201,7 +201,7 @@ const Index: React.FC<IQAProps> = props => {
                   editMode={editMode}
                   question={componentData.question}
                   onTextChange={operateDataFunctions.onQuestionTextChange}
-                  onImageChange={operateDataFunctions.onQuestionImageChange}
+                  onImageChange={image => operateDataFunctions.onQuestionImageChange(image, materialUuid || '')}
                 />
               </Paper>
             </ContainerItem>
@@ -219,7 +219,7 @@ const Index: React.FC<IQAProps> = props => {
                           editMode={editMode}
                           deleteChoice={operateDataFunctions.deleteChoice}
                           onImageChange={image => {
-                            operateDataFunctions.onChoiceImageChange(choice.uuid, image);
+                            operateDataFunctions.onChoiceImageChange(choice.uuid, image, materialUuid || '');
                           }}
                           onTextChange={text => {
                             operateDataFunctions.onChoiceTextChange(choice.uuid, text);

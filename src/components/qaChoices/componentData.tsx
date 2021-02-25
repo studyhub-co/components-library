@@ -8,6 +8,7 @@ import { IReducerObject, reducer } from './reducer';
 
 // import { mockQaChoicesMaterial } from '../mockData';
 import { mockQaChoices } from './mockData';
+import { uploadImage } from '../../utils/serviceRequests';
 
 // 1. operates componentData (defined as prop or currentMaterial.data)
 // 2. validate componentData with selected interfaces
@@ -70,13 +71,19 @@ function getOperateDataFunctions(dispatch: any) {
     dispatch({ type: 'QUESTION_HINT_CHANGE', payload: image });
   };
 
-  const onQuestionImageChange = (image: string): void => {
-    dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
+  const onQuestionImageChange = (image: any, materialUuid: string): void => {
+    // dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
+    uploadImage(image, materialUuid).then((response: any) => {
+      dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: response });
+    });
   };
 
-  const onChoiceImageChange = (uuid: string, image: File): void => {
-    const newChoice = { uuid, image };
-    dispatch({ type: 'CHOICE_IMAGE_CHANGE', payload: newChoice });
+  const onChoiceImageChange = (uuid: string, image: File, materialUuid: string): void => {
+    uploadImage(image, materialUuid).then((response: any) => {
+      const newChoice = { uuid, image: response.image };
+      dispatch({ type: 'CHOICE_IMAGE_CHANGE', payload: newChoice });
+    });
+    // dispatch({ type: 'CHOICE_IMAGE_CHANGE', payload: newChoice });
   };
 
   const onChoiceTextChange = (uuid: string, text: string): void => {

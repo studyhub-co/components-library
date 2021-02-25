@@ -7,6 +7,7 @@ import { MySQLData as IMySQLData, MySQLDataIo } from './IData/index';
 import { IReducerObject, reducer } from './reducer';
 
 import { mockMysql } from './mockData';
+import { uploadImage } from '../../utils/serviceRequests';
 
 export function useComponentData(componentData: IMySQLData | undefined, currentMaterial: any) {
   const initialState: IReducerObject = { reducerData: null };
@@ -56,8 +57,18 @@ function getOperateDataFunctions(dispatch: any) {
     dispatch({ type: 'QUESTION_HINT_CHANGE', payload: image });
   };
 
+  // const onQuestionImageChange = (image: any, materialUuid: string): void => {
+  //   /* try to upload image to the backend */
+  //   uploadImage(image, materialUuid).then((response: any) => {
+  //     dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
+  //   });
+  // };
+
   const onQuestionImageChange = (image: string): void => {
+    /* try to upload image to the backend */
+    // uploadImage(image, materialUuid).then((response: any) => {
     dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
+    // });
   };
 
   // const onAnswerTextChange = (text: string): void => {

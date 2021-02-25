@@ -1,5 +1,6 @@
 import produce from 'immer';
 import { QABaseData } from './IData/index';
+import { uploadImage } from '../../utils/serviceRequests';
 
 // this will add evaluatex to window
 import 'evaluatex/dist/evaluatex.min.js';
@@ -32,7 +33,7 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
       draft.reducerData.question.content.hint = text;
     }
     if (action.type === 'QUESTION_IMAGE_CHANGE') {
-      draft.reducerData.question.content.image = action.payload;
+      draft.reducerData.question.content.image = action.payload.image;
     }
     if (action.type === 'ANSWER_TEXT_CHANGE') {
       const text = action.payload;

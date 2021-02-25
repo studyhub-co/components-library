@@ -47,6 +47,10 @@ const EditableThumbnail: React.FC<EditableThumbnailProps> = props => {
       const objectUrl = URL.createObjectURL(image);
       setImageSrc(objectUrl);
     }
+    if (image && typeof image == 'string') {
+      // Image url from JSON DATA
+      setImageSrc(image);
+    }
   }, [image]);
 
   const selectImage = (event: React.ChangeEvent<HTMLInputElement>): void => {

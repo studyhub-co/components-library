@@ -142,7 +142,7 @@ const Index: React.FC<IQAProps> = props => {
                   question={componentData.question}
                   onTextChange={operateDataFunctions.onQuestionTextChange}
                   onHintChange={operateDataFunctions.onQuestionHintChange}
-                  onImageChange={operateDataFunctions.onQuestionImageChange}
+                  onImageChange={image => operateDataFunctions.onQuestionImageChange(image, materialUuid || '')}
                 />
               </Paper>
             </ContainerItem>
@@ -151,10 +151,10 @@ const Index: React.FC<IQAProps> = props => {
                 <Question
                   editMode={true}
                   mathMode={true}
-                  editTextMode={true}
+                  editTextMode={true} // TODO do we need an image in answer?
                   question={componentData.answer}
                   onTextChange={operateDataFunctions.onAnswerTextChange}
-                  onImageChange={operateDataFunctions.onAnswerImageChange}
+                  onImageChange={image => operateDataFunctions.onAnswerImageChange(image, materialUuid || '')}
                 />
               </Paper>
             </ContainerItem>
