@@ -171,7 +171,7 @@ const Index: React.FC<IVectorProps> = props => {
                   editMode={editMode}
                   question={componentData.question}
                   onTextChange={operateDataFunctions.onQuestionTextChange}
-                  onImageChange={operateDataFunctions.onQuestionImageChange}
+                  onImageChange={image => operateDataFunctions.onQuestionImageChange(image, materialUuid || '')}
                   mathMode={true}
                 />
                 <br />
@@ -230,7 +230,8 @@ const Index: React.FC<IVectorProps> = props => {
                 {componentData.answerTextOnly || (editMode && componentData.answerVectors.length === 0) ? (
                   <Question
                     editMode={true}
-                    editTextMode={!editMode}
+                    // editTextMode={!editMode} // TODO do we need answer image support?
+                    editTextMode={true}
                     question={componentData.answer}
                     onTextChange={operateDataFunctions.onAnswerTextChange}
                     onImageChange={operateDataFunctions.onAnswerImageChange}

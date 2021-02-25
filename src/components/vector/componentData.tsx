@@ -8,6 +8,7 @@ import { Vector as IVector } from './IData/vector';
 import { IReducerObject, reducer } from './reducer';
 
 import { mockVector } from './mockData';
+import { uploadImage } from '../../utils/serviceRequests';
 
 // 1. operates componentData (defined as prop or currentMaterial.data)
 // 2. validate componentData with selected interfaces
@@ -62,9 +63,16 @@ function getOperateDataFunctions(dispatch: any) {
     dispatch({ type: 'QUESTION_HINT_CHANGE', payload: image });
   };
 
-  const onQuestionImageChange = (image: string): void => {
-    dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
+  const onQuestionImageChange = (image: any, materialUuid: string): void => {
+    // dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: { image, materialUuid } });
+    uploadImage(image, materialUuid).then((response: any) => {
+      dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: response });
+    });
   };
+
+  // const onQuestionImageChange = (image: string): void => {
+  //   dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
+  // };
 
   const onQuestionTextOnly = (checked: boolean): void => {
     dispatch({ type: 'QUESTION_TEXT_ONLY', payload: checked });

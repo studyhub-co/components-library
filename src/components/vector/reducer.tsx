@@ -16,7 +16,7 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
       draft.reducerData.questionVectorIsNull = action.payload;
     }
     if (action.type === 'QUESTION_IMAGE_CHANGE') {
-      draft.reducerData.question.content.image = action.payload;
+      draft.reducerData.question.content.image = action.payload.image;
     }
     if (action.type === 'QUESTION_HINT_CHANGE') {
       draft.reducerData.question.content.hint = action.payload;
