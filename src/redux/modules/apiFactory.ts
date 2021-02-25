@@ -9,7 +9,8 @@ export type Params = {
 };
 
 export type Options = {
-  shouldCamelize: boolean;
+  shouldCamelize?: boolean;
+  headers?: any;
 };
 
 export type Api = {
@@ -58,7 +59,7 @@ export default (
         withCredentials: true,
       });
       return instance
-        .post(API_ROOT + path, body)
+        .post(API_ROOT + path, body, options || {})
         .then(response => handleResponse(response))
         .catch(e => handleError(e));
     },

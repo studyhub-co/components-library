@@ -154,7 +154,7 @@ const Index: React.FC<IMySQLProps> = props => {
                   question={componentData.question}
                   onTextChange={operateDataFunctions.onQuestionTextChange}
                   onHintChange={operateDataFunctions.onQuestionHintChange}
-                  onImageChange={operateDataFunctions.onQuestionImageChange}
+                  onImageChange={image => operateDataFunctions.onQuestionImageChange(image, materialUuid || '')}
                 />
                 {!editMode && <SchemaTable SQLSchemaJson={componentData.SQLSchemaResultJson} />}
               </Paper>

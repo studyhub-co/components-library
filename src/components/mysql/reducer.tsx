@@ -32,7 +32,7 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
       draft.reducerData.question.content.hint = text;
     }
     if (action.type === 'QUESTION_IMAGE_CHANGE') {
-      draft.reducerData.question.content.image = action.payload;
+      draft.reducerData.question.content.image = action.payload.image;
     }
     if (action.type === 'MYSQL_DATA_CHANGE') {
       draft.reducerData.answer.SQLSchema = action.payload.SQLSchema;

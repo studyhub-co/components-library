@@ -57,27 +57,12 @@ function getOperateDataFunctions(dispatch: any) {
     dispatch({ type: 'QUESTION_HINT_CHANGE', payload: image });
   };
 
-  // const onQuestionImageChange = (image: any, materialUuid: string): void => {
-  //   /* try to upload image to the backend */
-  //   uploadImage(image, materialUuid).then((response: any) => {
-  //     dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
-  //   });
-  // };
-
-  const onQuestionImageChange = (image: string): void => {
-    /* try to upload image to the backend */
-    // uploadImage(image, materialUuid).then((response: any) => {
-    dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
-    // });
+  const onQuestionImageChange = (image: any, materialUuid: string): void => {
+    // dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: { image, materialUuid } });
+    uploadImage(image, materialUuid).then((response: any) => {
+      dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: response });
+    });
   };
-
-  // const onAnswerTextChange = (text: string): void => {
-  //   dispatch({ type: 'ANSWER_TEXT_CHANGE', payload: text });
-  // };
-  //
-  // const onAnswerImageChange = (image: string): void => {
-  //   dispatch({ type: 'ANSWER_IMAGE_CHANGE', payload: image });
-  // };
 
   const onAnswerMySQLDataChange = (
     SQLSchema: string,
