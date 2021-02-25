@@ -7,6 +7,7 @@ import { UnitConversionData as IQABaseData, UnitConversionDataIo } from './IData
 import { IReducerObject, reducer } from './reducer';
 
 import { mockUnitConversion } from './mockData';
+import { uploadImage } from '../../utils/serviceRequests';
 
 export function useComponentData(componentData: IQABaseData | undefined, currentMaterial: any) {
   const initialState: IReducerObject = { reducerData: null };
@@ -57,8 +58,15 @@ function getOperateDataFunctions(dispatch: any) {
     dispatch({ type: 'QUESTION_HINT_CHANGE', payload: image });
   };
 
-  const onQuestionImageChange = (image: string): void => {
-    dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
+  // const onQuestionImageChange = (image: string): void => {
+  //   dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: image });
+  // };
+
+  const onQuestionImageChange = (image: any, materialUuid: string): void => {
+    // dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: { image, materialUuid } });
+    uploadImage(image, materialUuid).then((response: any) => {
+      dispatch({ type: 'QUESTION_IMAGE_CHANGE', payload: response });
+    });
   };
 
   const onUnitConversionTypeChange = (type: string): void => {

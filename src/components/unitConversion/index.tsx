@@ -162,7 +162,7 @@ const Index: React.FC<IUnitConversionProps> = props => {
                   question={componentData.question}
                   onTextChange={operateDataFunctions.onQuestionTextChange}
                   onHintChange={operateDataFunctions.onQuestionHintChange}
-                  onImageChange={operateDataFunctions.onQuestionImageChange}
+                  onImageChange={image => operateDataFunctions.onQuestionImageChange(image, materialUuid || '')}
                 />
               </Paper>
             </ContainerItem>
