@@ -12,7 +12,6 @@ const api: Api = apiFactory(BACKEND_SERVER_API_URL);
 // };
 
 export const uploadImage = (image: any, materialUuid: string) => {
-  // console.log(image);
   const url = `studio/images/`;
   const data = new FormData();
   data.append('image', image, image.name);

@@ -101,7 +101,10 @@ const validate = (correctData, userReactionData) => {
       const userVector = userReactionData.answerVectors[index];
       if (correctData.answerToCheck === 10) {
         // 'Full vector match',
-        answerIsCorrect = JSON.stringify(correctVector) === JSON.stringify(userVector);
+        // this is not work because order is important
+        // answerIsCorrect = JSON.stringify(correctVector) === JSON.stringify(userVector);
+        // check that all keys in correct answer is equal to userVector key's values
+        Object.keys(correctVector).every(key => correctVector[key] === userVector[key]);
       } else if (correctData.answerToCheck === 20) {
         // 'Magnitude only',
         answerIsCorrect = correctVector.magnitude === userVector.magnitude;

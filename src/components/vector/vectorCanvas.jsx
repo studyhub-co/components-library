@@ -159,11 +159,11 @@ export class CanvasVector {
 
   calcPolarArrowAngle(x1, y1, x2, y2) {
     const x = x2 - x1;
-    const y = y2 - y1;
-
+    const y = y1 - y2;
     // Perform atan2 calculation as is inexpensive in comparison to atan
     // to find tangent of angle.
-    return (Math.atan2(y, x) * 180) / Math.PI;
+    return (Math.atan2(y, x) * (180 / Math.PI) + 360) % 360;
+    // return (Math.atan2(y, x) * 180) / Math.PI;
   }
 
   getPolarVectorAngle() {
