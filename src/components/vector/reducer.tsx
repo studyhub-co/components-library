@@ -1,5 +1,6 @@
 import produce from 'immer';
 import { VectorData } from './IData/index';
+import { convertMQToEvaluatedMath } from '../../utils/index';
 
 // we can have reducerData null while ajax request
 export type IReducerObject = { reducerData: VectorData | null };
@@ -22,7 +23,15 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
       draft.reducerData.question.content.hint = action.payload;
     }
     if (action.type === 'QUESTION_TEXT_CHANGE') {
-      draft.reducerData.question.content.text = action.payload;
+      // draft.reducerData.question.content.text = action.payload;
+      const text = action.payload;
+      draft.reducerData.question.content.text = text;
+      // FIXME not sure that we need evaluatedMathText for question, no need to compare with user answer
+      // try {
+      //   draft.reducerData.question.content.evaluatedMathText = '' + window.evaluatex(text)();
+      // } catch (e) {
+      //   draft.reducerData.question.content.evaluatedMathText = text;
+      // }
     }
     if (action.type === 'QUESTION_VECTOR_ADD') {
       draft.reducerData.questionVectors.push(action.payload);
@@ -34,7 +43,12 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
       draft.reducerData.answer.content.image = action.payload;
     }
     if (action.type === 'ANSWER_TEXT_CHANGE') {
-      draft.reducerData.answer.content.text = action.payload;
+      // draft.reducerData.answer.content.text = action.payload;
+      const text = action.payload;
+
+      draft.reducerData.answer.content.text = text;
+      // TODO add support for vector format A\hat{x|i} ± B\hat{y|j}
+      draft.reducerData.answer.content.evaluatedMathText = convertMQToEvaluatedMath(text);
     }
     if (action.type === 'ANSWER_VECTOR_IS_NULL') {
       draft.reducerData.answerVectorIsNull = action.payload;

@@ -1,5 +1,5 @@
 // based on base.jsx
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useState, useCallback } from 'react';
 // React docs:
 // If you want to reuse non-UI functionality between components, we suggest extracting it into a separate JavaScript
 // module.
@@ -118,6 +118,66 @@ interface IAnswer {
   box: any;
   splitData?: any;
 }
+
+export const parseToValueUnit = (input: string) => {
+  // trim backslash and spaces
+  input = input.replace(/^[\\\s]+|[\\\s]+$/gm, '');
+
+  const unitsArr = INPUT_UNITS;
+  // check for longer unit name firstly
+  unitsArr.sort(function(a, b) {
+    return b.length - a.length;
+  });
+
+  for (let i = 0; i < unitsArr.length; i++) {
+    const unit = unitsArr[i];
+    const foundIndex = input.indexOf(unit, input.length - unit.length);
+    if (foundIndex !== -1) {
+      // replace all char and spaces in value
+      const val = input.substring(0, foundIndex).replace(/[^0-9*^.-]+/g, '');
+      return [val, unit];
+      // return [parseFloat(val), unit];
+    }
+  }
+  return null;
+};
+
+/**
+ * Replace unsupported Latex by js-quantities
+ * @param stringFromMQ string from MathQuill latex
+ */
+export const replaceLatexFormulas = (stringFromMQ: string) => {
+  stringFromMQ = stringFromMQ.replace(/\\class{strikethrough}{(\S+)}/, '$1');
+  // remove backslash with whitespace
+  stringFromMQ = stringFromMQ.replace(/\\ /g, ' ');
+  stringFromMQ = stringFromMQ.replace(/\\frac{(\S+)}{(\S+)}/, '$1/$2');
+  // convert scientific notation
+  stringFromMQ = stringFromMQ.replace(/\\cdot/g, '*');
+  stringFromMQ = stringFromMQ.replace(/\^{\s*(\S+)\s*}/, '^($1)'); // fix for math.parser()
+  return stringFromMQ;
+};
+
+// clear data before js-q parse
+// remove  strikethrough
+export const clearDataText = (tmpData: string) => {
+  tmpData = replaceLatexFormulas(tmpData);
+
+  // const parsedToValUnit = this.constructor.parseToValueUnit(tmpData);
+  const parsedToValUnit = parseToValueUnit(tmpData);
+
+  if (parsedToValUnit && parsedToValUnit[0]) {
+    // const parser = math.parser();
+    try {
+      const value = window.evaluatex(parsedToValUnit[0])();
+      // const value = parser.eval(parsedToValUnit[0]);
+      if (value && parsedToValUnit[1]) {
+        tmpData = value + ' ' + parsedToValUnit[1];
+      }
+    } catch (e) {} // catch SyntaxError
+  }
+
+  return tmpData;
+};
 
 export function useUnitConversionBase(props: IUseUnitConversionProps) {
   const {
@@ -358,33 +418,33 @@ export function useUnitConversionBase(props: IUseUnitConversionProps) {
     // });
   };
 
-  // clear data before js-q parse
-  // remove  strikethrough
-  const clearDataText = useCallback((tmpData: string) => {
-    tmpData = tmpData.replace(/\\class{strikethrough}{(\S+)}/, '$1');
-    // remove backslash with whitespace
-    tmpData = tmpData.replace(/\\ /g, ' ');
-    tmpData = tmpData.replace(/\\frac{(\S+)}{(\S+)}/, '$1/$2');
-    // convert scientific notation
-    tmpData = tmpData.replace(/\\cdot/g, '*');
-    tmpData = tmpData.replace(/\^{\s*(\S+)\s*}/, '^($1)'); // fix for math.parser()
-
-    // const parsedToValUnit = this.constructor.parseToValueUnit(tmpData);
-    const parsedToValUnit = parseToValueUnit(tmpData);
-
-    if (parsedToValUnit && parsedToValUnit[0]) {
-      // const parser = math.parser();
-      try {
-        const value = window.evaluatex(parsedToValUnit[0])();
-        // const value = parser.eval(parsedToValUnit[0]);
-        if (value && parsedToValUnit[1]) {
-          tmpData = value + ' ' + parsedToValUnit[1];
-        }
-      } catch (e) {} // catch SyntaxError
-    }
-
-    return tmpData;
-  }, []);
+  // // clear data before js-q parse
+  // // remove  strikethrough
+  // const clearDataText = useCallback((tmpData: string) => {
+  //   tmpData = tmpData.replace(/\\class{strikethrough}{(\S+)}/, '$1');
+  //   // remove backslash with whitespace
+  //   tmpData = tmpData.replace(/\\ /g, ' ');
+  //   tmpData = tmpData.replace(/\\frac{(\S+)}{(\S+)}/, '$1/$2');
+  //   // convert scientific notation
+  //   tmpData = tmpData.replace(/\\cdot/g, '*');
+  //   tmpData = tmpData.replace(/\^{\s*(\S+)\s*}/, '^($1)'); // fix for math.parser()
+  //
+  //   // const parsedToValUnit = this.constructor.parseToValueUnit(tmpData);
+  //   const parsedToValUnit = parseToValueUnit(tmpData);
+  //
+  //   if (parsedToValUnit && parsedToValUnit[0]) {
+  //     // const parser = math.parser();
+  //     try {
+  //       const value = window.evaluatex(parsedToValUnit[0])();
+  //       // const value = parser.eval(parsedToValUnit[0]);
+  //       if (value && parsedToValUnit[1]) {
+  //         tmpData = value + ' ' + parsedToValUnit[1];
+  //       }
+  //     } catch (e) {} // catch SyntaxError
+  //   }
+  //
+  //   return tmpData;
+  // }, []);
 
   const onMathQuillChange = useCallback(
     (data: string, row: number, col: number, mathquillObj: any) => {
@@ -453,8 +513,7 @@ export function useUnitConversionBase(props: IUseUnitConversionProps) {
 
   const getBaseFor2Qty = (firstQty: any, secondQty: any) => {
     // Determine the minimum of minLength
-    let minLength = 0;
-    minLength = firstQty.baseScalar.toString().length;
+    let minLength = firstQty.baseScalar.toString().length;
     if (secondQty.toString().length < minLength) {
       minLength = secondQty.baseScalar.toString().length;
     }
@@ -536,28 +595,28 @@ export function useUnitConversionBase(props: IUseUnitConversionProps) {
     return answers;
   };
 
-  const parseToValueUnit = (input: string) => {
-    // trim backslash and spaces
-    input = input.replace(/^[\\\s]+|[\\\s]+$/gm, '');
-
-    const unitsArr = INPUT_UNITS;
-    // check for longer unit name firstly
-    unitsArr.sort(function(a, b) {
-      return b.length - a.length;
-    });
-
-    for (let i = 0; i < unitsArr.length; i++) {
-      const unit = unitsArr[i];
-      const foundIndex = input.indexOf(unit, input.length - unit.length);
-      if (foundIndex !== -1) {
-        // replace all char and spaces in value
-        const val = input.substring(0, foundIndex).replace(/[^0-9*^.-]+/g, '');
-        return [val, unit];
-        // return [parseFloat(val), unit];
-      }
-    }
-    return null;
-  };
+  // const parseToValueUnit = (input: string) => {
+  //   // trim backslash and spaces
+  //   input = input.replace(/^[\\\s]+|[\\\s]+$/gm, '');
+  //
+  //   const unitsArr = INPUT_UNITS;
+  //   // check for longer unit name firstly
+  //   unitsArr.sort(function(a, b) {
+  //     return b.length - a.length;
+  //   });
+  //
+  //   for (let i = 0; i < unitsArr.length; i++) {
+  //     const unit = unitsArr[i];
+  //     const foundIndex = input.indexOf(unit, input.length - unit.length);
+  //     if (foundIndex !== -1) {
+  //       // replace all char and spaces in value
+  //       const val = input.substring(0, foundIndex).replace(/[^0-9*^.-]+/g, '');
+  //       return [val, unit];
+  //       // return [parseFloat(val), unit];
+  //     }
+  //   }
+  //   return null;
+  // };
   // }
 
   return {

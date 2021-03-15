@@ -57,7 +57,15 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
       }
     }
     if (action.type === 'QUESTION_TEXT_CHANGE') {
-      draft.reducerData.question.content.text = action.payload;
+      // draft.reducerData.question.content.text = action.payload;
+      const text = action.payload;
+      draft.reducerData.question.content.text = text;
+      // FIXME not sure that we need evaluatedMathText for question, no need to compare with user answer
+      // try {
+      //   draft.reducerData.question.content.evaluatedMathText = '' + window.evaluatex(text)();
+      // } catch (e) {
+      //   draft.reducerData.question.content.evaluatedMathText = text;
+      // }
     }
     if (action.type === 'QUESTION_HINT_CHANGE') {
       draft.reducerData.question.content.hint = action.payload;
