@@ -24,16 +24,17 @@ export function uuidV4() {
 export function convertMQToEvaluatedMath(text: string) {
   const parsedToValUnit = parseToValueUnit(replaceLatexFormulas(text));
   // if parseToValueUnit is null then text have no units
+  let newText = text.slice();
   if (parsedToValUnit) {
-    text = parsedToValUnit[0];
+    newText = parsedToValUnit[0];
   }
   try {
-    let evaluatedMathText = `${window.evaluatex(text)()}`;
+    let evaluatedMathText = `${window.evaluatex(newText)()}`;
     if (parsedToValUnit) {
       // value + unit
       evaluatedMathText = `${evaluatedMathText}${parsedToValUnit[1]}`;
     }
-    console.log(evaluatedMathText);
+    // console.log(evaluatedMathText);
     // draft.reducerData.answer.content.evaluatedMathText = evaluatedMathText;
     return evaluatedMathText;
   } catch (e) {
