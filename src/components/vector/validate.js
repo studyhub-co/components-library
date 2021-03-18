@@ -104,10 +104,12 @@ const validate = (correctData, userReactionData) => {
         // this is not work because order is important
         // answerIsCorrect = JSON.stringify(correctVector) === JSON.stringify(userVector);
         // check that all keys in correct answer is equal to userVector key's values
-        Object.keys(correctVector).every(key => correctVector[key] === userVector[key]);
+        answerIsCorrect = Object.keys(correctVector).every(
+          key => correctVector[key].toFixed(2) === userVector[key].toFixed(2),
+        );
       } else if (correctData.answerToCheck === 20) {
         // 'Magnitude only',
-        answerIsCorrect = correctVector.magnitude === userVector.magnitude;
+        answerIsCorrect = correctVector.magnitude.toFixed(2) === userVector.magnitude.toFixed(2);
       } else if (correctData.answerToCheck === 30) {
         // Angle only',
         answerIsCorrect = correctVector.angle === userVector.angle;

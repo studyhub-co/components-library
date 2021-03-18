@@ -6,6 +6,7 @@ import { VectorIo } from './vector';
 const HiddenFields = t.interface({
   answerVectors: t.array(VectorIo),
   answer: QuestionIo,
+  answerVectorIsNull: t.boolean,
 });
 
 export const VectorDataIo = t.interface({

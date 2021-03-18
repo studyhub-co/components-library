@@ -22,7 +22,8 @@ export function uuidV4() {
  * @param text: string from MathQuill latex
  */
 export function convertMQToEvaluatedMath(text: string) {
-  const parsedToValUnit = parseToValueUnit(replaceLatexFormulas(text));
+  text = replaceLatexFormulas(text);
+  const parsedToValUnit = parseToValueUnit(text);
   // if parseToValueUnit is null then text have no units
   let newText = text.slice();
   if (parsedToValUnit) {

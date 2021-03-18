@@ -1,4 +1,5 @@
 import { VectorData } from './IData/index';
+import * as t from "io-ts";
 
 // <MenuItem value={10}>Full vector match</MenuItem>
 /// <MenuItem value={20}>Magnitude only</MenuItem>
@@ -36,6 +37,7 @@ export const mockVector: VectorData = {
       },
       type: 'base',
     },
+    answerVectorIsNull: false,
   },
   questionVectors: [
     // {
