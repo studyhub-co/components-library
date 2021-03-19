@@ -75,7 +75,7 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
             color="primary"
             variant="contained"
             onClick={() => {
-              // TODO! we do not have next material uud here!
+              // TODO! we do not have next material uuid here!
               /* handleContinueClick see src/components/common/checkContinueButton.tsx for details */
               moveToNextComponent();
             }}

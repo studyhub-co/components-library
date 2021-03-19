@@ -159,6 +159,7 @@ const Index: React.FC<IUnitConversionProps> = props => {
               <Paper>
                 <Question
                   editMode={editMode}
+                  mathMode={true}
                   question={componentData.question}
                   onTextChange={operateDataFunctions.onQuestionTextChange}
                   onHintChange={operateDataFunctions.onQuestionHintChange}

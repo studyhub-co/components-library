@@ -112,7 +112,7 @@ const validate = (correctData, userReactionData) => {
         answerIsCorrect = correctVector.magnitude.toFixed(2) === userVector.magnitude.toFixed(2);
       } else if (correctData.answerToCheck === 30) {
         // Angle only',
-        answerIsCorrect = correctVector.angle === userVector.angle;
+        answerIsCorrect = correctVector.angle.toFixed(2) === userVector.angle.toFixed(2);
       }
     });
 

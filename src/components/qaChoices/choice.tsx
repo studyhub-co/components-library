@@ -225,7 +225,13 @@ const Choice: React.FC<ChoiceProps> = props => {
           </Grid>
         </Grid>
         <Grid item xs={8} md={10}>
-          <EditableLabel onChange={onTextChange} value={choice.content.text} editMode={editMode} cursorPointer={true} />
+          <EditableLabel
+            mathMode={true}
+            onChange={onTextChange}
+            value={choice.content.text}
+            editMode={editMode}
+            cursorPointer={true}
+          />
         </Grid>
         <Grid item xs={2} md={1}>
           <span style={{ display: editMode && state.hovered ? 'block' : 'none' }}>

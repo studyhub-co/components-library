@@ -23,16 +23,19 @@ import { validate as unitConversionValidate } from '../src/components/unitConver
 // const BACKEND_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1/';
 
 // TODO make it configurable
-const lessonUuid = '3a484714-dc4a-4f30-bae3-7ba0c6ad7a72';
+// const lessonUuid = '63dd9e74-4623-4fce-bb05-1cd85952794d';
+const lessonUuid = '6557af06-52bb-4a12-919f-cd09267373dd';
 
 // we need to set Material component type, because we don't use sandbox code (we use Component directly)
 const materialsUuids = {
-  /* order is important?! */
-  // 'a8970b5b-22b8-4792-ac37-8109244e3a75': QAChoices,
-  // 'aef3e51c-e0af-4426-be8b-7984ef68bc49': Vector,
-  // 'fed7dac1-4412-4a70-9070-bb1e691b16fd': MySQL,
-  // '941b2426-f0bf-45c3-b850-4b0ce03300a1': UnitConversion,
-  '44c8daca-5f13-4a9d-9a70-a1eb5389f65a': QABase,
+  /* order is important */
+  '124bb548-e231-46f6-98a1-3e5ffdab58e2': QAChoices,
+  //'dd8b7f41-a244-4c77-8451-f210e24b0715': QAChoices,
+  //'f6685f7a-3764-4d1e-806c-171ecdc9eaad': Vector,
+  // '9d264c70-56ce-40b0-83ad-8d746089ee61': Vector,
+  // '8b85058d-a22b-4615-a7a8-92e9dbbc5f86': MySQL,
+  // '3d35337f-e805-4126-9c91-dd35a7e01892': UnitConversion,
+  // 'ebe3c6c3-663c-4ed9-b03e-c769e054cadf': QABase,
 };
 
 // const componentOptions = {

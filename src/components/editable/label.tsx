@@ -64,6 +64,8 @@ const EditableLabel: React.FC<EditableLabelProps> = props => {
     }
   };
 
+  console.log(value);
+
   return (
     <div onMouseOver={onHover} onMouseOut={onHover}>
       {mathMode ? (

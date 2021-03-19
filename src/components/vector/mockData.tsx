@@ -1,5 +1,4 @@
 import { VectorData } from './IData/index';
-import * as t from "io-ts";
 
 // <MenuItem value={10}>Full vector match</MenuItem>
 /// <MenuItem value={20}>Magnitude only</MenuItem>
