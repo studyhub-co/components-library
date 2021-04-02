@@ -48,8 +48,15 @@ const EditableThumbnail: React.FC<EditableThumbnailProps> = props => {
       setImageSrc(objectUrl);
     }
     if (image && typeof image == 'string') {
-      // Image url from JSON DATA
-      setImageSrc(image);
+      // Image url from JSON DATA or from upload image API
+      // TODO make it configurable at the deploy stage
+      if (window.location.href === 'http://127.0.0.1:3000/') {
+        // pib_eval demo mode / add django dev domain
+        setImageSrc(`http://127.0.0.1:8000${image}`);
+      } else {
+        // development mode / django dev domain (uses the same local server for media and backend)
+        setImageSrc(image);
+      }
     }
   }, [image]);
 

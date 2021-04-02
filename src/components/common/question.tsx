@@ -7,7 +7,7 @@ import Box from '@material-ui/core/Box';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { FaFileImage } from 'react-icons/fa';
+// import { FaFileImage } from 'react-icons/fa';
 import EditableThumbnail from '../editable/thumbnail';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix

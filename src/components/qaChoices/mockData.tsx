@@ -4,7 +4,7 @@ import { uuidV4 } from '../../utils/index';
 export const mockQaChoices: QAData = {
   question: {
     content: {
-      text: 'Enter question text',
+      text: '\\text{Enter question text}',
       evaluatedMathText: '',
       image: '',
       hint: '',
