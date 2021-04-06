@@ -18,7 +18,8 @@
     margin-bottom: 4rem;
     height: auto;
     border-radius: 1rem;
-    padding: 4rem;
+    padding: 0.5rem;
+    /*padding: 4rem;*/
 }
 
 .red-border {

@@ -9,7 +9,8 @@ const ContainerItem: React.FC = props => {
   const newProps = {
     // default props
     item: true,
-    xs: 6,
+    xs: 12,
+    md: 6,
     ...props,
   } as React.HTMLAttributes<any>;
 

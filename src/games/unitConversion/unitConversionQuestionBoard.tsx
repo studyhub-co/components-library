@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import Draggable from 'react-draggable';
-import MediaQuery from 'react-responsive';
+import Grid from '@material-ui/core/Grid';
+// import Draggable from 'react-draggable';
+// import ScrollContainer from 'react-indiana-drag-scroll';
+// import MediaQuery from 'react-responsive';
 
 import UnitConversionCanvas from './unitConversionCanvas';
 
@@ -70,6 +72,7 @@ const UnitConversionQuestionBoard: React.FC<UnitConversionQuestionBoardProps> = 
   }, [csh]);
 
   const copy2AnswerFunc = () => {
+    // console.log('copy2AnswerFunc');
     if (calculatorAnswer !== '') {
       setAnswer2Send(calculatorAnswer);
       // const conversion = conversionCanvas.current as any;
@@ -111,7 +114,8 @@ const UnitConversionQuestionBoard: React.FC<UnitConversionQuestionBoardProps> = 
   };
 
   const mathFieldStyle = {
-    minWidth: '25rem',
+    // minWidth: '10rem',
+    width: '100%',
     fontSize: 30,
   };
 
@@ -123,50 +127,59 @@ const UnitConversionQuestionBoard: React.FC<UnitConversionQuestionBoardProps> = 
   };
 
   return (
-    <div>
-      <Draggable
-        disabled={window.screen.width > 736}
-        axis="x"
-        bounds={{ left: -window.screen.width + 100, top: 0, right: 0, bottom: 0 }}
-        cancel=".mq-root-block"
-      >
-        <div style={{ display: 'table', marginLeft: 'auto', marginRight: 'auto' }} className="bounding-box text-center">
-          <MediaQuery minDeviceWidth={736}>
-            <h2>{question}</h2>
-          </MediaQuery>
-          <MediaQuery maxDeviceWidth={736}>
-            <h2>{question}</h2>
-          </MediaQuery>
-          <UnitConversionCanvas
-            number={number}
-            unit={unit}
-            nextQuestion={nextQuestion}
-            gameOver={gameOver}
-            gameState={gameState}
-            level={level}
-            refreshAnswerValue={answer2Send}
-            conversionSessionHash={csh}
-            // ref={conversionCanvas => {
-            //   conversionCanvas.current = conversionCanvas;
-            // }}
-          />
-        </div>
-      </Draggable>
-      <Draggable
-        disabled={window.screen.width > 736}
-        axis="x"
-        bounds={{ left: -window.screen.width + 100, top: 0, right: 0, bottom: 0 }}
-        cancel=".mq-root-block"
-      >
-        <div style={{ display: 'table', marginLeft: 'auto', marginRight: 'auto' }} className="bounding-box">
-          <div className="text-center">
-            <h2>Calculator</h2>
-            <div>
-              <div style={{ display: 'table-cell', verticalAlign: 'middle' }}>
+    <div className="bounding-box text-center">
+      {/*<Draggable*/}
+      {/*  disabled={window.screen.width > 736}*/}
+      {/*  axis="x"*/}
+      {/*  bounds={{ left: -window.screen.width + 100, top: 0, right: 0, bottom: 0 }}*/}
+      {/*  cancel=".mq-root-block"*/}
+      {/*>*/}
+      {/*<ScrollContainer vertical={false}>*/}
+      {/*<div style={{ display: 'block', overflowX: 'auto' }}>*/}
+      {/*  <div style={{ display: 'table', marginLeft: 'auto', marginRight: 'auto' }} className="bounding-box text-center">*/}
+      <h2>{question}</h2>
+      {/*<MediaQuery minDeviceWidth={736}>*/}
+      {/*  <h2>{question}</h2>*/}
+      {/*</MediaQuery>*/}
+      {/*<MediaQuery maxDeviceWidth={736}>*/}
+      {/*  <h2>{question}</h2>*/}
+      {/*</MediaQuery>*/}
+      <UnitConversionCanvas
+        number={number}
+        unit={unit}
+        nextQuestion={nextQuestion}
+        gameOver={gameOver}
+        gameState={gameState}
+        level={level}
+        refreshAnswerValue={answer2Send}
+        conversionSessionHash={csh}
+        // ref={conversionCanvas => {
+        //   conversionCanvas.current = conversionCanvas;
+        // }}
+      />
+      {/*</div>*/}
+      {/*</ScrollContainer>*/}
+      {/*</Draggable>*/}
+      {/*<Draggable*/}
+      {/*  disabled={window.screen.width > 736}*/}
+      {/*  axis="x"*/}
+      {/*  bounds={{ left: -window.screen.width + 100, top: 0, right: 0, bottom: 0 }}*/}
+      {/*  cancel=".mq-root-block"*/}
+      {/*>*/}
+      {/*<ScrollContainer vertical={false}>*/}
+      {/*<div style={{ display: 'table', marginLeft: 'auto', marginRight: 'auto' }} className="bounding-box">*/}
+      <div className="text-center">
+        <h2>Calculator</h2>
+        <div style={{ display: 'block', overflowX: 'auto' }}>
+          <Grid container justify="center" alignItems="center">
+            <Grid item xs={5}>
+              <div style={{ verticalAlign: 'middle' }}>
                 <p style={{ marginBottom: 5 }}>
                   <span id={csh + '-calculatorField'} style={mathFieldStyle} />
                 </p>
               </div>
+            </Grid>
+            <Grid item xs={7}>
               <div
                 style={{
                   fontSize: 30,
@@ -189,72 +202,92 @@ const UnitConversionQuestionBoard: React.FC<UnitConversionQuestionBoardProps> = 
               >
                 {calculatorAnswer}
               </div>
-              <div style={{ textAlign: 'right' }}>
-                <div className="button-group">
-                  <Button style={checkSaveButtonStyle} variant="contained" color="primary" onClick={copy2AnswerFunc}>
-                    Copy to answer
-                  </Button>
-                  {/*<button*/}
-                  {/*  id="checkButton"*/}
-                  {/*  className={'btn btn-primary' + (calculatorAnswer === '' ? ' disabled' : '')}*/}
-                  {/*  onClick={copy2AnswerFunc}*/}
-                  {/*>*/}
-                  {/*  Copy to answer*/}
-                  {/*</button>*/}
+            </Grid>
+          </Grid>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div className="button-group">
+            <Button style={checkSaveButtonStyle} variant="contained" color="primary" onClick={copy2AnswerFunc}>
+              Copy to answer
+            </Button>
+            {/*<button*/}
+            {/*  id="checkButton"*/}
+            {/*  className={'btn btn-primary' + (calculatorAnswer === '' ? ' disabled' : '')}*/}
+            {/*  onClick={copy2AnswerFunc}*/}
+            {/*>*/}
+            {/*  Copy to answer*/}
+            {/*</button>*/}
+          </div>
+        </div>
+        {/*</div>*/}
+      </div>
+      {/*</ScrollContainer>*/}
+      {/*</Draggable>*/}
+      {/*<Draggable*/}
+      {/*  disabled={window.screen.width > 736}*/}
+      {/*  axis="x"*/}
+      {/*  bounds={{ left: -window.screen.width, top: 0, right: 0, bottom: 0 }}*/}
+      {/*  cancel=".mq-root-block"*/}
+      {/*>*/}
+      <div style={{ marginLeft: 'auto', marginRight: 'auto' }} className="bounding-box">
+        <div className="text-center">
+          <h2>Unit Conversion Cheat Sheet</h2>
+          <div style={{ overflowX: 'auto' }}>
+            <div
+              style={{
+                display: 'table',
+                marginLeft: 'auto',
+                borderCollapse: 'collapse',
+                marginRight: 'auto',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <div style={{ display: 'table-row' }}>
+                <div style={Object.assign({}, cellCheatStyle, { textDecoration: 'underline', fontWeight: 'bold' })}>
+                  Measurement
+                </div>
+                <div style={Object.assign({}, cellCheatStyle, { textDecoration: 'underline', fontWeight: 'bold' })}>
+                  SI to US Standard
+                </div>
+                <div style={Object.assign({}, cellCheatStyle, { textDecoration: 'underline', fontWeight: 'bold' })}>
+                  US Standard to SI
+                </div>
+              </div>
+              <div style={{ display: 'table-row' }}>
+                <div style={cellCheatStyle}>Distance</div>
+                <div style={cellCheatStyle}>
+                  1 cm = 0.3937 in <br />
+                  1 m = 100 cm = 3.28 ft <br />1 km = 0.621 mi
+                </div>
+                <div style={cellCheatStyle}>
+                  1 in = 2.54 cm <br />
+                  1 ft = 0.3048 m <br />1 mi = 5280 ft = 1.609 km
+                </div>
+              </div>
+              <div style={{ display: 'table-row' }}>
+                <div style={cellCheatStyle}>Mass</div>
+                <div style={cellCheatStyle}>
+                  1 kg = 1000 g = 2.2 lb <br />1 g = 0.035 oz
+                </div>
+                <div style={cellCheatStyle}>
+                  1 lb = 16 oz = 0.454 kg <br />1 oz = 28.35 g = 0.02835 kg
+                </div>
+              </div>
+              <div style={{ display: 'table-row' }}>
+                <div style={cellCheatStyle}>Time</div>
+                <div style={cellCheatStyle}>1 s = 1000 ms = 0.0166 min</div>
+                <div style={cellCheatStyle}>
+                  1 min = 60 s <br /> <br />
+                  Other useful non-SI conversions: <br />
+                  1 hr = 60 min <br />
+                  1 day = 24 hr <br />1 week = 7 days
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </Draggable>
-      <div style={{ display: 'table', marginLeft: 'auto', marginRight: 'auto' }} className="bounding-box">
-        <div className="text-center">
-          <h2>Unit Conversion Cheat Sheet</h2>
-          <div style={{ display: 'table', marginLeft: 'auto', borderCollapse: 'collapse', marginRight: 'auto' }}>
-            <div style={{ display: 'table-row' }}>
-              <div style={Object.assign({}, cellCheatStyle, { textDecoration: 'underline', fontWeight: 'bold' })}>
-                Measurement
-              </div>
-              <div style={Object.assign({}, cellCheatStyle, { textDecoration: 'underline', fontWeight: 'bold' })}>
-                SI to US Standard
-              </div>
-              <div style={Object.assign({}, cellCheatStyle, { textDecoration: 'underline', fontWeight: 'bold' })}>
-                US Standard to SI
-              </div>
-            </div>
-            <div style={{ display: 'table-row' }}>
-              <div style={cellCheatStyle}>Distance</div>
-              <div style={cellCheatStyle}>
-                1 cm = 0.3937 in <br />
-                1 m = 100 cm = 3.28 ft <br />1 km = 0.621 mi
-              </div>
-              <div style={cellCheatStyle}>
-                1 in = 2.54 cm <br />
-                1 ft = 0.3048 m <br />1 mi = 5280 ft = 1.609 km
-              </div>
-            </div>
-            <div style={{ display: 'table-row' }}>
-              <div style={cellCheatStyle}>Mass</div>
-              <div style={cellCheatStyle}>
-                1 kg = 1000 g = 2.2 lb <br />1 g = 0.035 oz
-              </div>
-              <div style={cellCheatStyle}>
-                1 lb = 16 oz = 0.454 kg <br />1 oz = 28.35 g = 0.02835 kg
-              </div>
-            </div>
-            <div style={{ display: 'table-row' }}>
-              <div style={cellCheatStyle}>Time</div>
-              <div style={cellCheatStyle}>1 s = 1000 ms = 0.0166 min</div>
-              <div style={cellCheatStyle}>
-                1 min = 60 s <br /> <br />
-                Other useful non-SI conversions: <br />
-                1 hr = 60 min <br />
-                1 day = 24 hr <br />1 week = 7 days
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
+      {/*</Draggable>*/}
     </div>
   );
 };

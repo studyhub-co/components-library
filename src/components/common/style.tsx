@@ -7,6 +7,7 @@ export const checkSaveButtonStyle = {
   outline: 'none',
   width: '60%',
   margin: '2rem 0 2rem 0',
+  cursor: 'pointer',
 };
 
 export const checkSaveButtonStyleDisabled = {

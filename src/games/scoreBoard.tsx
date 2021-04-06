@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import ReactCountdownClock from 'react-countdown-clock';
-import MediaQuery from 'react-responsive';
+// import MediaQuery from 'react-responsive';
 import Grid from '@material-ui/core/Grid';
 
 import { GameState } from './constants';
@@ -88,7 +88,7 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
     case GameState.WON:
       paused = true;
       scorePanel = (
-        <Grid item md={4}>
+        <Grid item md={5}>
           <h2 className="TwCenMT">Score: {score}</h2>
           <h1 className="TwCenMT">You Won!</h1>
           <Button
@@ -107,93 +107,94 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
     case GameState.PAUSED:
       paused = true;
       scorePanel = (
-        <Grid item md={6}>
-          <Grid container>
-            <MediaQuery minDeviceWidth={736}>
-              <Grid item md={6}>
-                <h2 className="TwCenMT">Score: {score}</h2>
-              </Grid>
-              <Grid item md={6}>
-                <h2 className="TwCenMT">Level: {level}</h2>
-              </Grid>
-            </MediaQuery>
-            <MediaQuery maxDeviceWidth={736}>
-              <Grid item md={6}>
-                <h4 className="TwCenMT text-center">Score: {score}</h4>
-                <h4 className="TwCenMT text-center">Level: {level}</h4>
-              </Grid>
-            </MediaQuery>
+        <Grid container item md={2} sm={2} xs={5} lg={1}>
+          {/*<Grid container>*/}
+          {/*<Grid container>*/}
+          {/*<MediaQuery minDeviceWidth={736}>*/}
+          <Grid item xs={12}>
+            <h3 className="TwCenMT">Score: {score}</h3>
           </Grid>
+          <Grid item xs={12}>
+            <h3 className="TwCenMT">Level: {level}</h3>
+          </Grid>
+          {/*</MediaQuery>*/}
+          {/*<MediaQuery maxDeviceWidth={736}>*/}
+          {/*  <Grid item md={6}>*/}
+          {/*    <h4 className="TwCenMT text-center">Score: {score}</h4>*/}
+          {/*    <h4 className="TwCenMT text-center">Level: {level}</h4>*/}
+          {/*  </Grid>*/}
+          {/*</MediaQuery>*/}
+          {/*</Grid>*/}
         </Grid>
       );
       break;
     default:
       paused = false;
       scorePanel = (
-        <Grid item md={6}>
+        <Grid container item md={2} sm={2} xs={5} lg={1}>
           {/*<MediaQuery minDeviceWidth={736}>*/}
-          <Grid container>
-            <Grid item md={6}>
-              {/* fixme TwCenMT font family. */}
-              <h2 className="TwCenMT">Score: {score}</h2>
-            </Grid>
-            <Grid item md={6}>
-              <h2 className="TwCenMT">Level: {level}</h2>
-            </Grid>
+          {/*<Grid container>*/}
+          <Grid item xs={12}>
+            {/* fixme TwCenMT font family. */}
+            <h3 className="TwCenMT">Score: {score}</h3>
           </Grid>
+          <Grid item xs={12}>
+            <h3 className="TwCenMT">Level: {level}</h3>
+          </Grid>
+          {/*</Grid>*/}
         </Grid>
       );
   }
   const clockStyle = {
-    height: 100,
-    width: 100,
-    top: '50%',
-    left: '50%',
-    display: 'block',
-    marginLeft: -100,
-    position: 'relative' as 'relative',
+    // height: 100,
+    // width: 100,
+    // top: '50%',
+    // left: '50%',
+    // display: 'block',
+    // marginLeft: -100,
+    // position: 'relative' as 'relative',
     cursor: 'pointer',
   } as React.CSSProperties;
-  const smallClockStyle = {
-    height: 50,
-    width: 50,
-    top: '50%',
-    left: '50%',
-    display: 'block',
-    marginLeft: -50,
-    position: 'relative',
-  } as React.CSSProperties;
+  // const smallClockStyle = {
+  //   height: 50,
+  //   width: 50,
+  //   top: '50%',
+  //   left: '50%',
+  //   display: 'block',
+  //   marginLeft: -50,
+  //   position: 'relative',
+  // } as React.CSSProperties;
   return (
-    <Grid container justify="center">
-      <Grid item md={2}>
-        <MediaQuery minDeviceWidth={736}>
-          <div style={clockStyle} onClick={pause}>
-            <ReactCountdownClock
-              key={clockKey}
-              seconds={seconds}
-              color="#1baff6"
-              alpha={0.9}
-              size={100}
-              weight={10}
-              paused={paused}
-              onComplete={timesUp}
-            />
-          </div>
-        </MediaQuery>
-        <MediaQuery maxDeviceWidth={736}>
-          <div style={smallClockStyle} onClick={pause}>
-            <ReactCountdownClock
-              key={clockKey}
-              seconds={seconds}
-              color="#1baff6"
-              alpha={0.9}
-              size={50}
-              weight={10}
-              paused={paused}
-              onComplete={timesUp}
-            />
-          </div>
-        </MediaQuery>
+    <Grid container item justify="center">
+      <Grid item md={2} sm={2} xs={5} lg={1}>
+        {/*<MediaQuery minDeviceWidth={736}>*/}
+        <div style={clockStyle} onClick={pause}>
+          <ReactCountdownClock
+            key={clockKey}
+            seconds={seconds}
+            color="#1baff6"
+            alpha={0.9}
+            size={100}
+            weight={10}
+            paused={paused}
+            onComplete={timesUp}
+          />
+        </div>
+        {/*</MediaQuery>*/}
+        {/*<MediaQuery maxDeviceWidth={736}>*/}
+        {/*<div style={smallClockStyle} onClick={pause}>*/}
+        {/*  <ReactCountdownClock*/}
+        {/*    key={clockKey}*/}
+        {/*    seconds={seconds}*/}
+        {/*    color="#1baff6"*/}
+        {/*    alpha={0.9}*/}
+        {/*    size={50}*/}
+        {/*    weight={10}*/}
+        {/*    paused={paused}*/}
+        {/*    onComplete={timesUp}*/}
+        {/*  />*/}
+        {/*</div>*/}
+        {/*</MediaQuery>*/}
       </Grid>
       {scorePanel}
     </Grid>
