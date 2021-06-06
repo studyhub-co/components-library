@@ -42,7 +42,13 @@ const materialsUuids = {
 //   BACKEND_SERVER_API_URL: BACKEND_SERVER_API_URL,
 // };
 
-const Student: React.FC = ({ currentMaterial, fetchMaterialStudentView }) => {
+const Student: ({
+  currentMaterial,
+  fetchMaterialStudentView,
+}: {
+  currentMaterial: any;
+  fetchMaterialStudentView: any;
+}) => JSX.Element = ({ currentMaterial, fetchMaterialStudentView }) => {
   // we need data only from selected materials
 
   const [state, setState] = useState({
@@ -79,7 +85,7 @@ const Student: React.FC = ({ currentMaterial, fetchMaterialStudentView }) => {
         setState({ ...state, currentMaterialUuid: currentMaterial.uuid });
       }
     }
-  }, [currentMaterial]);
+  }, [currentMaterial]); // do not use state here!
 
   return (
     <div>

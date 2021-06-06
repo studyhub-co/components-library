@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Draggable from 'react-draggable';
+// import Draggable from 'react-draggable';
 
 import { ThemeProvider } from '@material-ui/core/styles';
 
@@ -169,37 +169,37 @@ const Index: React.FC<IUnitConversionProps> = props => {
             </ContainerItem>
             <ContainerItem>
               <Paper>
-                <Draggable
-                  disabled={window.screen.width > 736}
-                  axis="x"
-                  bounds={{ left: -window.screen.width + 100, top: 0, right: 0, bottom: 0 }}
-                  cancel=".mq-root-block"
-                >
-                  <UnitConversion
-                    answerNumber={componentData.answerStepNumber}
-                    answerUnit={componentData.answerStepUnit}
-                    number={componentData.questionStepNumber}
-                    unit={componentData.questionStepUnit}
-                    unitConversionType={componentData.conversionType}
-                    onUnitConversionTypeChange={(event: any) => {
-                      operateDataFunctions.onUnitConversionTypeChange(event.target.value);
-                    }}
-                    onQuestionStepChange={operateDataFunctions.onQuestionStepChange}
-                    conversionSteps={componentData.conversionSteps}
-                    // onConversionStepsChange={operateDataFunctions.onConversionStepsChange}
-                    updateAnswer={(answer: any) => {
-                      // update all steps + answer
-                      if (answer) {
-                        // const answer = answerArray[1]['unitConversion'];
-                        operateDataFunctions.onConversionStepsChange(answer.conversionSteps);
-                        operateDataFunctions.onAnswerStepChange(answer.answerNumber, answer.answerUnit);
-                      }
-                    }}
-                    editMode={editMode}
-                    // uuid={this.props.question.uuid}
-                    // is_correct_answer={this.props.correct}
-                  />
-                </Draggable>
+                {/*<Draggable*/}
+                {/*  disabled={window.screen.width > 736}*/}
+                {/*  axis="x"*/}
+                {/*  bounds={{ left: -window.screen.width + 100, top: 0, right: 0, bottom: 0 }}*/}
+                {/*  cancel=".mq-root-block"*/}
+                {/*>*/}
+                <UnitConversion
+                  answerNumber={componentData.answerStepNumber}
+                  answerUnit={componentData.answerStepUnit}
+                  number={componentData.questionStepNumber}
+                  unit={componentData.questionStepUnit}
+                  unitConversionType={componentData.conversionType}
+                  onUnitConversionTypeChange={(event: any) => {
+                    operateDataFunctions.onUnitConversionTypeChange(event.target.value);
+                  }}
+                  onQuestionStepChange={operateDataFunctions.onQuestionStepChange}
+                  conversionSteps={componentData.conversionSteps}
+                  // onConversionStepsChange={operateDataFunctions.onConversionStepsChange}
+                  updateAnswer={(answer: any) => {
+                    // update all steps + answer
+                    if (answer) {
+                      // const answer = answerArray[1]['unitConversion'];
+                      operateDataFunctions.onConversionStepsChange(answer.conversionSteps);
+                      operateDataFunctions.onAnswerStepChange(answer.answerNumber, answer.answerUnit);
+                    }
+                  }}
+                  editMode={editMode}
+                  // uuid={this.props.question.uuid}
+                  // is_correct_answer={this.props.correct}
+                />
+                {/*</Draggable>*/}
               </Paper>
             </ContainerItem>
           </Container>
