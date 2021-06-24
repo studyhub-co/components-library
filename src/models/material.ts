@@ -17,7 +17,7 @@ export interface UserReactionResult {
   completed_on: null | string;
   correct_data?: QAData | VectorData | QABaseData | UnitConversionData | MySQLData;
   required_score: number;
-  score: number;
+  lesson_progress: number;
   status: number;
   was_correct: boolean;
   next_material_uuid: string;

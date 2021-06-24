@@ -21,7 +21,7 @@ export function useUserMaterialReactionResult(
         type: 'user_reaction_state',
         data: {
           state: userReactionStateP,
-          userLessonScore: userMaterialReactionResult?.score,
+          userLessonScore: userMaterialReactionResult?.lesson_progress,
           wasCorrect: userReactionStateP === 'checked' ? userMaterialReactionResult?.was_correct : null,
         },
       },
