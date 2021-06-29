@@ -6,6 +6,7 @@ import { MySQLData } from '../components/mysql/IData/index';
 
 export interface Material {
   uuid: string | null; // null - material not loaded yet
+  next_material_uuid?: string;
   data: QAData | VectorData | QABaseData | UnitConversionData | MySQLData | null; // TODO list of components interfaces
 }
 

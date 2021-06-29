@@ -55,10 +55,10 @@ export function useSpaEventsHook(
         if (data.type === 'continue') {
           if (currentMaterial.uuid) {
             // reset results for the same problem type component
-            moveToNextComponent(userMaterialReactionResult.next_material_uuid);
+            moveToNextComponent(userMaterialReactionResult?.next_material_uuid || currentMaterial?.next_material_uuid);
             setUserReactionState('start');
 
-            // send redirect url tp parent
+            // send redirect url to parent
             window.parent.postMessage(
               {
                 type: 'redirect_to_material',

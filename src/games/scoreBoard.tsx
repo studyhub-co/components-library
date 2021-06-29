@@ -80,7 +80,7 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
               moveToNextComponent();
             }}
           >
-            Exit
+            Skip
           </Button>
         </Grid>
       );

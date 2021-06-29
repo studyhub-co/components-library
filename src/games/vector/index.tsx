@@ -418,8 +418,8 @@ const VectorGame: React.FC<VectorGameProps> = props => {
     resetCounter();
     setIsActiveCounter(true);
     playBackgroundAudio('rainbow', 0.2);
-    questionToState(0, 1);
-    // questionToState(1500, 4); // start last level
+    // questionToState(0, 1);
+    questionToState(1500, 4); // start last level
     // setGameState() // set in questionToState
   };
 
