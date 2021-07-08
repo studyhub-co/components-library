@@ -276,7 +276,7 @@ const Index: React.FC<IQAProps> = props => {
             setUserReactionState('checked');
             /* eslint-disable @typescript-eslint/camelcase */
             material.reaction_start_on = reactionStart.current.toISOString();
-            console.log(material.reaction_start_on);
+            // console.log(material.reaction_start_on);
             checkUserMaterialReaction(material);
           }}
           currentMaterial={currentMaterial}

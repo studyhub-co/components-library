@@ -13,6 +13,8 @@ import Vector from '../src/components/vector';
 import MySQL from '../src/components/mysql';
 import UnitConversion from '../src/components/unitConversion';
 
+import VectorGame from '../src/games/vector';
+
 import { validate as unitConversionValidate } from '../src/components/unitConversion/validate.js';
 
 // import ValidateVector from '../src/components/vector/validate';
@@ -23,19 +25,19 @@ import { validate as unitConversionValidate } from '../src/components/unitConver
 // const BACKEND_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1/';
 
 // TODO make it configurable
-const lessonUuid = '63dd9e74-4623-4fce-bb05-1cd85952794d';
-// const lessonUuid = '6557af06-52bb-4a12-919f-cd09267373dd';
+const lessonUuid = 'ae38f620-b7b5-438c-90d4-65e8fac305c5';
 
 // we need to set Material component type, because we don't use sandbox code (we use Component directly)
 const materialsUuids = {
   /* order is important */
   // '124bb548-e231-46f6-98a1-3e5ffdab58e2': QAChoices,
-  //'dd8b7f41-a244-4c77-8451-f210e24b0715': QAChoices,
+  'fc704bf7-5b98-4668-9e68-70c7767b5489': QAChoices,
   //'f6685f7a-3764-4d1e-806c-171ecdc9eaad': Vector,
   // '9d264c70-56ce-40b0-83ad-8d746089ee61': Vector,
   // '8b85058d-a22b-4615-a7a8-92e9dbbc5f86': MySQL,
   // '3d35337f-e805-4126-9c91-dd35a7e01892': UnitConversion,
-  'ebe3c6c3-663c-4ed9-b03e-c769e054cadf': QABase,
+  '1cdee680-d5db-4f0c-b140-17067e45b98b': QABase,
+  // '7285e728-ca15-4bce-89e0-e7ccd83f78ba': VectorGame,
 };
 
 // const componentOptions = {

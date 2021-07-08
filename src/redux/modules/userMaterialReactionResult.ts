@@ -29,6 +29,7 @@ const userMaterialReactionSuccess = (userReaction: UserReactionResult | {} | nul
 
 const api: Api = apiFactory(BACKEND_SERVER_API_URL);
 
+// , callback: Function
 // actions
 export const checkUserMaterialReaction = (material: Material) => {
   return (dispatch: any) => {
@@ -38,6 +39,7 @@ export const checkUserMaterialReaction = (material: Material) => {
       .post<Material>(url, { ...material })
       .then((result: any) => {
         dispatch(userMaterialReactionSuccess(result));
+        // callback();
       })
       .catch((error: any) => {
         if (error.response?.status === 404) {

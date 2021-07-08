@@ -5,6 +5,31 @@ interface SoundSingletonI {
   soundEnabled: boolean;
 }
 
+// add event listener for catch user profile
+// catch profile when:
+// 1) profile was requesting with get_user_profile
+// 2) profile was loaded in parent after login/logout
+
+// request parent window for user profile
+// FIXME is good place for this?
+window.parent.postMessage(
+  {
+    type: 'get_user_profile',
+  },
+  '*',
+);
+
+const userProfileMessageListener = ({ data }: { data: any }): any => {
+  if (data.hasOwnProperty('type')) {
+    if (data.type === 'user_profile') {
+      SoundSingleton.soundEnabled = data.data.sound_enabled;
+    }
+  }
+};
+
+window.addEventListener('message', userProfileMessageListener);
+// todo how to remove?
+
 const SoundSingleton: SoundSingletonI = {
   soundFiles: {
     correct: new Audio('https://assets.physicsisbeautiful.com/curricula/audio/correct.mp3'),
@@ -40,16 +65,20 @@ export const playAudio = function(key: string, volume: number) {
   //       break;
   //   }
   // } else if (SoundSingleton.soundEnabled) {
-  const audio: any = SoundSingleton.soundFiles[key];
-  audio.volume = volume;
-  audio.play();
-  // }
+  if (SoundSingleton.soundEnabled) {
+    const audio: any = SoundSingleton.soundFiles[key];
+    audio.volume = volume;
+    audio.play();
+  }
 };
 
 export const playBackgroundAudio = function(key: string, volume: number) {
   volume = typeof volume !== 'undefined' ? volume : 1;
 
   stopBackgroundAudio();
+
+  console.log(SoundSingleton);
+
   if (SoundSingleton.soundEnabled) {
     bgAudio = SoundSingleton.soundFiles[key];
     bgAudio['loop'] = true;

@@ -174,10 +174,10 @@ const Index: React.FC<IQAProps> = props => {
           checkUserMaterialReaction={material => {
             // This function is used only for current library Footer
             // For check reaction from studyhub.io see src/components/hooks/spaEvents.tsx
-            setUserReactionState('checked');
             /* eslint-disable @typescript-eslint/camelcase */
             material.reaction_start_on = reactionStart.current.toISOString();
             checkUserMaterialReaction(material);
+            setUserReactionState('checked');
           }}
           currentMaterial={currentMaterial}
           disabledCheck={disabledCheck}
