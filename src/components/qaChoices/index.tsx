@@ -199,7 +199,7 @@ const Index: React.FC<IQAProps> = props => {
                 <Question
                   onHintChange={operateDataFunctions.onQuestionHintChange}
                   editMode={editMode}
-                  mathMode={true}
+                  mathMode={false}
                   question={componentData.question}
                   onTextChange={operateDataFunctions.onQuestionTextChange}
                   onImageChange={image => operateDataFunctions.onQuestionImageChange(image, materialUuid || '')}

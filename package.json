@@ -37,6 +37,7 @@
     "ace-builds": "^1.4.12",
     "axios": "^0.19.2",
     "babel-preset-react-app": "^9.1.1",
+    "better-react-mathjax": "^1.0.3",
     "clsx": "^1.1.0",
     "evaluatex": "^2.2.0",
     "fabric": "^3.6.3",

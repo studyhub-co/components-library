@@ -172,7 +172,7 @@ const Index: React.FC<IVectorProps> = props => {
                   question={componentData.question}
                   onTextChange={operateDataFunctions.onQuestionTextChange}
                   onImageChange={image => operateDataFunctions.onQuestionImageChange(image, materialUuid || '')}
-                  mathMode={true}
+                  mathMode={false}
                 />
                 <br />
                 {!componentData.questionTextOnly && (

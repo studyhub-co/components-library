@@ -12,6 +12,7 @@
     "checkJs": false,
     "module": "esnext",
     "outDir": "lib",
+    "skipLibCheck": true, /* Skip type checking of lib declaration files. mathjax-full not works with skipLibCheck = false */
     "moduleResolution": "node",
     "lib": [
       "dom",

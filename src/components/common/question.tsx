@@ -16,6 +16,7 @@ interface IQuestionProps {
   question: IQuestion;
   mathButtons?: undefined | string[];
   mathMode?: boolean;
+  // mathJaxMode?: boolean;
   editTextMode?: boolean; // text field edit mode only
   onTextChange: (text: string) => void;
   onImageChange: (image: any) => void;
