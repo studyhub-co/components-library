@@ -10,5 +10,6 @@ export const useStyles = makeStyles({
     // minHeight: '60vh',
     backgroundColor: 'white',
     boxShadow: '0 0 1vw #d8d8d8',
+    fontFamily: '"Benton Sans", monospace',
   },
 });

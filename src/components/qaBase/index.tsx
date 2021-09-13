@@ -138,7 +138,7 @@ const Index: React.FC<IQAProps> = props => {
               <Paper>
                 <Question
                   editMode={editMode}
-                  mathMode={true}
+                  mathMode={false}
                   question={componentData.question}
                   onTextChange={operateDataFunctions.onQuestionTextChange}
                   onHintChange={operateDataFunctions.onQuestionHintChange}

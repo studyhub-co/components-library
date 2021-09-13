@@ -16,7 +16,7 @@ export const mockQaChoices: QAData = {
     {
       content: {
         image: '',
-        text: '1st choice',
+        text: '1st\\ choice',
       },
       selected: true,
       hiddenFields: { selected: false },
@@ -28,7 +28,7 @@ export const mockQaChoices: QAData = {
     {
       content: {
         image: '',
-        text: '2nd choice',
+        text: '2nd\\ choice',
       },
       selected: false,
       hiddenFields: { selected: false },

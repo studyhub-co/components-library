@@ -52,8 +52,8 @@ const Components: React.FC = () => {
         control={<Switch checked={state.checkedEditMode} color="primary" onChange={handleEditModeChange()} value="" />}
         label="Edit Mode"
       />
-      {/*<h2>Q&A Base</h2>*/}
-      {/*<QABase componentData={mockQaBase} editMode={state.checkedEditMode} />*/}
+      <h2>Q&A Base</h2>
+      <QABase componentData={mockQaBase} editMode={state.checkedEditMode} />
       <h2>Q&A Choices</h2>
       <QAChoices componentData={mockQaChoices} editMode={state.checkedEditMode} />
       <h2>Vector</h2>

@@ -3,7 +3,7 @@ import { QABaseData } from './IData/index';
 export const mockQaBase: QABaseData = {
   question: {
     content: {
-      text: 'Enter\\  question\\  text',
+      text: 'Enter question text',
       evaluatedMathText: '',
       image: '',
       hint: '',
