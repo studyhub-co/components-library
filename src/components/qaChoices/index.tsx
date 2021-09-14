@@ -192,7 +192,7 @@ const Index: React.FC<IQAProps> = props => {
   return (
     <ThemeProvider theme={theme}>
       {componentData ? ( // need to wait componentData
-        <div style={{ flexGrow: 1, padding: '1rem' }}>
+        <div style={{ flexGrow: 1 }}>
           <Container>
             <ContainerItem>
               <Paper>

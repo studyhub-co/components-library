@@ -25,18 +25,18 @@ import { validate as unitConversionValidate } from '../src/components/unitConver
 // const BACKEND_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1/';
 
 // TODO make it configurable
-const lessonUuid = 'ae38f620-b7b5-438c-90d4-65e8fac305c5';
+const lessonUuid = '13bb64e1-8f69-4409-8472-68ee39ef0365';
 
 // we need to set Material component type, because we don't use sandbox code (we use Component directly)
 const materialsUuids = {
   /* order is important */
   // '124bb548-e231-46f6-98a1-3e5ffdab58e2': QAChoices,
-  'fc704bf7-5b98-4668-9e68-70c7767b5489': QAChoices,
+  // 'fc704bf7-5b98-4668-9e68-70c7767b5489': QAChoices,
   //'f6685f7a-3764-4d1e-806c-171ecdc9eaad': Vector,
-  // '9d264c70-56ce-40b0-83ad-8d746089ee61': Vector,
+  'b98a982d-f247-414c-bddf-39217f7e01d7': Vector,
   // '8b85058d-a22b-4615-a7a8-92e9dbbc5f86': MySQL,
   // '3d35337f-e805-4126-9c91-dd35a7e01892': UnitConversion,
-  '1cdee680-d5db-4f0c-b140-17067e45b98b': QABase,
+  // '1cdee680-d5db-4f0c-b140-17067e45b98b': QABase,
   // '7285e728-ca15-4bce-89e0-e7ccd83f78ba': VectorGame,
 };
 

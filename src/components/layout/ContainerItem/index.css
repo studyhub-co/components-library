@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Benton Sans';
+    src: url('../../../fonts/Benton-Sans/benton-sans-regular.eot');
+    src: url('../../../fonts/Benton-Sans/benton-sans-regular.eot?#iefix') format('embedded-opentype'),
+    url('../../../fonts/Benton-Sans/benton-sans-regular.woff') format('woff'),
+    url('../../../fonts/Benton-Sans/benton-sans-regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}

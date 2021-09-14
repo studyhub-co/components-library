@@ -1,4 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles';
+
+import './index.css';
+
 // import { base } from '../../style';
 
 export const useStyles = makeStyles({
@@ -6,10 +9,10 @@ export const useStyles = makeStyles({
     // margin: '2vh',
     // padding: '2vh',
     // marginTop: '1%',
-    borderRadius: '1vw',
+    // borderRadius: '1vw',
     // minHeight: '60vh',
-    backgroundColor: 'white',
-    boxShadow: '0 0 1vw #d8d8d8',
+    // backgroundColor: 'white',
+    // boxShadow: '0 0 1vw #d8d8d8',
     fontFamily: '"Benton Sans", monospace',
   },
 });
