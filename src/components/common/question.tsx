@@ -44,12 +44,13 @@ const Question: React.FC<IQuestionProps> = props => {
           cursorPointer={true}
         />
       </React.Fragment>
-      <br />
-      <EditableThumbnail
-        editMode={editMode && !editTextMode}
-        image={question.content.image}
-        onImageChange={onImageChange}
-      />
+      <div>
+        <EditableThumbnail
+          editMode={editMode && !editTextMode}
+          image={question.content.image}
+          onImageChange={onImageChange}
+        />
+      </div>
       {editMode && onHintChange && (
         <EditableLabel
           placeholder="Hint text"

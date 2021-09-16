@@ -73,7 +73,7 @@ const EditableThumbnail: React.FC<EditableThumbnailProps> = props => {
       {/*{value && <img src={''} />}*/}
       {!editMode && imageSrc && <img width={'100%'} src={imageSrc} />}
       {editMode && (
-        <React.Fragment>
+        <div style={{ padding: '1rem' }}>
           <input
             accept="image/*"
             style={{ display: 'none' }}
@@ -89,7 +89,7 @@ const EditableThumbnail: React.FC<EditableThumbnailProps> = props => {
               <FaFileImage style={{ cursor: 'pointer' }} size={'2rem'} />
             )}
           </label>
-        </React.Fragment>
+        </div>
       )}
       {/*<div style={{ display: showAddImageIcon && editMode ? 'block' : 'none' }}>*/}
       {/*  <FaImage size={'2rem'} />*/}

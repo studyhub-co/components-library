@@ -1,9 +1,16 @@
 @font-face {
     font-family: 'Benton Sans';
-    src: url('../../../fonts/Benton-Sans/benton-sans-regular.eot');
-    src: url('../../../fonts/Benton-Sans/benton-sans-regular.eot?#iefix') format('embedded-opentype'),
-    url('../../../fonts/Benton-Sans/benton-sans-regular.woff') format('woff'),
-    url('../../../fonts/Benton-Sans/benton-sans-regular.ttf') format('truetype');
+    /*src: url('../../../fonts/Benton-Sans/benton-sans-regular.eot');*/
+    /*src: url('../../../fonts/Benton-Sans/benton-sans-regular.eot?#iefix') format('embedded-opentype'),*/
+    /*url('../../../fonts/Benton-Sans/benton-sans-regular.woff') format('woff'),*/
+    /*url('../../../fonts/Benton-Sans/benton-sans-regular.ttf') format('truetype');*/
+
+    /* to able to use fonts in sandbox directly and not include to the library (it will increase sandbox bundle size) */
+    /* Fixme: when (if) we will support sandbox files, move font there (check license?) */
+    src: url("https://www.bu.edu/cdn/fonts/Benton-Sans-Regular/019c3a13-b3d7-4c5a-be27-07a8334a43e6-2.eot");
+    src: url("https://www.bu.edu/cdn/fonts/Benton-Sans-Regular/019c3a13-b3d7-4c5a-be27-07a8334a43e6-2.eot?") format("embedded-opentype"),
+    url("https://www.bu.edu/cdn/fonts/Benton-Sans-Regular/019c3a13-b3d7-4c5a-be27-07a8334a43e6-3.woff") format("woff"),
+    url("https://www.bu.edu/cdn/fonts/Benton-Sans-Regular/019c3a13-b3d7-4c5a-be27-07a8334a43e6-1.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
 }

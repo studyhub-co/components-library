@@ -23,8 +23,8 @@ export function useUserMaterialReactionResult(
 
     const wasCorrect = userReactionStateP === 'checked' ? userMaterialReactionResult?.was_correct : null;
 
-    console.log(userReactionStateP);
-    console.log(userMaterialReactionResult);
+    // console.log(userReactionStateP);
+    // console.log(userMaterialReactionResult);
 
     // play audio
     if (wasCorrect === true) {
