@@ -25,7 +25,7 @@ import { validate as unitConversionValidate } from '../src/components/unitConver
 // const BACKEND_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1/';
 
 // TODO make it configurable
-const lessonUuid = '13bb64e1-8f69-4409-8472-68ee39ef0365';
+const lessonUuid = '3c5426d3-4da3-4710-be2f-e99219c22e16';
 
 // we need to set Material component type, because we don't use sandbox code (we use Component directly)
 const materialsUuids = {
@@ -33,7 +33,7 @@ const materialsUuids = {
   // '124bb548-e231-46f6-98a1-3e5ffdab58e2': QAChoices,
   // 'fc704bf7-5b98-4668-9e68-70c7767b5489': QAChoices,
   //'f6685f7a-3764-4d1e-806c-171ecdc9eaad': Vector,
-  'b98a982d-f247-414c-bddf-39217f7e01d7': Vector,
+  '9e8fefaf-1c59-4892-bc17-1239b994feed': Vector,
   // '8b85058d-a22b-4615-a7a8-92e9dbbc5f86': MySQL,
   // '3d35337f-e805-4126-9c91-dd35a7e01892': UnitConversion,
   // '1cdee680-d5db-4f0c-b140-17067e45b98b': QABase,

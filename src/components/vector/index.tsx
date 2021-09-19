@@ -240,16 +240,22 @@ const Index: React.FC<IVectorProps> = props => {
                   />
                 ) : null}
                 <br />
+                {/* answer vector */}
                 {!componentData.answerTextOnly &&
                   !componentData.answer.content.text &&
                   !componentData.answer.content.image && (
                     <VectorCanvas
-                      clear={true}
+                      clear={false} // clears by internal function
                       canvasId={'answer'}
-                      // objects={objects} // objects -> objects that we need to draw on Canvas
-                      objects={vectorCanvases(componentData?.answerVectors)}
+                      // objects -> objects that we need to draw on Canvas
+                      // not send objects to canvas in student view  to deny redraw vectors from center (we do not store start point of the vectors)
+                      objects={editMode && vectorCanvases(componentData?.answerVectors)}
                       allowInput={componentData?.answerVectors?.length < 4}
+                      // not use now
+                      // vectorsLimit={1} // limit number of vectors / see https://github.com/studyhub-co/components-library/issues/10 for details
                       updateAnswer={(ans: any) => {
+                        // only one vector in the answer support for now!
+                        operateDataFunctions.onAnswerClearVector();
                         operateDataFunctions.onAnswerVectorAdd(ans.vector as IVector);
                       }}
                       // updateAnswer={ans => this.props.onVectorChanged(ans[1].vector.x_component, ans[1].vector.y_component)}

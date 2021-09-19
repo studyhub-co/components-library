@@ -47,9 +47,13 @@ export default (
 
   const api: Api = {
     get(path, params, options) {
-      return axios
+      const instance = axios.create({
+        withCredentials: true,
+      });
+      return instance
         .get(API_ROOT + path, {
           params,
+          withCredentials: true,
         })
         .then(response => handleResponse(response))
         .catch(e => handleError(e));

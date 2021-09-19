@@ -8,9 +8,3 @@ export const VectorIo = t.interface({
 });
 
 export type Vector = t.TypeOf<typeof VectorIo>;
-
-// export interface Vector {
-//   angle: number;
-//   xComponent: number;
-//   yComponent: number;
-// }

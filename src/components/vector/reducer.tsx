@@ -63,6 +63,7 @@ export const reducer = (state: IReducerObject, action: { type: string; payload: 
       draft.reducerData.answerToCheck = action.payload;
     }
     if (action.type === 'ANSWER_VECTOR_ADD') {
+      console.log(action);
       draft.reducerData.answerVectors.push(action.payload);
     }
     if (action.type === 'ANSWER_SET_VECTORS') {

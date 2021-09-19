@@ -1,7 +1,9 @@
 import React from 'react';
+
 import { fabric } from 'fabric';
 
 // TODO migrate to TypeScript
+// TODO need more comments here, code is too hard to read
 
 const GRID = 50;
 
@@ -13,11 +15,13 @@ export class Vector {
 }
 
 // This is the vector itself
+// TODO rename to Vector!
 export class CanvasVector {
   constructor(canvas, pointer, color) {
     this.canvas = canvas;
     color = color || 'red';
     const points = [Math.round(pointer.x / GRID) * GRID, Math.round(pointer.y / GRID) * GRID, pointer.x, pointer.y];
+
     this.startPointer = {
       x: pointer.x,
       y: pointer.y,
@@ -163,7 +167,6 @@ export class CanvasVector {
     // Perform atan2 calculation as is inexpensive in comparison to atan
     // to find tangent of angle.
     return (Math.atan2(y, x) * (180 / Math.PI) + 360) % 360;
-    // return (Math.atan2(y, x) * 180) / Math.PI;
   }
 
   getPolarVectorAngle() {
@@ -215,6 +218,7 @@ const canvasTextDefaults = {
   fill: 'green',
 };
 
+// TODO rename to Text
 export class CanvasText {
   constructor(canvas, point, text, renderInfo) {
     renderInfo = renderInfo || {};
@@ -238,6 +242,7 @@ export class CanvasText {
   }
 }
 
+// FIXME any reason we need NullVector on canvas if have NullVector checkbox?
 export class NullVector {
   getXComponent() {
     return null;
@@ -252,6 +257,10 @@ export class NullVector {
   }
 
   getVectorMagnitude() {
+    return null;
+  }
+
+  getPolarVectorAngle() {
     return null;
   }
 
@@ -296,7 +305,7 @@ export class VectorCanvas extends React.Component {
     super(props);
     this.objects = [];
     this.state = {
-      checked: false, // TODO rename to isNullVector
+      isNullVector: false,
       submitted: false,
     };
     this.drawColor = 'red';
@@ -313,16 +322,14 @@ export class VectorCanvas extends React.Component {
     this.canvas.on('mouse:down', this.mouseDown.bind(this));
     this.canvas.on('mouse:move', this.mouseMove.bind(this));
     this.canvas.on('mouse:up', this.mouseUp.bind(this));
-    // this.setState({checked: false});
-    // $('#checkAnswer').click(this.checkAnswer.bind(this));
 
-    // this.fixCanvas();
+    this.fixCanvas();
   }
 
   componentDidUpdate() {
     const newState = {};
-    if (this.props.clear && this.state.checked) {
-      newState.checked = false;
+    if (this.props.clear && this.state.isNullVector) {
+      newState.isNullVector = false;
     }
     if (this.state.submitted && this.props.clear) {
       newState.submitted = false;
@@ -332,12 +339,17 @@ export class VectorCanvas extends React.Component {
     }
   }
 
+  // populate vector data in external component (e.g. external reducer)
+  // the vectors will recreate with external data
   refreshAnswer() {
-    // populate answer in external component
     // if (!this.props.question) {
     //   return;
     // }
+
     if (this.arrow) {
+      if (this.arrow instanceof NullVector) {
+        return;
+      }
       // todo check if this.arrow is null vector
       this.props.updateAnswer({
         vector: {
@@ -383,20 +395,19 @@ export class VectorCanvas extends React.Component {
 
   mouseDown(o) {
     if (this.arrow) {
-      if (this.arrow instanceof NullVector) {
-        this.setState({ checked: false });
-      }
+      // must be upper than setState (render() can change this.arrow - see below)
       this.arrow.delete();
+      if (this.arrow instanceof NullVector) {
+        this.setState({ isNullVector: false });
+      }
     }
     this.arrow = new CanvasVector(this.canvas, this.canvas.getPointer(o.e), this.getColor());
-    //        this.refreshAnswer()
   }
 
   mouseMove(o) {
     if (this.arrow && this.arrow instanceof CanvasVector) {
       this.arrow.draw(this.canvas.getPointer(o.e));
     }
-    //        this.refreshAnswer()
   }
 
   mouseUp(o) {
@@ -416,7 +427,7 @@ export class VectorCanvas extends React.Component {
   }
 
   // nullBoxCheck(event) {
-  //   const newState = !this.state.checked;
+  //   const newState = !this.state.isNullVector;
   //   if (newState) {
   //     if (this.arrow) {
   //       this.arrow.delete();
@@ -432,7 +443,7 @@ export class VectorCanvas extends React.Component {
   //     }
   //     this.arrow = null;
   //   }
-  //   this.setState({ checked: newState });
+  //   this.setState({ isNullVector: newState });
   //   this.refreshAnswer();
   // }
 
@@ -483,25 +494,27 @@ export class VectorCanvas extends React.Component {
   }
 
   // Waits till at least one canvas container is loaded onto the page.
-  // Note that we are only going to have one.
-  // fixCanvas() {
-  //   const noScroll = document.getElementsByClassName('canvas-container');
-  //   for (let i = 0; i < noScroll.length; i++) {
-  //     noScroll[i].addEventListener(
-  //       'touchmove',
-  //       function(e) {
-  //         e.preventDefault();
-  //       },
-  //       false,
-  //     );
-  //   }
-  // }
+  // Note that we are only going to have one. - up. we can have more than one now
+  fixCanvas() {
+    const noScroll = document.getElementsByClassName('canvas-container');
+    for (let i = 0; i < noScroll.length; i++) {
+      // fixme why we need this?
+      noScroll[i].addEventListener(
+        'touchmove',
+        function(e) {
+          e.preventDefault();
+        },
+        false,
+      );
+    }
+  }
 
   render() {
     if (this.props.clear) {
       if (this.arrow) {
         this.arrow.delete();
       }
+      // TODO: VERY VERY bad idea to change component property in render function
       this.arrow = null;
       for (let i = 0; i < this.objects.length; i++) {
         this.objects[i].delete();
@@ -522,12 +535,6 @@ export class VectorCanvas extends React.Component {
 
     if (!this.props.allowInput || this.state.submitted) {
       wrapperStyle['pointerEvents'] = 'none';
-      // $('.upper-canvas').css('pointer-events', 'none');
-      // console.log(document.getElementsByClassName('.upper-canvas').style);
-      // document.getElementsByClassName('.upper-canvas').style.pointerEvents = 'none';
-    } else {
-      // $('.upper-canvas').css('pointer-events', '');
-      // document.getElementsByClassName('.upper-canvas').style.pointerEvents = '';
     }
 
     // let nullBox = '';
@@ -538,29 +545,15 @@ export class VectorCanvas extends React.Component {
     //       submitted={this.state.submitted}
     //       isAnswer={this.props.isNullAnswer}
     //       isNotAnswer={this.props.isNotNullAnswer}
-    //       checked={this.state.checked}
+    //       checked={this.state.isNullVector}
     //       onChange={this.nullBoxCheck.bind(this)}
     //     />
     //   );
     // }
-    // var checkButton = '';
-    // if (this.props.manualCheck) {
-    //     var buttonClass = 'btn btn-primary';
-    //     if (!this.props.allowInput || this.state.submitted) {
-    //         buttonClass += ' disabled';
-    //     }
-    //     checkButton = (
-    //         <div className={'button-group' + (this.props.answer === null ? '' : ' hidden')} id='vectorButton'>
-    //             <a className={buttonClass} onClick={this.checkAnswer.bind(this)}>Check</a>
-    //         </div>
-    //     );
-    // }
+
     return (
       <div style={wrapperStyle}>
         <canvas id={this.props.canvasId} width="300" height="300" className="lower-canvas" style={canvasStyle} />
-        {/*<div>{nullBox}</div>*/}
-        {/* <div>{checkButton}</div> */}
-        {/* {typeof this.props.continueBtn !== 'undefined' ? this.props.continueBtn : ''} */}
       </div>
     );
   }
