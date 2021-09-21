@@ -174,7 +174,6 @@ const Index: React.FC<IVectorProps> = props => {
                   onImageChange={image => operateDataFunctions.onQuestionImageChange(image, materialUuid || '')}
                   mathMode={false}
                 />
-                <br />
                 {!componentData.questionTextOnly && (
                   <VectorCanvas
                     clear={true}
@@ -192,7 +191,6 @@ const Index: React.FC<IVectorProps> = props => {
                     <IconButton color="primary" onClick={operateDataFunctions.onQuestionClearVector} component="div">
                       <FaTimes /> clear
                     </IconButton>
-                    <br />
                     <FormControlLabel
                       control={
                         <Checkbox
@@ -206,7 +204,6 @@ const Index: React.FC<IVectorProps> = props => {
                       }
                       label="Question text only"
                     />
-                    <br />
                     <FormControlLabel
                       control={
                         <Checkbox
@@ -239,7 +236,6 @@ const Index: React.FC<IVectorProps> = props => {
                     mathMode={true}
                   />
                 ) : null}
-                <br />
                 {/* answer vector */}
                 {!componentData.answerTextOnly &&
                   !componentData.answer.content.text &&
@@ -262,7 +258,6 @@ const Index: React.FC<IVectorProps> = props => {
                       // question={{ uuid: this.props.question }}
                     />
                   )}
-                <br />
                 {editMode || componentData.answerNullableVector ? (
                   <FormControlLabel
                     control={
@@ -278,13 +273,11 @@ const Index: React.FC<IVectorProps> = props => {
                     label="Null vector"
                   />
                 ) : null}
-                <br />
                 {editMode && (
                   <React.Fragment>
                     <IconButton color="primary" onClick={operateDataFunctions.onAnswerClearVector} component="div">
                       <FaTimes /> clear
                     </IconButton>
-                    <br />
                     <FormControlLabel
                       control={
                         <Checkbox
@@ -299,7 +292,6 @@ const Index: React.FC<IVectorProps> = props => {
                       }
                       label="Answer text only"
                     />
-                    <br />
                     <FormControlLabel
                       control={
                         <Checkbox
@@ -313,7 +305,6 @@ const Index: React.FC<IVectorProps> = props => {
                       }
                       label="Nullable vector (Show 'Null vector' checkbox for student)"
                     />
-                    <br />
                     <FormControl>
                       <InputLabel id="demo-simple-select-label">To check:</InputLabel>
                       <Select

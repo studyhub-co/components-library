@@ -531,7 +531,7 @@ export class VectorCanvas extends React.Component {
     const canvasStyle = {
       border: '1px solid #ccc',
     };
-    const wrapperStyle = {};
+    const wrapperStyle = { margin: 'auto', display: 'inline-block' };
 
     if (!this.props.allowInput || this.state.submitted) {
       wrapperStyle['pointerEvents'] = 'none';
