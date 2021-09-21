@@ -61,7 +61,7 @@ const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
     // TODO replace with if/else
     case GameState.NEW:
       return (
-        <Grid container justify="center" className="game-sheet" style={style}>
+        <Grid container justifyContent="center" className="game-sheet" style={style}>
           <Grid item md={4} className={'text-center'}>
             <span>
               <h2 className="game-title">Vector Game</h2>
@@ -80,7 +80,7 @@ const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
       );
     case GameState.PAUSED:
       return (
-        <Grid container justify="center" className="game-sheet" style={style}>
+        <Grid container justifyContent="center" className="game-sheet" style={style}>
           {/*<Prompt when={this.props.state == GameState.QUESTION} message="Changes you made may not be saved." />*/}
           <ScoreBoard
             gameState={gameState}
@@ -105,7 +105,7 @@ const VectorGameBoard: React.FC<VectorGameBoardProps> = props => {
       );
   }
   return (
-    <Grid container justify="center" className="game-sheet" style={style}>
+    <Grid container justifyContent="center" className="game-sheet" style={style}>
       {/*<Prompt when={this.props.state == GameState.QUESTION} message="Changes you made may not be saved." />*/}
       <ScoreBoard
         gameState={gameState}

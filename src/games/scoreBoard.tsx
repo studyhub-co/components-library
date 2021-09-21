@@ -165,7 +165,7 @@ const ScoreBoard: React.FC<ScoreBoardProps> = props => {
   //   position: 'relative',
   // } as React.CSSProperties;
   return (
-    <Grid container item justify="center">
+    <Grid container item justifyContent="center">
       <Grid item md={2} sm={2} xs={5} lg={1}>
         {/*<MediaQuery minDeviceWidth={736}>*/}
         <div style={clockStyle} onClick={pause}>

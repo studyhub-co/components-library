@@ -201,7 +201,7 @@ const Choice: React.FC<ChoiceProps> = props => {
       onMouseOver={onHover}
       onMouseOut={onHoverOut}
     >
-      <Grid container direction="row" justify="center" alignItems="center">
+      <Grid container direction="row" justifyContent="center" alignItems="center">
         <Grid item xs={2} md={1}>
           <Grid container direction="row" alignItems="center">
             <Grid item xs={2}>

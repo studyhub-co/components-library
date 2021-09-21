@@ -75,7 +75,7 @@ const UnitConversionGameBoard: React.FC<UnitConversionGameBoardProps> = props =>
   ) {
     case GameState.NEW:
       return (
-        <Grid container justify="center" className="game-sheet" style={style}>
+        <Grid container justifyContent="center" className="game-sheet" style={style}>
           <Grid item md={4} className={'text-center'}>
             <span>
               <h2 className="game-title">Unit Conversion Game</h2>
@@ -91,7 +91,7 @@ const UnitConversionGameBoard: React.FC<UnitConversionGameBoardProps> = props =>
       );
     case GameState.PAUSED:
       return (
-        <Grid container justify="center" className="game-sheet" style={style}>
+        <Grid container justifyContent="center" className="game-sheet" style={style}>
           {/*<Prompt when={state === GameState.QUESTION} message="Changes you made may not be saved." />*/}
           <ScoreBoard
             gameState={gameState}
@@ -116,7 +116,7 @@ const UnitConversionGameBoard: React.FC<UnitConversionGameBoardProps> = props =>
       );
   }
   return (
-    <Grid container justify="center" className="game-sheet" style={style}>
+    <Grid container justifyContent="center" className="game-sheet" style={style}>
       {/*<Prompt when={state === GameState.QUESTION} message="Changes you made may not be saved." />*/}
       <ScoreBoard
         gameState={gameState}

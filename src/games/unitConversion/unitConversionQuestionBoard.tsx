@@ -171,7 +171,7 @@ const UnitConversionQuestionBoard: React.FC<UnitConversionQuestionBoardProps> = 
       <div className="text-center">
         <h2>Calculator</h2>
         <div style={{ display: 'block', overflowX: 'auto' }}>
-          <Grid container justify="center" alignItems="center">
+          <Grid container justifyContent="center" alignItems="center">
             <Grid item xs={5}>
               <div style={{ verticalAlign: 'middle' }}>
                 <p style={{ marginBottom: 5 }}>

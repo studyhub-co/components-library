@@ -8,7 +8,7 @@ const Container: React.FC = props => {
   const newProps = {
     container: true,
     spacing: 3,
-    justify: 'center',
+    justifyContent: 'center',
     ...props,
   } as React.HTMLAttributes<any>;
 
