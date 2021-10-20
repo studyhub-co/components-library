@@ -40,14 +40,22 @@ const BlueInput = withStyles({
   root: {
     color: 'inherit',
   },
-})((props: InputProps) =>
-  props.readOnly ? (
-    <MathJaxContext>
-      <MathJax>{props.value as string}</MathJax>
-    </MathJaxContext>
-  ) : (
-    <Input color="primary" {...props} />
-  ),
+})(
+  (props: InputProps) => <Input color="primary" {...props} />,
+  // (props: InputProps) =>
+  //   props && props.readOnly ? (
+  //     <MathJaxContext>
+  //       <MathJax>{props.value as string}</MathJax>
+  //     </MathJaxContext>
+  //   ) : (
+  //     <Input color="primary" {...props} />
+  //   ),
+  // <React.Fragment>
+  //   <MathJaxContext>
+  //     <MathJax>{props && props.readOnly && (props.value as string)}</MathJax>
+  //   </MathJaxContext>
+  //   {props && !props.readOnly && <Input color="primary" {...props} />}
+  // </React.Fragment>
 );
 
 //  <MathJax>{'\\(\\frac{10}{4x} \\approx 2^{12}\\)'}</MathJax>}
@@ -116,7 +124,7 @@ const EditableLabel: React.FC<EditableLabelProps> = props => {
             </StaticMathField>
           </div>
         )
-      ) : (
+      ) : editMode ? ( // not mathquill mode
         <BlueInput
           fullWidth
           disableUnderline={!editMode}
@@ -133,6 +141,10 @@ const EditableLabel: React.FC<EditableLabelProps> = props => {
             style: { cursor: editMode || props.cursorPointer ? 'pointer' : 'default' },
           }}
         />
+      ) : (
+        <MathJaxContext>
+          <MathJax>{value as string}</MathJax>
+        </MathJaxContext>
       )}
 
       {editMode && mathButtons && (

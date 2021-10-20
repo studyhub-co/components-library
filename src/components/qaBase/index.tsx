@@ -135,6 +135,7 @@ const Index: React.FC<IQAProps> = props => {
         {componentData ? ( // need to wait componentData
           <Container>
             <ContainerItem>
+              {/*<div>{`Proper value ${componentData.question.content.text}`}</div>*/}
               <Paper>
                 <Question
                   editMode={editMode}

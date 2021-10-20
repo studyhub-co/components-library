@@ -41,27 +41,27 @@ const Components: React.FC = () => {
       {/*    console.log(`moveToNextComponent called. nextMaterialUuid: ${nextMaterialUuid}`);*/}
       {/*  }}*/}
       {/*/>*/}
-      <h3>Unit Conversion Game</h3>
-      <UnitConversionGame
-        materialUuid={'9130054b-42b3-4f16-8864-033872831d97'}
-        moveToNextComponent={nextMaterialUuid => {
-          console.log(`moveToNextComponent called. nextMaterialUuid: ${nextMaterialUuid}`);
-        }}
-      />
+      {/*<h3>Unit Conversion Game</h3>*/}
+      {/*<UnitConversionGame*/}
+      {/*  materialUuid={'9130054b-42b3-4f16-8864-033872831d97'}*/}
+      {/*  moveToNextComponent={nextMaterialUuid => {*/}
+      {/*    console.log(`moveToNextComponent called. nextMaterialUuid: ${nextMaterialUuid}`);*/}
+      {/*  }}*/}
+      {/*/>*/}
       <FormControlLabel
         control={<Switch checked={state.checkedEditMode} color="primary" onChange={handleEditModeChange()} value="" />}
         label="Edit Mode"
       />
       <h2>Q&A Base</h2>
       <QABase componentData={mockQaBase} editMode={state.checkedEditMode} />
-      <h2>Q&A Choices</h2>
-      <QAChoices componentData={mockQaChoices} editMode={state.checkedEditMode} />
-      <h2>Vector</h2>
-      <Vector componentData={mockVector} editMode={state.checkedEditMode} />
-      <h2>Unit Conversion</h2>
-      <UnitConversion componentData={mockUnitConversion} editMode={state.checkedEditMode} />
-      <h2>MySQL</h2>
-      <MySQL componentData={mockMysql} editMode={state.checkedEditMode} />
+      {/*<h2>Q&A Choices</h2>*/}
+      {/*<QAChoices componentData={mockQaChoices} editMode={state.checkedEditMode} />*/}
+      {/*<h2>Vector</h2>*/}
+      {/*<Vector componentData={mockVector} editMode={state.checkedEditMode} />*/}
+      {/*<h2>Unit Conversion</h2>*/}
+      {/*<UnitConversion componentData={mockUnitConversion} editMode={state.checkedEditMode} />*/}
+      {/*<h2>MySQL</h2>*/}
+      {/*<MySQL componentData={mockMysql} editMode={state.checkedEditMode} />*/}
     </div>
   );
 };

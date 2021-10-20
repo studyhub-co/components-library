@@ -1,6 +1,6 @@
 {
   "name": "@studyhub.co/eval",
-  "version": "0.8.7",
+  "version": "0.9.0",
   "author": "Studyhub (https://studyhub.co)",
   "license": "MIT",
   "private": false,
@@ -19,8 +19,8 @@
     "start": "node scripts/start.js",
     "install-peers": "install-peers -f",
     "build": "yarn build:clean && yarn build:types && yarn build:lib",
-    "build:lib": "cross-env NODE_ENV=production babel src --out-dir lib --extensions \".tsx,.ts\" --copy-files",
-    "build:devlib": "cross-env NODE_ENV=production babel src --out-dir lib --extensions \".tsx,.ts\" --copy-files --source-maps inline",
+    "build:lib": "cross-env NODE_ENV=production babel src --out-dir lib --extensions \".jsx,.tsx,.ts\" --copy-files",
+    "build:devlib": "cross-env NODE_ENV=production babel src --out-dir lib --extensions \".jsx,.tsx,.ts\" --copy-files --source-maps inline",
     "build:types": "tsc --emitDeclarationOnly",
     "build:clean": "rimraf lib/*",
     "analyze": "node scripts/build.js && source-map-explorer 'build/static/js/*.js'",
