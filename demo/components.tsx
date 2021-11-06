@@ -54,8 +54,8 @@ const Components: React.FC = () => {
       />
       <h2>Q&A Base</h2>
       <QABase componentData={mockQaBase} editMode={state.checkedEditMode} />
-      {/*<h2>Q&A Choices</h2>*/}
-      {/*<QAChoices componentData={mockQaChoices} editMode={state.checkedEditMode} />*/}
+      <h2>Q&A Choices</h2>
+      <QAChoices componentData={mockQaChoices} editMode={state.checkedEditMode} />
       {/*<h2>Vector</h2>*/}
       {/*<Vector componentData={mockVector} editMode={state.checkedEditMode} />*/}
       {/*<h2>Unit Conversion</h2>*/}

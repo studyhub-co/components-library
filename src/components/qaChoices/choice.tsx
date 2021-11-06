@@ -17,6 +17,7 @@ import { StyledChoiceButton, useStyles } from './style';
 import EditableLabel from '../editable/label';
 import EditableThumbnail from '../editable/thumbnail';
 import { Choice as IChoice } from './IData/choices';
+import Question from '../common/question';
 
 type onSelectType = (uuid: string, value: boolean) => void;
 type deleteChoice = (uuid: string) => void;
@@ -28,6 +29,7 @@ interface ChoiceProps {
   choice: IChoice;
   index: number;
   editMode: boolean | undefined;
+  mathMode: boolean | undefined;
   onSelect: onSelectType;
   selected: boolean;
   cardMode: boolean;
@@ -84,6 +86,7 @@ const Choice: React.FC<ChoiceProps> = props => {
     choice,
     index,
     editMode,
+    mathMode,
     onSelect,
     deleteChoice,
     onImageChange,
@@ -155,7 +158,6 @@ const Choice: React.FC<ChoiceProps> = props => {
   }, [userReactionState, choice.reactionResult]);
 
   // TODO process userReactionState==reaction && choice.reactionResult to show correct\wrong answers
-
   return cardMode ? (
     // return true ? (
     <Card className={cardClasses.root} onClick={handleChange} onMouseOver={onHover} onMouseOut={onHoverOut}>
@@ -169,7 +171,13 @@ const Choice: React.FC<ChoiceProps> = props => {
       </CardMedia>
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="div">
-          <EditableLabel onChange={onTextChange} value={choice.content.text} editMode={editMode} cursorPointer={true} />
+          <EditableLabel
+            onChange={onTextChange}
+            value={choice.content.text}
+            mathMode={mathMode}
+            editMode={editMode}
+            cursorPointer={true}
+          />
         </Typography>
       </CardContent>
       <div className={cardClasses.controls}>
@@ -226,10 +234,10 @@ const Choice: React.FC<ChoiceProps> = props => {
         </Grid>
         <Grid item xs={8} md={10}>
           <EditableLabel
-            mathMode={true}
             onChange={onTextChange}
             value={choice.content.text}
             editMode={editMode}
+            mathMode={mathMode}
             cursorPointer={true}
           />
         </Grid>

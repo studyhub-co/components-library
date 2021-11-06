@@ -218,6 +218,7 @@ const Index: React.FC<IQAProps> = props => {
                           onSelect={operateDataFunctions.selectChoiceUuid}
                           // edit mode
                           editMode={editMode}
+                          mathMode={false}
                           deleteChoice={operateDataFunctions.deleteChoice}
                           onImageChange={image => {
                             operateDataFunctions.onChoiceImageChange(choice.uuid, image, materialUuid || '');

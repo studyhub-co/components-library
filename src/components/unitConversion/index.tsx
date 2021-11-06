@@ -50,7 +50,7 @@ interface IUnitConversionProps {
   editMode?: boolean;
   componentData?: IUnitConversionData;
   showFooter?: boolean | undefined;
-  checkFrontendUserMaterialReaction(material: Material): void;
+  checkFrontendUserMaterialReaction?(material: Material): void;
   moveToNextComponent(nextMaterialUuid: string | undefined): void;
   // redux actions
   fetchMaterial(uuid: string): void;
