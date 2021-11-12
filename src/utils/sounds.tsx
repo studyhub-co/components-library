@@ -1,5 +1,3 @@
-// TODO we need to get sound settings for current user (on\off).
-
 interface SoundSingletonI {
   soundFiles: { [key: string]: HTMLAudioElement };
   soundEnabled: boolean;
@@ -27,19 +25,58 @@ const userProfileMessageListener = ({ data }: { data: any }): any => {
   }
 };
 
-window.addEventListener('message', userProfileMessageListener);
 // todo how to remove?
+window.addEventListener('message', userProfileMessageListener);
+
+// TODO domain should be configurable
+const createHtmlAudio = (mp3Name: string) => {
+  const newAudio = new Audio(`https://assets.physicsisbeautiful.com/curricula/audio/${mp3Name}.mp3`);
+  // newAudio.autoplay = true;
+  newAudio.controls = true;
+  return newAudio;
+};
 
 const SoundSingleton: SoundSingletonI = {
   soundFiles: {
-    correct: new Audio('https://assets.physicsisbeautiful.com/curricula/audio/correct.mp3'),
-    incorrect: new Audio('https://assets.physicsisbeautiful.com/curricula/audio/incorrect.mp3'),
-    continue: new Audio('https://assets.physicsisbeautiful.com/curricula/audio/continue.mp3'),
-    complete: new Audio('https://assets.physicsisbeautiful.com/curricula/audio/complete.mp3'),
-    rainbow: new Audio('https://assets.physicsisbeautiful.com/curricula/audio/doublerainbow.mp3'),
+    correct: createHtmlAudio('correct'),
+    incorrect: createHtmlAudio('incorrect'),
+    continue: createHtmlAudio('continue'),
+    complete: createHtmlAudio('complete'),
+    rainbow: createHtmlAudio('doublerainbow'),
   },
+  // soundFiles: {
+  //   correct: new Audio('https://assets.physicsisbeautiful.com/curricula/audio/correct.mp3'),
+  //   incorrect: new Audio('https://assets.physicsisbeautiful.com/curricula/audio/incorrect.mp3'),
+  //   continue: new Audio('https://assets.physicsisbeautiful.com/curricula/audio/continue.mp3'),
+  //   complete: new Audio('https://assets.physicsisbeautiful.com/curricula/audio/complete.mp3'),
+  //   rainbow: new Audio('https://assets.physicsisbeautiful.com/curricula/audio/doublerainbow.mp3'),
+  // },
   soundEnabled: true,
 };
+
+// safari play sounds hack
+let unlocked = false;
+'touchstart click'.split(' ').forEach(function(e) {
+  document.body.addEventListener(
+    e,
+    function() {
+      // for (const audioProp in SoundSingleton.soundFiles) {
+      /* we don't need heavy doublerainbow mp3 */
+      if (!unlocked) {
+        for (const audioProp of ['correct', 'incorrect', 'continue', 'complete']) {
+          const audio = SoundSingleton.soundFiles[audioProp];
+          audio.play();
+          audio.pause();
+          audio.currentTime = 0;
+          console.log(`unlocked: ${audioProp}`);
+          unlocked = true;
+        }
+      }
+      // }
+    },
+    false,
+  );
+});
 
 let bgAudio: any = null;
 
@@ -77,7 +114,7 @@ export const playBackgroundAudio = function(key: string, volume: number) {
 
   stopBackgroundAudio();
 
-  console.log(SoundSingleton);
+  // console.log(SoundSingleton);
 
   if (SoundSingleton.soundEnabled) {
     bgAudio = SoundSingleton.soundFiles[key];
