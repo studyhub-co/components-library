@@ -479,6 +479,7 @@ export class UnitConversion extends UnitConversionBase {
       // margin: 'auto',
       // marginTop: 1,
       // marginBottom: 1,
+      whiteSpace: 'nowrap',
     };
     const disabledButtonStyle = {
       // padding: 2,
@@ -491,6 +492,7 @@ export class UnitConversion extends UnitConversionBase {
       color: '#c0c0c0',
       border: '.2rem solid #c0c0c0',
       backgroundColor: '#ffffff',
+      whiteSpace: 'nowrap',
     };
 
     // console.log(this.state);

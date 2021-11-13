@@ -346,6 +346,7 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
     margin: 'auto',
     marginTop: 1,
     marginBottom: 1,
+    whiteSpace: 'nowrap' as const,
   };
   const disabledButtonStyle = {
     padding: 2,
@@ -358,6 +359,7 @@ const UnitConversionCanvas: React.FC<UnitConversionCanvasProps> = props => {
     color: '#c0c0c0',
     border: '.2rem solid #c0c0c0',
     backgroundColor: '#ffffff',
+    whiteSpace: 'nowrap' as const,
   };
 
   let pointerEvents = { pointerEvents: 'auto' } as React.CSSProperties;
