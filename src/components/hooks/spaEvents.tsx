@@ -54,18 +54,25 @@ export function useSpaEventsHook(
         }
         if (data.type === 'continue') {
           if (currentMaterial.uuid) {
-            // reset results for the same problem type component
-            moveToNextComponent(userMaterialReactionResult?.next_material_uuid || currentMaterial?.next_material_uuid);
-            setUserReactionState('start');
+            const next_material_uuid =
+              currentMaterial.next_material_uuid || userMaterialReactionResult.next_material_uuid;
+            // we no need userMaterialReactionResult here (this was in the old version -
+            // next_material_uuid was only in userMaterialReactionResult)
+            // we always need next_material_uuid from currentMaterial
+            // || userMaterialReactionResult?.next_material_uuid;
 
             // send redirect url to parent
             window.parent.postMessage(
               {
                 type: 'redirect_to_material',
-                data: { lessonUuid, nextMaterialUuid: userMaterialReactionResult.next_material_uuid },
+                data: { lessonUuid, nextMaterialUuid: next_material_uuid },
               },
               '*',
             );
+
+            // reset results for the same problem type component
+            moveToNextComponent(next_material_uuid);
+            setUserReactionState('start');
           }
         }
       }
