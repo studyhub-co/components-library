@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { FaTrashAlt } from 'react-icons/fa';
+import { isMobile } from 'react-device-detect';
 
 import Radio, { RadioProps } from '@material-ui/core/Radio';
 import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
@@ -44,9 +45,9 @@ interface ChoiceProps {
 // card styles
 const useCardStyles = makeStyles({
   root: {
-    maxWidth: '15rem',
+    maxWidth: '10rem',
     display: 'inline-block',
-    margin: '1rem',
+    margin: '0.5rem',
     cursor: 'pointer',
   },
   media: {

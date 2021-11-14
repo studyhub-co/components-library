@@ -1,6 +1,6 @@
 {
   "name": "@studyhub.co/eval",
-  "version": "0.9.7",
+  "version": "0.9.11",
   "author": "Studyhub (https://studyhub.co)",
   "license": "MIT",
   "private": false,
@@ -51,6 +51,7 @@
     "react-ace": "^9.2.1",
     "react-countdown-clock": "^2.8.0",
     "react-data-table-component": "^6.11.6",
+    "react-device-detect": "^2.1.2",
     "react-dom": "^16.12.0",
     "react-icons": "^3.9.0",
     "react-mathquill": "^0.2.8",

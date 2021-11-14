@@ -68,7 +68,7 @@ let unlocked = false;
           audio.play();
           audio.pause();
           audio.currentTime = 0;
-          console.log(`unlocked: ${audioProp}`);
+          // console.log(`unlocked: ${audioProp}`);
           unlocked = true;
         }
       }

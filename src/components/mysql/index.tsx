@@ -213,7 +213,7 @@ const Index: React.FC<IMySQLProps> = props => {
             </ContainerItem>
           </Container>
         ) : (
-          <div>Loading...</div> // TODO replace with spinner
+          <div></div> // TODO replace with spinner
         )}
       </div>
       {showFooter && (

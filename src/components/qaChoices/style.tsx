@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
-// import { base } from '../../style';
+import { isMobile } from 'react-device-detect';
 
 export const useStyles = makeStyles({
   choiceButtonWrong: {
@@ -32,10 +32,12 @@ export const StyledChoiceButton = styled.div`
   transition: color 0.3s, border 0.3s;
   text-align: justify;
   cursor: pointer;
+  ${!isMobile &&
+    `
   &:hover {
     color: #1caff6;
     border: 0.2rem solid #1caff6;
-  }
+  }`}
 `;
 
 // export const checkSaveButtonStyle = {

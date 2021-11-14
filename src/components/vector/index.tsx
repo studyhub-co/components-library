@@ -204,6 +204,7 @@ const Index: React.FC<IVectorProps> = props => {
                       }
                       label="Question text only"
                     />
+                    <br />
                     <FormControlLabel
                       control={
                         <Checkbox
@@ -259,19 +260,21 @@ const Index: React.FC<IVectorProps> = props => {
                     />
                   )}
                 {editMode || componentData.answerNullableVector ? (
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={componentData.answerVectorIsNull}
-                        onChange={(e, checked) => {
-                          operateDataFunctions.onAnswerIsNullVector(checked);
-                        }}
-                        name="checkedANull"
-                        color="primary"
-                      />
-                    }
-                    label="Null vector"
-                  />
+                  <div>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={componentData.answerVectorIsNull}
+                          onChange={(e, checked) => {
+                            operateDataFunctions.onAnswerIsNullVector(checked);
+                          }}
+                          name="checkedANull"
+                          color="primary"
+                        />
+                      }
+                      label="Null vector"
+                    />
+                  </div>
                 ) : null}
                 {editMode && (
                   <React.Fragment>

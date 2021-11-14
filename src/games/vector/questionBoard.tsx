@@ -52,6 +52,7 @@ const QuestionBoard: React.FC<QuestionBoardProps> = props => {
         allowInput={disabled}
         fade={fade}
       />
+      <br />
       <FormControlLabel
         control={
           <Checkbox

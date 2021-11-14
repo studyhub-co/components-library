@@ -204,7 +204,7 @@ const Index: React.FC<IUnitConversionProps> = props => {
             </ContainerItem>
           </Container>
         ) : (
-          <div>Loading...</div> // TODO replace with spinner
+          <div></div> // TODO replace with spinner
         )}
       </div>
       {showFooter && (

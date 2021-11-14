@@ -261,7 +261,7 @@ const Index: React.FC<IQAProps> = props => {
           </Container>
         </div>
       ) : (
-        <div>Loading...</div> // TODO replace with spinner
+        <div></div> // TODO replace with spinner
       )}
       {showFooter && (
         <Footer

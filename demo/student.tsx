@@ -25,15 +25,14 @@ import { validate as unitConversionValidate } from '../src/components/unitConver
 // const BACKEND_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1/';
 
 // TODO make it configurable
-const lessonUuid = '3c5426d3-4da3-4710-be2f-e99219c22e16';
+const lessonUuid = '547f5412-557e-43a8-bcfe-ac297c123df3';
 
 // we need to set Material component type, because we don't use sandbox code (we use Component directly)
 const materialsUuids = {
   /* order is important */
-  // '124bb548-e231-46f6-98a1-3e5ffdab58e2': QAChoices,
-  // 'fc704bf7-5b98-4668-9e68-70c7767b5489': QAChoices,
-  //'f6685f7a-3764-4d1e-806c-171ecdc9eaad': Vector,
-  '9e8fefaf-1c59-4892-bc17-1239b994feed': Vector,
+  'c2a54475-bba4-4cbf-9480-3a3028a962c8': QAChoices,
+  // 'f6685f7a-3764-4d1e-806c-171ecdc9eaad': Vector,
+  // '9e8fefaf-1c59-4892-bc17-1239b994feed': Vector,
   // '8b85058d-a22b-4615-a7a8-92e9dbbc5f86': MySQL,
   // '3d35337f-e805-4126-9c91-dd35a7e01892': UnitConversion,
   // '1cdee680-d5db-4f0c-b140-17067e45b98b': QABase,
@@ -91,7 +90,7 @@ const Student: ({
 
   return (
     <div>
-      <Paper style={{ padding: '1rem' }}>
+      <Paper style={{ padding: '1rem', margin: '1rem' }}>
         {/*BACKEND SERVER API URL: {BACKEND_SERVER_API_URL}*/}
         <br />
         Materials uuids: {Object.keys(materialsUuids).join(', ')}

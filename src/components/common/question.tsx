@@ -61,7 +61,7 @@ const Question: React.FC<IQuestionProps> = props => {
         />
       )}
       {!editMode && question.content.hint && (
-        <React.Fragment>
+        <div>
           <FormControlLabel
             control={<Switch checked={showHint} onChange={handleShowHintChange} name="showHint" color="primary" />}
             label="Show hint"
@@ -69,7 +69,7 @@ const Question: React.FC<IQuestionProps> = props => {
           <Box display={showHint ? 'block' : 'none'} m={1}>
             {question.content.hint}
           </Box>
-        </React.Fragment>
+        </div>
       )}
     </React.Fragment>
   );
