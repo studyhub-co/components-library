@@ -92,6 +92,8 @@ export class CanvasVector {
 
   complete(pointer) {
     this.drawing = false;
+
+    if (!pointer) return;
     const snappedxCoordinate = Math.round(pointer.x / GRID) * GRID;
     const snappedyCoordinate = Math.round(pointer.y / GRID) * GRID;
     const snappedxCoordinateArrowhead = Math.round((pointer.x + this.deltaX) / GRID) * GRID;

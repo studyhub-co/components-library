@@ -25,7 +25,7 @@ import { Material } from '../../models/';
 
 import { VectorData as IVectorData } from './IData/index';
 
-import { VectorCanvas, CanvasVector } from './vectorCanvas';
+import { VectorCanvas, CanvasVector, CanvasText } from './vectorCanvas';
 
 import Question from '../common/question';
 import Footer from '../common/footer';
@@ -82,6 +82,7 @@ const Index: React.FC<IVectorProps> = props => {
   const { data: componentData, operateDataFunctions } = useComponentData(componentDataProp, currentMaterial);
   const [showFooter, setShowFooter] = useState(showFooterProp || false);
   const [disabledCheck, setDisabledCheckS] = useState(true);
+  const [fade, setFade] = useState(false);
 
   useSpaEventsHook(
     updateMaterial,
@@ -124,7 +125,20 @@ const Index: React.FC<IVectorProps> = props => {
     } else {
       setDisabledCheck(false);
     }
+    // if (userMaterialReactionResult?.was_correct === false) {
+    //   console.log(userMaterialReactionResult);
+    //   console.log('add wrong vector');
+    // }
   }, [userMaterialReactionResult]);
+
+  useEffect(() => {
+    // disable canvas
+    if (userReactionState !== 'start') {
+      setFade(true);
+    } else {
+      setFade(false);
+    }
+  }, [userReactionState]);
 
   useEffect(() => {
     if (currentMaterial.isFetching === false && currentMaterial.uuid) {
@@ -155,6 +169,50 @@ const Index: React.FC<IVectorProps> = props => {
       const v = new CanvasVector(null, pointer, VECTOR_COLORS[i]);
       v.complete(endPointer);
       objects.push(v);
+    }
+    return objects;
+  };
+
+  const correctAnswers = (correctData: any) => {
+    console.log(correctData.answerVectors);
+    const objects = [];
+    if (correctData?.answerVectorIsNull) {
+      const textPoint = {
+        left: VectorCanvas.calcCanvasMagnitude(0.65),
+        top: VectorCanvas.calcCanvasMagnitude(1),
+      };
+      const text = new CanvasText(null, textPoint, 'Null\nvector');
+      objects.push(text);
+    } else {
+      const vectorsList = correctData?.answerVectors;
+      for (const i in vectorsList) {
+        const pointer = {
+          x: VectorCanvas.calcVectorXStart(vectorsList[i].xComponent),
+          y: VectorCanvas.calcVectorYStart(vectorsList[i].yComponent),
+        };
+        let endPointer;
+        if (vectorsList[i].angle) {
+          // if we known only angle
+          endPointer = {
+            x: pointer['x'] + VectorCanvas.calcCanvasMagnitude(1 * Math.cos(vectorsList[i].angle * (Math.PI / 180))),
+            y: pointer['y'] - VectorCanvas.calcCanvasMagnitude(1 * Math.sin(vectorsList[i].angle * (Math.PI / 180))),
+          };
+        } else {
+          endPointer = {
+            x: pointer['x'] + VectorCanvas.calcCanvasMagnitude(vectorsList[i].xComponent),
+            y: pointer['y'] - VectorCanvas.calcCanvasMagnitude(vectorsList[i].yComponent),
+          };
+        }
+        const vector = new CanvasVector(null, pointer, 'green');
+        vector.complete(endPointer);
+        const textPoint = {
+          left: endPointer.x - VectorCanvas.calcCanvasMagnitude(0.65) + vectorsList[i].xComponent,
+          top: endPointer.y - vectorsList[i].yComponent - VectorCanvas.calcCanvasMagnitude(1),
+        };
+        const text = new CanvasText(null, textPoint, 'correct\nsolution');
+        objects.push(vector);
+        objects.push(text);
+      }
     }
     return objects;
   };
@@ -244,10 +302,19 @@ const Index: React.FC<IVectorProps> = props => {
                     <VectorCanvas
                       clear={false} // clears by internal function
                       canvasId={'answer'}
+                      fade={fade}
                       // objects -> objects that we need to draw on Canvas
-                      // not send objects to canvas in student view  to deny redraw vectors from center (we do not store start point of the vectors)
-                      objects={editMode && vectorCanvases(componentData?.answerVectors)}
-                      allowInput={componentData?.answerVectors?.length < 4}
+                      // not send objects to canvas in student view to deny redraw vectors from center (we do not store start point of the vectors)
+                      // if user not correct generate correct answer
+                      objects={
+                        (editMode && vectorCanvases(componentData?.answerVectors)) ||
+                        (userReactionState === 'checked' &&
+                          userMaterialReactionResult &&
+                          !userMaterialReactionResult.isFetching &&
+                          !userMaterialReactionResult.was_correct &&
+                          correctAnswers(userMaterialReactionResult?.correct_data))
+                      }
+                      allowInput={componentData?.answerVectors?.length < 4 && userReactionState === 'start'}
                       // not use now
                       // vectorsLimit={1} // limit number of vectors / see https://github.com/studyhub-co/components-library/issues/10 for details
                       updateAnswer={(ans: any) => {
